@@ -7,7 +7,7 @@ const app = express();
 app.use('/api/file', file);
 
 app.listen(config.PORT, () => {
-    console.log('Server is runing');
+    console.log('Server is running');
 });
 
 app.all('/*', (req, res) => {

@@ -1,6 +1,5 @@
 import Router from 'express';
 
-
 const file = Router();
 
 file.get('/', (req, res) => {
