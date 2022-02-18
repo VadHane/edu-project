@@ -1,8 +1,10 @@
 import express from 'express';
 import config from './config.js';
 import file from './routes/fileRoutes.js';
+import mongoose from 'mongoose';
 
 const app = express();
+mongoose.connect(config.MONGE_URL);
 
 app.use('/api/file', file);
 
