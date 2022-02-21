@@ -1,25 +1,17 @@
 import Router from 'express';
+import FileController from '../controllers/FileController.js';
 
-const file = Router();
+const router = Router();
+const controller = new FileController();
 
-file.get('/', (req, res) => {
-    res.status(200).json('Get all file');
-});
+router.get('/', controller.getAllFiles);
 
-file.get('/:id', (req, res) => {
-    res.status(200).json(`Get file (id = ${req.params.id})`);
-});
+router.get('/:id', controller.getFile);
 
-file.post('/', (req, res) => {
-    res.status(200).json('Add some file');
-});
+router.post('/', controller.createFile);
 
-file.put('/:id', (req, res) => {
-    res.status(200).json(`Update file (id = ${req.params.id})`);
-});
+router.put('/:id', controller.updateFile);
 
-file.delete('/:id', (req, res) => {
-    res.status(200).json(`Delete file (id = ${req.params.id})`);
-});
+router.delete('/:id', controller.deleteFile);
 
-export default file;
+export default router;
