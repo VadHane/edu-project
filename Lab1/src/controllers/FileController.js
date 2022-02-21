@@ -1,4 +1,4 @@
-class FileController { 
+export default class FileController { 
     constructor() { 
         this.getAllFiles = this.getAllFiles.bind(this);
         this.getFile = this.getFile.bind(this);
@@ -26,6 +26,4 @@ class FileController {
     deleteFile(req, res) { 
         res.status(200).json(`Delete file (id = ${req.params.id})`);
     } 
-} 
-
-export default FileController;
+}
