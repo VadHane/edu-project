@@ -1,16 +1,17 @@
 import Router from 'express';
 import FileController from '../controllers/FileController.js';
 
-const file = Router();
+const router = Router();
+const controller = new FileController();
 
-file.get('/', FileController.getAllFiles);
+router.get('/', controller.getAllFiles);
 
-file.get('/:id', FileController.getFile);
+router.get('/:id', controller.getFile);
 
-file.post('/', FileController.createFile);
+router.post('/', controller.createFile);
 
-file.put('/:id', FileController.updateFile);
+router.put('/:id', controller.updateFile);
 
-file.delete('/:id', FileController.deleteFile);
+router.delete('/:id', controller.deleteFile);
 
-export default file;
+export default router;

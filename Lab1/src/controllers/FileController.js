@@ -1,19 +1,17 @@
 class FileController { 
-
     constructor() { 
         this.getAllFiles = this.getAllFiles.bind(this);
         this.getFile = this.getFile.bind(this);
         this.createFile = this.createFile.bind(this); 
         this.updateFile = this.updateFile.bind(this); 
         this.deleteFile = this.deleteFile.bind(this);
-
     } 
 
     getAllFiles(req, res) { 
         res.status(200).json('Get all file');
     } 
 
-    async getFile(req, res) { 
+    getFile(req, res) { 
         res.status(200).json(`Get file (id = ${req.params.id})`);
     } 
 
@@ -30,4 +28,4 @@ class FileController {
     } 
 } 
 
-export default new FileController();
+export default FileController;
