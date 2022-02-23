@@ -23,6 +23,6 @@ const fileSchema = new Mongoose.Schema({
     }
 });
 
-const file = Mongoose.Model('file', fileSchema);
+const file = Mongoose.model('file', fileSchema);
 
 export default file;
