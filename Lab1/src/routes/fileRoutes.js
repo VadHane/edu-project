@@ -1,7 +1,14 @@
 import Router from 'express';
 import FileController from '../controllers/FileController.js';
 
+/**
+ * Express router for API. (Path: /api/file/*)
+ */
 const router = Router();
+
+/**
+ * Object with endpoints for this router.
+ */
 const controller = new FileController();
 
 router.get('/', controller.getAllFiles);

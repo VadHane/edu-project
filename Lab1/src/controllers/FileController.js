@@ -1,6 +1,9 @@
+import Config from '../config.js';
 import FileService from '../services/fileService.js';
 
-export default class FileController { 
+/** Class with endpoints for API router. */
+export default class FileController {
+    /** Binding all methods and creating new object (fileServise) to working with database. */ 
     constructor() { 
         this.getAllFiles = this.getAllFiles.bind(this);
         this.getFile = this.getFile.bind(this);
@@ -10,35 +13,143 @@ export default class FileController {
         this.fileService = new FileService();
     } 
 
-    getAllFiles(req, res) {
-        res.status(200).json('Get all file');
+    /**
+     * Get all files as array of json objects.
+     * 
+     * @param {Request} req - The request that user send to API.
+     * @param {Response} res - The response that API send to user.
+     * 
+     * @returns Status code 200 and array of json objects of photo from database.
+     * @returns Status code 404 and json string - 'Files was not found', if database dont contains any file.
+     * @returns Status code 500, if there was exception.
+     */
+    async getAllFiles(req, res) {
+        try {
+            const files = await this.fileService.getAll();
+
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+            });
+
+            if(!files) {
+                res.status(404).send('Files was not found').end();
+            } else {
+                res.status(200).send(files).end();
+            }
+        } catch(e) {
+            res.status(500).end();
+        }
     } 
 
-    getFile(req, res) { 
-        res.status(200).json(`Get file (id = ${req.params.id})`);
+    /**
+     * Get file by id.
+     * 
+     * @param {Request} req - The request that user send to API.
+     * @param {Response} res - The response that API send to user.
+     * 
+     * @returns Status code 200 and json objects of photo from database.
+     * @returns Status code 404 and json string - 'Files was not found', if database dont contains file with id from request.params.id
+     * @returns Status code 500, if there was exception.
+     */
+    async getFile(req, res) { 
+        try {
+            const filePath = await this.fileService.get(req.params.id);
+
+            res.set({
+                'Content-Type': 'image/jpeg',
+                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+            });
+
+            if(!filePath) {
+                res.status(404).json('File with this id was not found');
+                return;
+            }
+
+            res.status(200).sendFile(filePath); 
+        } catch(e) {
+            res.status(500).end();
+        }
     } 
 
+    /**
+     * Create and safe in database new file from request.files.
+     * 
+     * @param {Request} req - The request that user send to API.
+     * @param {Response} res - The response that API send to user.
+     * 
+     * @returns Status code 200 and view of new file as json object from database.
+     * @returns Status code 500, if there was exception.
+     */
     async createFile(req, res) {
         try {
             const document = await this.fileService.create(req.files.file);
-            res.status(200).json(document); 
+
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+            });
+
+            res.status(200).json(document).end(); 
         } catch(e) {
-            console.log(e);
-            res.status(500);
+            res.status(500).end();
         }
     } 
 
+    /**
+     * Find and replase file from database with id = request.params.id with new file from request.files.
+     * 
+     * @param {Request} req - The request that user send to API.
+     * @param {Response} res - The response that API send to user.
+     * 
+     * @returns Status code 200 and view of updated file as json object from database.
+     * @returns Status code 404 and json string - 'Files was not found'.
+     * @returns Status code 500, if there is some exeption.
+     */
     async updateFile(req, res) {
         try {
             const document = await this.fileService.update(req.params.id, req.files.file);
-            res.status(200).json(document);
+
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+            });
+
+            if(!document) {
+                res.status(404).json('Files was not found').end();
+            } else {
+                res.status(200).json(document).end();
+            }
         } catch(e) {
-            console.log(e);
-            res.status(500);
+            res.status(500).end();
         }
     } 
 
-    deleteFile(req, res) { 
-        res.status(200).json(`Delete file (id = ${req.params.id})`);
+    /**
+     * Find and delete file with id = request.params.id from database.
+     * 
+     * @param {Request} req - The request that user send to API.
+     * @param {Response} res - The response that API send to user.
+     * 
+     * @returns Status code 200 and view of deleted file as json object from database.
+     * @returns Status code 500, if there is some exeption.
+     */
+    async deleteFile(req, res) { 
+        try {
+            const document = await this.fileService.delete(req.params.id);
+
+            res.set({
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+            });
+
+            if(!document) {
+                res.status(404).json('Files was not found').end();
+            } else {
+                res.status(200).json(document).end();
+            }
+        } catch (e) {
+            res.status(500).end();
+        }
     } 
 }
