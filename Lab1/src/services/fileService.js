@@ -1,7 +1,7 @@
 import fs from 'fs';
 import DataBase from '../models/File.js';
 import path from 'path';
-import Config from '../config.js';
+import {Exceptions, AllowedExtensions, resHeaders} from '../config.js';
 
 /** Class for interaction with database. */
 export default class FileService {
@@ -22,7 +22,11 @@ export default class FileService {
      */
     async getAll() {
         const documents = await DataBase.find();
-        let files = [];
+        const files = [];
+
+        if (!documents) {
+            return null;
+        }
 
         for (let document of documents) {        
             files.push({
@@ -48,7 +52,7 @@ export default class FileService {
      */
     async get(id) {
         if (!id) {
-            throw Error('Id is undefined or null!');
+            throw Error(Exceptions.incorrectId);
         }
 
         const document = await DataBase.findById(id);
@@ -71,29 +75,18 @@ export default class FileService {
      */
     #validateFile(file) {
         if (!file){
-            throw Error('File is undefined or null!');
+            throw Error(Exceptions.incorrectFile);
         }
 
         if(!file.name || !file.mimetype || !file.encoding) {
-            throw Error('File doesn\'t contain needed fields!');
+            throw Error(Exceptions.neededFieldsAreMissing);
         }
 
         const fileExtension = path.extname(file.name);
-        const isPhoto = (fileExtension) => {
-            const extensions = ['.png', '.jpeg', '.jpg'];
-            let flag = false;
+        const isPhoto = AllowedExtensions.includes(fileExtension);
 
-            extensions.forEach(element => {
-                if (fileExtension === element) {
-                    flag = true;
-                }
-            });
-
-            return flag;
-        };
-
-        if (!isPhoto(fileExtension)) {
-            throw Error('File is not image!');
+        if (!isPhoto) {
+            throw Error(Exceptions.fileNotImage);
         }
     }
 
@@ -104,7 +97,7 @@ export default class FileService {
      * 
      * @returns Absolute path for file.
      */
-    #getFilePath(fileName) {
+    #generateFilePath(fileName) {
         const fileExtension = path.extname(fileName);
 
         const _fileName = Date.now() + fileExtension;
@@ -129,7 +122,7 @@ export default class FileService {
             throw Error(e.message);
         }
 
-        const filePath = this.#getFilePath(newFile.name);
+        const filePath = this.#generateFilePath(newFile.name);
         newFile.mv(filePath);
 
         return await DataBase.create({
@@ -140,7 +133,7 @@ export default class FileService {
                 //CORS rules
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin: Config.AccessControlAllowOrigin,
+                AccessControlAllowOrigin: resHeaders.AccessControlAllowOrigin,
             },
         });
     }
@@ -160,7 +153,7 @@ export default class FileService {
      */
     async update(id, updFile) {
         if (!id) {
-            throw Error('Id is undefined or null!');
+            throw Error(Exceptions.incorrectId);
         }
 
         try {
@@ -181,7 +174,7 @@ export default class FileService {
             }
         });
 
-        const filePath = this.#getFilePath(updFile.name);
+        const filePath = this.#generateFilePath(updFile.name);
         updFile.mv(filePath);
 
         return await DataBase.findByIdAndUpdate(id, {
@@ -204,7 +197,7 @@ export default class FileService {
      */
     async delete(id) {
         if (!id) {
-            throw Error('Id is undefined or null!');
+            throw Error(Exceptions.incorrectId);
         }
 
         const document = await DataBase.findByIdAndDelete(id);

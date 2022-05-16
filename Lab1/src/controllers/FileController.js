@@ -1,4 +1,4 @@
-import Config from '../config.js';
+import {resHeaders, Exceptions} from '../config.js';
 import FileService from '../services/fileService.js';
 
 /** Class with endpoints for API router. */
@@ -28,12 +28,11 @@ export default class FileController {
             const files = await this.fileService.getAll();
 
             res.set({
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+                ...resHeaders
             });
 
             if(!files) {
-                res.status(404).send('Files was not found').end();
+                res.status(404).send(Exceptions.filesWereNotFound).end();
             } else {
                 res.status(200).send(files).end();
             }
@@ -57,12 +56,12 @@ export default class FileController {
             const filePath = await this.fileService.get(req.params.id);
 
             res.set({
-                'Content-Type': 'image/jpeg',
-                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+                ...resHeaders,
+                'Content-Type': 'image/jpeg'
             });
 
             if(!filePath) {
-                res.status(404).json('File with this id was not found');
+                res.status(404).json(Exceptions.filesWereNotFound);
                 return;
             }
 
@@ -86,8 +85,7 @@ export default class FileController {
             const document = await this.fileService.create(req.files.file);
 
             res.set({
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+                ...resHeaders
             });
 
             res.status(200).json(document).end(); 
@@ -111,12 +109,11 @@ export default class FileController {
             const document = await this.fileService.update(req.params.id, req.files.file);
 
             res.set({
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+                ...resHeaders
             });
 
             if(!document) {
-                res.status(404).json('Files was not found').end();
+                res.status(404).json(Exceptions.filesWereNotFound).end();
             } else {
                 res.status(200).json(document).end();
             }
@@ -139,12 +136,11 @@ export default class FileController {
             const document = await this.fileService.delete(req.params.id);
 
             res.set({
-                'Content-Type': 'application/json',
-                'Access-Control-Allow-Origin': Config.AccessControlAllowOrigin
+                ...resHeaders
             });
 
             if(!document) {
-                res.status(404).json('Files was not found').end();
+                res.status(404).json(Exceptions.filesWereNotFound).end();
             } else {
                 res.status(200).json(document).end();
             }
