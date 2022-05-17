@@ -6,6 +6,8 @@ namespace Lab2.Models
 {
     public class User
     {
+        public virtual ICollection<Role> Roles { get; set; }
+
         public User()
         {
             Roles = new List<Role>();
@@ -23,9 +25,8 @@ namespace Lab2.Models
 
         [MaxLength(20)]
         public string LastName { get; set; }
+
         public string ImageBlobKey { get; set; }
 
-
-        public virtual ICollection<Role> Roles { get; set; }
     }
 }
