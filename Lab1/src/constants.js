@@ -1,7 +1,7 @@
 /**
  * Headers for the response.
  */
- export const CORS_RES_HEADERS = {
+export const CORS_RES_HEADERS = {
     'Content-Type': 'application/json',
     /** Url address of UI. */
     'Access-Control-Allow-Origin': 'http://localhost:3005'

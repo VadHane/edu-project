@@ -6,7 +6,7 @@ import fileUpload from 'express-fileupload';
 
 /** Express app. */
 const app = express();
-mongoose.connect(config.MONGE_URL);
+mongoose.connect(config.MONGO_URL);
 
 /** Middleware for uploading files. */
 app.use(fileUpload());
