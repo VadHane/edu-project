@@ -5,8 +5,7 @@
   "license": "MIT",
   "scripts": {
     "start": "nodemon ./src/server.js --exec babel-node",
-    "test": "jest",
-    "prettier": "prettier --write **/src/**/*.{js,ts,tsx}"
+    "test": "jest"
   },
   "dependencies": {
     "body-parser": "^1.19.1",
@@ -22,7 +21,6 @@
     "babel-jest": "^27.5.1",
     "eslint": "^8.9.0",
     "jest": "^27.5.1",
-    "nodemon": "^2.0.15",
-    "prettier": "2.6.2"
+    "nodemon": "^2.0.15"
   }
 }
