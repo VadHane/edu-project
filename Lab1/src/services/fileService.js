@@ -96,7 +96,6 @@ export default class FileService {
      */
     #generateFilePath(fileName) {
         const fileExtension = path.extname(fileName);
-
         const _fileName = Date.now() + fileExtension;
         return path.resolve('src', 'static', _fileName);
     }
@@ -120,6 +119,7 @@ export default class FileService {
         }
 
         const filePath = this.#generateFilePath(newFile.name);
+
         newFile.mv(filePath);
 
         return await DataBase.create({
@@ -172,6 +172,7 @@ export default class FileService {
         });
 
         const filePath = this.#generateFilePath(updFile.name);
+        
         updFile.mv(filePath);
 
         return await DataBase.findByIdAndUpdate(id, {
