@@ -1,4 +1,4 @@
-import {resHeaders, Exceptions} from '../config.js';
+import {CORS_RES_HEADERS, FILE_WAS_NOT_FOUND_TEXT, FILES_WERE_NOT_FOUND_TEXT} from '../constants.js';
 import FileService from '../services/fileService.js';
 
 /** Class with endpoints for API router. */
@@ -27,12 +27,10 @@ export default class FileController {
         try {
             const files = await this.fileService.getAll();
 
-            res.set({
-                ...resHeaders
-            });
+            res.set(CORS_RES_HEADERS);
 
             if(!files) {
-                res.status(404).send(Exceptions.filesWereNotFound).end();
+                res.status(404).send(FILES_WERE_NOT_FOUND_TEXT).end();
             } else {
                 res.status(200).send(files).end();
             }
@@ -56,16 +54,16 @@ export default class FileController {
             const filePath = await this.fileService.get(req.params.id);
 
             res.set({
-                ...resHeaders,
+                ...CORS_RES_HEADERS,
                 'Content-Type': 'image/jpeg'
             });
 
             if(!filePath) {
-                res.status(404).json(Exceptions.filesWereNotFound);
+                res.status(404).json(FILE_WAS_NOT_FOUND_TEXT);
                 return;
             }
 
-            res.status(200).sendFile(filePath); 
+            res.status(200).sendFile(filePath).end(); 
         } catch(e) {
             res.status(500).end();
         }
@@ -84,9 +82,7 @@ export default class FileController {
         try {
             const document = await this.fileService.create(req.files.file);
 
-            res.set({
-                ...resHeaders
-            });
+            res.set(CORS_RES_HEADERS);
 
             res.status(200).json(document).end(); 
         } catch(e) {
@@ -108,12 +104,10 @@ export default class FileController {
         try {
             const document = await this.fileService.update(req.params.id, req.files.file);
 
-            res.set({
-                ...resHeaders
-            });
+            res.set(CORS_RES_HEADERS);
 
             if(!document) {
-                res.status(404).json(Exceptions.filesWereNotFound).end();
+                res.status(404).json(FILE_WAS_NOT_FOUND_TEXT).end();
             } else {
                 res.status(200).json(document).end();
             }
@@ -135,12 +129,10 @@ export default class FileController {
         try {
             const document = await this.fileService.delete(req.params.id);
 
-            res.set({
-                ...resHeaders
-            });
+            res.set(CORS_RES_HEADERS);
 
             if(!document) {
-                res.status(404).json(Exceptions.filesWereNotFound).end();
+                res.status(404).json(FILE_WAS_NOT_FOUND_TEXT).end();
             } else {
                 res.status(200).json(document).end();
             }

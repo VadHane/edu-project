@@ -3,8 +3,43 @@ import FileService from '../fileService.js';
 import db from '../../models/File.js';
 import fs from 'fs';
 import path from 'path';
-import {Exceptions, resHeaders} from '../../config.js';
+import { CORS_RES_HEADERS, FILE_NOT_IMAGE_EXCEPTION, INCORRECT_FILE_EXCEPTION, INCORRECT_ID_EXCEPTION, NEEDED_FIELDS_ARE_MISSING_EXCEPTION } from '../../constants.js';
 const service = new FileService();
+
+const testData = [
+    {
+        _id: 1,
+        metadata: {
+            contentType: 'json',
+        },
+        createdAt: 10,
+        updateAt: 10
+    },
+    {
+        _id: 2,
+        metadata: {
+            contentType: 'json',
+        },
+        createdAt: 11,
+        updateAt: 11
+    },
+    {
+        _id: 3,
+        path: 'testing\\path',
+        metadata: {
+            contentType: 'json',
+        },
+        createdAt: 12,
+        updateAt: 12
+    },
+];
+
+const testFile = {
+    name: 'testName.jpg',
+    mimetype: 'image/jpeg',
+    encoding: '7bit',
+    mv: jest.fn()
+};
 
 describe('Testing async method "getAll"', () => {
     beforeAll(() => {
@@ -12,12 +47,11 @@ describe('Testing async method "getAll"', () => {
     });
 
     test('Returning the empty array if db is empty too.', async () => {
-        const testData = [];
-        db.find.mockReturnValue(testData);
+        db.find.mockReturnValue([]);
 
         const data = await service.getAll();
 
-        expect(data).toEqual(testData);
+        expect(data.length).toBe(0);
     });
 
     test('Returning null if database is empty.', async () => {
@@ -29,36 +63,9 @@ describe('Testing async method "getAll"', () => {
     });
 
     test('Correctly returning data.', async () => {
-        let testData = [
-            {
-                _id: 1,
-                metadata: {
-                    contentType: 'json',
-                },
-                createdAt: 10,
-                updateAt: 10
-            },
-            {
-                _id: 2,
-                metadata: {
-                    contentType: 'json',
-                },
-                createdAt: 11,
-                updateAt: 11
-            },
-            {
-                _id: 3,
-                metadata: {
-                    contentType: 'json',
-                },
-                createdAt: 12,
-                updateAt: 12
-            },
-        ];
-
         db.find.mockReturnValue(testData);
 
-        testData = [
+        const expectedData = [
             {
                 id: 1,
                 contentType: 'json',
@@ -80,7 +87,7 @@ describe('Testing async method "getAll"', () => {
         ];
 
         const data = await service.getAll();
-        expect(data).toEqual(testData);
+        expect(data).toEqual(expectedData);
     });
 });
 
@@ -90,8 +97,8 @@ describe('Testing async method "get(id)"', () => {
     });
 
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.get()).rejects.toThrowError(Exceptions.incorrectId);
-        await expect(service.get(null)).rejects.toThrowError(Exceptions.incorrectId);
+        await expect(service.get()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.get(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
     });
 
     test('Returning null if id is out of range.', async () => {
@@ -103,58 +110,38 @@ describe('Testing async method "get(id)"', () => {
     });
 
     test('Correctly returning data.', async () => {
-        const testData = {
-            id: 3,
-            path: 'testing\\path',
-            contentType: 'json',
-            createAt: 12,
-            updateAt: 12
-        };
-        db.findById.mockReturnValue(testData);
+        db.findById.mockReturnValue(testData[2]);
 
         const data = await service.get(3);
 
-        expect(data).toBe('testing\\path');
+        expect(data).toBe(testData[2].path);
     });
 });
 
 describe('Testing async method "create(new file)"', () => { 
-    let testData;
-
     beforeAll(() => {
         db.create = jest.fn(obj => obj);
     });
 
-    beforeEach(() => {
-        testData = {
-            name: 'testName.jpg',
-            mimetype: 'image/jpeg',
-            encoding: '7bit',
-            mv: jest.fn()
-        };
-    });
-
     test('Throw error if new file is undefined or null.', async () => {
-        await expect(service.create()).rejects.toThrowError(Exceptions.incorrectFile);
-        await expect(service.create(null)).rejects.toThrowError(Exceptions.incorrectFile);
+        await expect(service.create()).rejects.toThrowError(INCORRECT_FILE_EXCEPTION);
+        await expect(service.create(null)).rejects.toThrowError(INCORRECT_FILE_EXCEPTION);
     });
 
     test('Throw error if new file is not image.', async () => {
-        testData.name = 'testName.txt';
-
-        await expect(service.create(testData)).rejects.toThrowError(Exceptions.fileNotImage);
+        await expect(service.create({...testFile, name: 'testName.txt'})).rejects.toThrowError(FILE_NOT_IMAGE_EXCEPTION);
     });
 
     test('Throw erroe if new file doesn\'t contain needed fields: name, mimetype, encoding.', async () => {
-        await expect(service.create({...testData, mimetype: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
-        await expect(service.create({...testData, name: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
-        await expect(service.create({...testData, encoding: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
+        await expect(service.create({...testFile, mimetype: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(service.create({...testFile, name: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(service.create({...testFile, encoding: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
     });
 
     test('Correctly returning data.', async () => {
         Date.now = jest.fn(() => 'test');
 
-        const data = await service.create(testData);
+        const data = await service.create(testFile);
 
         expect(data).toEqual({
             path: path.resolve('src', 'static', 'test.jpg'),
@@ -163,40 +150,29 @@ describe('Testing async method "create(new file)"', () => {
                 contentEncoding: '7bit',
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin: resHeaders.AccessControlAllowOrigin
+                AccessControlAllowOrigin: CORS_RES_HEADERS.AccessControlAllowOrigin
             }
         });
     });
 });
 
 describe('Testing async method "update(id)"', () => {
-    let testData;
-
-    beforeEach(() => {
-        testData = {
-            name: 'testName.jpg',
-            mimetype: 'image/jpeg',
-            encoding: '7bit',
-            mv: jest.fn()
-        };
-    });
-
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.update()).rejects.toThrowError(Exceptions.incorrectId);
-        await expect(service.update(null)).rejects.toThrowError(Exceptions.incorrectId);
+        await expect(service.update()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.update(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
     });
 
     test('Throw erroe if new file doesn\'t contain needed fields: name, mimetype, encoding.', async () => {
         // 1 is random number
-        await expect(service.update(1, {...testData, mimetype: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
-        await expect(service.update(1, {...testData, name: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
-        await expect(service.update(1, {...testData, encoding: undefined})).rejects.toThrowError(Exceptions.neededFieldsAreMissing);
+        await expect(service.update(1, {...testFile, mimetype: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(service.update(1, {...testFile, name: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(service.update(1, {...testFile, encoding: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
     });
 
     test('Returning null if id is out of range.', async () => {
         db.findById.mockReturnValue(null);
 
-        const data = await service.update(6, testData); // database collection doesn`t contain object with id = 6
+        const data = await service.update(6, testFile); // database collection doesn`t contain object with id = 6
 
         expect(data).toBe(null);
     });
@@ -207,7 +183,7 @@ describe('Testing async method "update(id)"', () => {
         db.findByIdAndUpdate = jest.fn((id, obj) => obj);
         db.findById = jest.fn(() => 123); // 123 is random number
 
-        const data = await service.update(1, testData); // 1 is random number
+        const data = await service.update(1, testFile); // 1 is random number
 
         expect(data).toEqual({
             path: path.resolve('src', 'static', 'test.jpg'),
@@ -222,8 +198,8 @@ describe('Testing async method "update(id)"', () => {
 
 describe('Testing async method "update(id)"', () => {
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.delete()).rejects.toThrowError(Exceptions.incorrectId);
-        await expect(service.delete(null)).rejects.toThrowError(Exceptions.incorrectId);
+        await expect(service.delete()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.delete(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
     });
 
     test('Returning null if id is out of range.', async () => {
@@ -235,7 +211,7 @@ describe('Testing async method "update(id)"', () => {
     });
 
     test('Correctly returning data.', async () => {
-        const testData = {
+        const expectedData = {
             path: path.resolve('src', 'static', 'test.jpg'),
             metadata: {
                 contentType: 'image/jpeg',
@@ -249,10 +225,10 @@ describe('Testing async method "update(id)"', () => {
         };
 
         fs.unlink = jest.fn();
-        db.findByIdAndDelete = jest.fn(() => testData);
+        db.findByIdAndDelete = jest.fn(() => expectedData);
 
         const data = await service.delete(1); // 1 is random number
 
-        expect(data).toEqual(testData);
+        expect(data).toEqual(expectedData);
     });
 });

@@ -30,6 +30,6 @@ const fileSchema = new Mongoose.Schema({
  * Model of collection from Mongo DB.
  * Using this file, u can send any requests to database.
  */
-const file = Mongoose.model('file', fileSchema);
+const fileContext = Mongoose.model('file', fileSchema);
 
-export default file;
+export default fileContext;

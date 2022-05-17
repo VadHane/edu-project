@@ -1,7 +1,7 @@
 import fs from 'fs';
 import DataBase from '../models/File.js';
 import path from 'path';
-import {Exceptions, AllowedExtensions, resHeaders} from '../config.js';
+import {ALLOWED_IMAGE_EXTENSIONS, CORS_RES_HEADERS, FILE_NOT_IMAGE_EXCEPTION, INCORRECT_FILE_EXCEPTION, INCORRECT_ID_EXCEPTION, NEEDED_FIELDS_ARE_MISSING_EXCEPTION, } from '../constants.js';
 
 /** Class for interaction with database. */
 export default class FileService {
@@ -22,37 +22,34 @@ export default class FileService {
      */
     async getAll() {
         const documents = await DataBase.find();
-        const files = [];
 
         if (!documents) {
             return null;
         }
 
-        for (let document of documents) {        
-            files.push({
-                id: document._id,
-                contentType: document.metadata.contentType,
-                createAt: document.createdAt,
-                updateAt: document.updateAt
-            });
-        }
+        const files = documents.map(document => ({
+            id: document._id,
+            contentType: document.metadata.contentType,
+            createAt: document.createdAt,
+            updateAt: document.updateAt
+        }));
         
         return files;
     }
 
     /**
-     * Get file from database by id. Async method.
+     * Get path of file from database by id. Async method.
      * 
      * @param {Number} id - Unique identifier of file.
      * 
      * @returns Json objects of photo from database.
      * @returns Null, if database dont contains file with id.
      * 
-     * @throws {'Id is undefined or null!'} Argument id must be non-undefined and non-null.
+     * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
      */
     async get(id) {
         if (!id) {
-            throw Error(Exceptions.incorrectId);
+            throw Error(INCORRECT_ID_EXCEPTION);
         }
 
         const document = await DataBase.findById(id);
@@ -74,19 +71,19 @@ export default class FileService {
      * @throws Error 'File is not image!'
      */
     #validateFile(file) {
-        if (!file){
-            throw Error(Exceptions.incorrectFile);
+        if (!file) {
+            throw Error(INCORRECT_FILE_EXCEPTION);
         }
 
         if(!file.name || !file.mimetype || !file.encoding) {
-            throw Error(Exceptions.neededFieldsAreMissing);
+            throw Error(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
         }
 
         const fileExtension = path.extname(file.name);
-        const isPhoto = AllowedExtensions.includes(fileExtension);
+        const isPhoto = ALLOWED_IMAGE_EXTENSIONS.includes(fileExtension);
 
         if (!isPhoto) {
-            throw Error(Exceptions.fileNotImage);
+            throw Error(FILE_NOT_IMAGE_EXCEPTION);
         }
     }
 
@@ -111,9 +108,9 @@ export default class FileService {
      * 
      * @returns View of new file as json object from database.
      * 
-     * @throws {'File is undefined or null!'} Argument newFile must be non-undefined and non-null.
-     * @throws {'File doesn\'t contain needed fields!'} Argument newFile must contains next fields: name, mimetype, encoding.
-     * @throws {'File is not image!'} Argument newFile must be image.
+     * @throws {'File is undefined or null'} Argument newFile must be non-undefined and non-null.
+     * @throws {'File doesn\'t contain needed fields'} Argument newFile must contains next fields: name, mimetype, encoding.
+     * @throws {'File is not image'} Argument newFile must be image.
      */
     async create(newFile) {
         try {
@@ -133,7 +130,7 @@ export default class FileService {
                 //CORS rules
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin: resHeaders.AccessControlAllowOrigin,
+                AccessControlAllowOrigin: CORS_RES_HEADERS.AccessControlAllowOrigin,
             },
         });
     }
@@ -146,14 +143,14 @@ export default class FileService {
      * 
      * @returns View of updated file as json object from database.
      * 
-     * @throws {'Id is undefined or null!'} Argument id must be non-undefined and non-null.
-     * @throws {'File is undefined or null!'} Argument newFile must be non-undefined and non-null.
-     * @throws {'File doesn\'t contain needed fields!'} Argument newFile must contains next fields: name, mimetype, encoding.
-     * @throws {'File is not image!'} Argument newFile must be image.
+     * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
+     * @throws {'File is undefined or null'} Argument newFile must be non-undefined and non-null.
+     * @throws {'File doesn\'t contain needed fields'} Argument newFile must contains next fields: name, mimetype, encoding.
+     * @throws {'File is not image'} Argument newFile must be image.
      */
     async update(id, updFile) {
         if (!id) {
-            throw Error(Exceptions.incorrectId);
+            throw Error(INCORRECT_ID_EXCEPTION);
         }
 
         try {
@@ -193,11 +190,11 @@ export default class FileService {
      * @param {*} id - Unique identifier of file.
      * @returns View of deleted file as json object from database.
      * 
-     * @throws {'Id is undefined or null!'} Argument id must be non-undefined and non-null.
+     * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
      */
     async delete(id) {
         if (!id) {
-            throw Error(Exceptions.incorrectId);
+            throw Error(INCORRECT_ID_EXCEPTION);
         }
 
         const document = await DataBase.findByIdAndDelete(id);
