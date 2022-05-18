@@ -3,6 +3,9 @@ using System;
 
 namespace Lab2.Models
 {
+    /// <summary>
+    /// Context of 'Users' database.
+    /// </summary>
     public class UserContext : DbContext
     {
         public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
