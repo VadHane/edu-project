@@ -1,21 +1,29 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using Lab2.Models;
 
 namespace Lab2.Services
 {
     public class UserService
     {
+        /// <summary>
+        /// The context of database.
+        /// </summary>
+        private readonly UserContext context;
+
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="_context">The context of database.</param>
         public UserService(UserContext _context)
         {
             context = _context;
         }
 
-        public UserContext context { get; set; }
-
-
+        /// <summary>
+        /// Return all users entity from database.
+        /// </summary>
+        /// <returns>Array of user entities.</returns>
         public User[] ReadAll()
         {
             if (!context.Users.Any())
@@ -26,6 +34,11 @@ namespace Lab2.Services
             return context.Users.ToArray();
         }
 
+        /// <summary>
+        /// Create new user entity in database.
+        /// </summary>
+        /// <param name="user">The model of user.</param>
+        /// <returns>The entity of created user from database.</returns>
         public User Create(User user)
         {
             User newUser = new User()
@@ -37,7 +50,6 @@ namespace Lab2.Services
                 ImageBlobKey = user.ImageBlobKey,
             };
 
-            // question
             foreach (Role role in user.Roles)
             {
                 Role foundRole = context.Roles.Where(_role => _role.Id == role.Id).First();
@@ -54,9 +66,15 @@ namespace Lab2.Services
             return createdEntity;
         }
 
+        /// <summary>
+        /// Update the user entity in database.
+        /// </summary>
+        /// <param name="id">The unique id of user in database.</param>
+        /// <param name="user">New model of user.</param>
+        /// <returns>The entity of updated user from database.</returns>
         public User Update(Guid id, User user)
         {
-            User foundUser = context.Users.Where(_user => _user.Id == id).First();
+            User foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
 
             if (foundUser == null)
             {
@@ -88,10 +106,14 @@ namespace Lab2.Services
             return updatedEntity;
         }
 
-
+        /// <summary>
+        /// Delete the user entity in database.
+        /// </summary>
+        /// <param name="id">The unique id of user in database.</param>
+        /// <returns>The entity of deleted user from database.</returns>
         public User Delete(Guid id)
         {
-            User deletedEntity = context.Users.Where(user => user.Id == id).First();
+            User deletedEntity = context.Users.FirstOrDefault(user => user.Id == id);
 
             if (deletedEntity == null)
             {

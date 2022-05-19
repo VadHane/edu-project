@@ -5,56 +5,61 @@ using Lab2.Models;
 
 namespace Lab2.Controllers
 {
+    /// <summary>
+    /// Endpoints for queries with 'api/users/roles/*' path.
+    /// </summary>
     [ApiController]
     [Route("api/users/roles")]
     public class RolesController : Controller
     {
-        public RoleService EService { get; set; }
+        /// <summary>
+        /// The instance of RoleService for interaction with database.
+        /// </summary>
+        private readonly RoleService roleService;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="service">The instance of RoleService for interaction with database.</param>
         public RolesController(RoleService service)
         {
-            EService = service;
+            roleService = service;
         }
 
+        /// <summary>
+        /// The endpoint for get method with 'api/users/roles' path.
+        /// </summary>
+        /// <returns>Return all role's entities from database as JSON string and send status code 200.</returns>
         [HttpGet]
         public ActionResult<Role[]> Get()
         {
-            Role[] roles;
-
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
-
             try
             {
-                roles = EService.ReadAll();
+                var roles = roleService.ReadAll();
 
-                Response.Headers.Add("Content-Type", "application/json");
                 Response.StatusCode = 200;
 
                 return roles;
             }
             catch (Exception exception)
             {
-                if (exception.Message == Constants.DATABASE_IS_EMPTY_TEXT)
-                {
-                    Response.StatusCode = 204; // no content status code
-                }
-                else
-                {
-                    Response.StatusCode = 500; // Internal Server Error
-                }
+                Response.StatusCode = exception.Message == Constants.DATABASE_IS_EMPTY_TEXT ? 204 : 500;
 
                 return null;
             }
         }
 
+        /// <summary>
+        /// The endpoint for post method with 'api/users' path.
+        /// </summary>
+        /// <param name="role">The role's model, which generated from request body.</param>
+        /// <returns>Return the created role entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
         public ActionResult<Role> Post([FromBody]Role role)
         {
-            Role createdRole;
-
             try
             {
-                createdRole = EService.Create(role);
+                var createdRole = roleService.Create(role);
 
                 Response.StatusCode = 201;
 

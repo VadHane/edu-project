@@ -5,46 +5,55 @@ using Lab2.Services;
 
 namespace Lab2.Controllers
 {
+    /// <summary>
+    /// Endpoints for queries with 'api/users/*' path.
+    /// </summary>
     [ApiController]
     [Route("api/users")]
     public class UsersController : Controller
     {
+        /// <summary>
+        /// The instance of UserService for interaction with database.
+        /// </summary>
         private readonly UserService userService;
 
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        /// <param name="service">The instance of UserService for interaction with database.</param>
         public UsersController(UserService service)
         {
             userService = service;
         }
 
+        /// <summary>
+        /// The endpoint for get method with 'api/users' path.
+        /// </summary>
+        /// <returns>Return all user's entities from database as JSON string and send status code 200.</returns>
         [HttpGet]
         public ActionResult<User[]> Get()
         {
-            User[] users;
-
-            Response.Headers.Add("Access-Control-Allow-Origin", "*");
-
             try
             {
-                users = userService.ReadAll();
+                var users = userService.ReadAll();
 
-                Response.Headers.Add("Content-Type", "application/json");
                 Response.StatusCode = 200;
 
                 return users;
             }
             catch (Exception exception)
             {
-                if (exception.Message == Constants.DATABASE_IS_EMPTY_TEXT)
-                {
-                    Response.StatusCode = 204; // no content status code
-                    return null;
-                }
+                Response.StatusCode = exception.Message == Constants.DATABASE_IS_EMPTY_TEXT ? 204 : 500;
 
-                Response.StatusCode = 500; // Internal Server Error
                 return null;
             }
         }
 
+        /// <summary>
+        /// The endpoint for post method with 'api/users' path.
+        /// </summary>
+        /// <param name="user">The user's model, which generated from request body.</param>
+        /// <returns>Return the created user entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
         public ActionResult<User> Post([FromBody]User user)
         {
@@ -64,14 +73,18 @@ namespace Lab2.Controllers
             }
         }
 
+        /// <summary>
+        /// The endpoint for put method with 'api/users/:id' path.
+        /// </summary>
+        /// <param name="id">The unique id of user.</param>
+        /// <param name="user">The user's model, which generated from request body.</param>
+        /// <returns>Return the updated user entity from database as JSON string and send status code 200.</returns>
         [HttpPut("{id}")]
         public ActionResult<User> Put(Guid id, [FromBody]User user)
         {
-            User updatedUser;
-
             try
             {
-                updatedUser = userService.Update(id, user);
+                var updatedUser = userService.Update(id, user);
 
                 Response.StatusCode = 200;
 
@@ -79,27 +92,23 @@ namespace Lab2.Controllers
             }
             catch (Exception exception)
             {
-                if (exception.Message == Constants.NOT_FOUND_EXCEPTION)
-                {
-                    Response.StatusCode = 404;
-                }
-                else
-                {
-                    Response.StatusCode = 500;
-                }
+                Response.StatusCode = exception.Message == Constants.NOT_FOUND_EXCEPTION ? 404 : 500;
 
                 return null;
             }
         }
 
+        /// <summary>
+        /// The endpoint for delete method with 'api/users/:id' path.
+        /// </summary>
+        /// <param name="id">The unique id of user.</param>
+        /// <returns>Return the deleted user entity from database as JSON string and send status code 200.</returns>
         [HttpDelete("{id}")]
         public ActionResult<User> Delete(Guid id)
         {
-            User deletedUser;
-
             try
             {
-                deletedUser = userService.Delete(id);
+                User deletedUser = userService.Delete(id);
 
                 Response.StatusCode = 200;
 
@@ -107,14 +116,7 @@ namespace Lab2.Controllers
             }
             catch (Exception exception)
             {
-                if (exception.Message == Constants.NOT_FOUND_EXCEPTION)
-                {
-                    Response.StatusCode = 404;
-                }
-                else
-                {
-                    Response.StatusCode = 500;
-                }
+                Response.StatusCode = exception.Message == Constants.NOT_FOUND_EXCEPTION ? 404 : 500;
 
                 return null;
             }
