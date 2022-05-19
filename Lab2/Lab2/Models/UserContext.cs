@@ -8,12 +8,10 @@ namespace Lab2.Models
     /// </summary>
     public class UserContext : DbContext
     {
-        public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
-
-
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
+        public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -22,7 +20,6 @@ namespace Lab2.Models
                 new Role() { Id = Guid.NewGuid(), Name = "Super Admin" },
                 new Role() { Id = Guid.NewGuid(), Name = "Admin" }
             );
-
         }
     }
 }
