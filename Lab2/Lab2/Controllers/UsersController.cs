@@ -51,6 +51,34 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
+        /// The endpoint for get method with 'api/users/:id' path.
+        /// </summary>
+        /// <param name="id">The unique id of user.</param>
+        /// <returns>Return one user's entity from database by id as JSON string and send status code 200.</returns>
+        [HttpGet("{id}")]
+        public ActionResult<User> Get(Guid id)
+        {
+            try
+            {
+                var user = userService.ReadOne(id);
+
+                return Ok(user);
+            }
+            catch (DatabaseIsEmptyException)
+            {
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// The endpoint for post method with 'api/users' path.
         /// </summary>
         /// <param name="user">The user's model, which generated from request body.</param>
@@ -106,7 +134,7 @@ namespace Lab2.Controllers
         {
             try
             {
-                User deletedUser = userService.Delete(id);
+                var deletedUser = userService.Delete(id);
 
                 return Ok(deletedUser);
             }

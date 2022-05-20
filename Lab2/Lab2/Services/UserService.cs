@@ -15,15 +15,15 @@ namespace Lab2.Services
         private readonly UserContext context;
 
         /// <summary>
-        /// Attach roles to the user.
+        /// Assign roles to the user.
         /// </summary>
         /// <param name="roles">List of roles.</param>
         /// <param name="user">The model of user.</param>
-        private void AttachUserRole(ICollection<Role> roles, User user)
+        private void AssignRolesToUser(ICollection<Role> roles, User user)
         {
             foreach (var role in roles)
             {
-                Role foundRole = context.Roles.FirstOrDefault(_role => _role.Id == role.Id);
+                var foundRole = context.Roles.FirstOrDefault(_role => _role.Id == role.Id);
 
                 if (foundRole != null)
                 {
@@ -56,13 +56,35 @@ namespace Lab2.Services
         }
 
         /// <summary>
+        /// Return the user entity from database by id.
+        /// </summary>
+        /// <param name="id">The unique id of user in database.</param>
+        /// <returns>The entity of found user from database.</returns>
+        public User ReadOne(Guid id)
+        {
+            if (!context.Users.Any())
+            {
+                throw new DatabaseIsEmptyException();
+            }
+
+            var foundUser = context.Users.AsNoTracking().Include(user => user.Roles).FirstOrDefault(user => user.Id == id);
+
+            if (foundUser == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return foundUser;
+        }
+
+        /// <summary>
         /// Create new user entity in database.
         /// </summary>
         /// <param name="user">The model of user.</param>
         /// <returns>The entity of created user from database.</returns>
         public User Create(User user)
         {
-            User newUser = new User()
+            var newUser = new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = user.FirstName,
@@ -71,7 +93,7 @@ namespace Lab2.Services
                 ImageBlobKey = user.ImageBlobKey,
             };
 
-            AttachUserRole(user.Roles, newUser);
+            AssignRolesToUser(user.Roles, newUser);
 
             var createdEntity = (User)context.AddAndSave(newUser);
 
@@ -86,14 +108,14 @@ namespace Lab2.Services
         /// <returns>The entity of updated user from database.</returns>
         public User Update(Guid id, User user)
         {
-            User foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
+            var foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
 
             if (foundUser == null)
             {
                 throw new EntityNotFoundException();
             }
 
-            User updatedUser = new User()
+            var updatedUser = new User()
             {
                 Id = id,
                 FirstName = user.FirstName ?? foundUser.FirstName,
@@ -102,9 +124,9 @@ namespace Lab2.Services
                 ImageBlobKey = user.ImageBlobKey ?? foundUser.ImageBlobKey
             };
 
-            AttachUserRole(user.Roles, updatedUser);
+            AssignRolesToUser(user.Roles, updatedUser);
 
-            var updatedEntity = (User)context.UpdateAndSave(foundUser);
+            var updatedEntity = (User)context.UpdateAndSave(foundUser, updatedUser);
 
             return updatedEntity;
         }
@@ -116,7 +138,7 @@ namespace Lab2.Services
         /// <returns>The entity of deleted user from database.</returns>
         public User Delete(Guid id)
         {
-            User deletedUser = context.Users.FirstOrDefault(user => user.Id == id);
+            var deletedUser = context.Users.FirstOrDefault(user => user.Id == id);
 
             if (deletedUser == null)
             {

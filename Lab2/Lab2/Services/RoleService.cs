@@ -37,6 +37,28 @@ namespace Lab2.Services
         }
 
         /// <summary>
+        /// Return the role entity from database by id.
+        /// </summary>
+        /// <param name="id">The unique id of role in database.</param>
+        /// <returns>The entity of found role from database.</returns>
+        public Role ReadOne(Guid id)
+        {
+            if (!context.Users.Any())
+            {
+                throw new DatabaseIsEmptyException();
+            }
+
+            var foundRole = context.Roles.AsNoTracking().Include(role => role.Users).FirstOrDefault(role => role.Id == id);
+
+            if (foundRole == null)
+            {
+                throw new EntityNotFoundException();
+            }
+
+            return foundRole;
+        }
+
+        /// <summary>
         /// Create new role entity in database.
         /// </summary>
         /// <param name="role">The model of role.</param>

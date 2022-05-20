@@ -9,12 +9,10 @@ namespace Lab2.Models
     /// </summary>
     public class UserContext : DbContext
     {
-        public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
-
-
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
+        public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
@@ -26,29 +24,29 @@ namespace Lab2.Models
 
         }
 
-        public Object AddAndSave(Object entity)
+        public object AddAndSave(object entity)
         {
-            var createdEntity = this.Add(entity).Entity;
+            var createdEntity = Add(entity).Entity;
 
-            this.SaveChanges();
+            SaveChanges();
 
             return createdEntity;
         }
 
-        public Object UpdateAndSave(Object entity)
+        public object UpdateAndSave(object entity, object updEntity)
         {
-            var updatedEntity = this.Update(entity).Entity;
+            Entry(entity).CurrentValues.SetValues(updEntity);
 
-            this.SaveChanges();
+            SaveChanges();
 
-            return updatedEntity;
+            return Entry(updEntity).Entity;
         }
 
-        public Object DeleteAndSave(Object entity)
+        public object DeleteAndSave(object entity)
         {
-            var deleteEntity = this.Remove(entity).Entity;
+            var deleteEntity = Remove(entity).Entity;
 
-            this.SaveChanges();
+            SaveChanges();
 
             return deleteEntity;
         }

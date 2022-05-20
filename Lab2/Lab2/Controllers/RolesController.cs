@@ -51,6 +51,34 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
+        /// The endpoint for get method with 'api/users/roles/:id' path.
+        /// </summary>
+        /// <param name="id">The unique id of role.</param>
+        /// <returns>Return one role's entity from database by id as JSON string and send status code 200.</returns>
+        [HttpGet("{id}")]
+        public ActionResult<User> Get(Guid id)
+        {
+            try
+            {
+                var role = roleService.ReadOne(id);
+
+                return Ok(role);
+            }
+            catch (DatabaseIsEmptyException)
+            {
+                return NoContent();
+            }
+            catch (EntityNotFoundException)
+            {
+                return NotFound();
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        /// <summary>
         /// The endpoint for post method with 'api/users' path.
         /// </summary>
         /// <param name="role">The role's model, which generated from request body.</param>
@@ -61,7 +89,7 @@ namespace Lab2.Controllers
             try
             {
                 var createdRole = roleService.Create(role);
-                var uriToCreatedRole = new UriBuilder((Request.IsHttps ? "https://" : "http://") + Request.Host + Request.Path + createdRole.Id).Uri;
+                var uriToCreatedRole = new UriBuilder((Request.IsHttps ? "https://" : "http://"), Request.Host.Host, (int)Request.Host.Port, Request.Path + createdRole.Id).Uri;
 
                 return Created(uriToCreatedRole, createdRole);
             }
