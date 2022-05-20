@@ -89,7 +89,7 @@ namespace Lab2.Controllers
             try
             {
                 var createdUser = userService.Create(user);
-                var uriToCreatedUser = new UriBuilder((Request.IsHttps ? "https://" : "http://") + Request.Host + Request.Path + createdUser.Id).Uri;
+                var uriToCreatedUser = new UriBuilder(Request.IsHttps ? "https://" : "http://", Request.Host.Host, (int)Request.Host.Port, Request.Path + createdUser.Id).Uri;
 
                 return Created(uriToCreatedUser, createdUser);
             }

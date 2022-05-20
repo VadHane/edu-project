@@ -40,7 +40,7 @@ namespace Lab2.Models
         public string ImageBlobKey { get; set; }
 
         /// <summary>
-        /// Collections of roles of user.
+        /// Collection of roles of user.
         /// </summary>
         public virtual ICollection<Role> Roles { get; set; }
 

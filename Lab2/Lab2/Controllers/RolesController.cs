@@ -89,7 +89,7 @@ namespace Lab2.Controllers
             try
             {
                 var createdRole = roleService.Create(role);
-                var uriToCreatedRole = new UriBuilder((Request.IsHttps ? "https://" : "http://"), Request.Host.Host, (int)Request.Host.Port, Request.Path + createdRole.Id).Uri;
+                var uriToCreatedRole = new UriBuilder(Request.IsHttps ? "https://" : "http://", Request.Host.Host, (int)Request.Host.Port, Request.Path + createdRole.Id).Uri;
 
                 return Created(uriToCreatedRole, createdRole);
             }

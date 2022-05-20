@@ -67,7 +67,7 @@ namespace Lab2.Services
         {
             role.Id = Guid.NewGuid();
 
-            Role createdEntity = (Role)context.AddAndSave(role);
+            var createdEntity = (Role)context.AddAndSave(role);
 
             return createdEntity;
         }
