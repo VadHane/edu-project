@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
+using Lab2.Exceptions;
 using Lab2.Models;
 
 namespace Lab2.Services
@@ -28,10 +30,10 @@ namespace Lab2.Services
         {
             if (!context.Roles.Any())
             {
-                throw new Exception(Constants.DATABASE_IS_EMPTY_TEXT);
+                throw new DatabaseIsEmptyException();
             }
 
-            return context.Roles.ToArray();
+            return context.Roles.AsNoTracking().Include(role => role.Users).ToArray();
         }
 
         /// <summary>
@@ -43,8 +45,7 @@ namespace Lab2.Services
         {
             role.Id = Guid.NewGuid();
 
-            Role createdEntity = context.Add(role).Entity;
-            context.SaveChanges();
+            Role createdEntity = (Role)context.AddAndSave(role);
 
             return createdEntity;
         }

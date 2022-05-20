@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Lab2.Services;
 using Lab2.Models;
+using Lab2.Exceptions;
 
 namespace Lab2.Controllers
 {
@@ -37,15 +38,15 @@ namespace Lab2.Controllers
             {
                 var roles = roleService.ReadAll();
 
-                Response.StatusCode = 200;
-
-                return roles;
+                return Ok(roles);
             }
-            catch (Exception exception)
+            catch (DatabaseIsEmptyException)
             {
-                Response.StatusCode = exception.Message == Constants.DATABASE_IS_EMPTY_TEXT ? 204 : 500;
-
-                return null;
+                return NoContent();
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -60,16 +61,13 @@ namespace Lab2.Controllers
             try
             {
                 var createdRole = roleService.Create(role);
+                var uriToCreatedRole = new UriBuilder((Request.IsHttps ? "https://" : "http://") + Request.Host + Request.Path + createdRole.Id).Uri;
 
-                Response.StatusCode = 201;
-
-                return createdRole;
+                return Created(uriToCreatedRole, createdRole);
             }
             catch
             {
-                Response.StatusCode = 500;
-
-                return null;
+                return StatusCode(500);
             }
         }
     }

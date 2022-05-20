@@ -24,7 +24,6 @@ namespace Lab2
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
-
             services.AddControllers();
             services.AddDbContext<UserContext>(
                 options => options.UseSqlServer(

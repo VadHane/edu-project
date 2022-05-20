@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Lab2.Models;
 using Lab2.Services;
+using Lab2.Exceptions;
 
 namespace Lab2.Controllers
 {
@@ -37,15 +38,15 @@ namespace Lab2.Controllers
             {
                 var users = userService.ReadAll();
 
-                Response.StatusCode = 200;
-
-                return users;
+                return Ok(users);
             }
-            catch (Exception exception)
+            catch (DatabaseIsEmptyException)
             {
-                Response.StatusCode = exception.Message == Constants.DATABASE_IS_EMPTY_TEXT ? 204 : 500;
-
-                return null;
+                return NoContent();
+            } 
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -60,16 +61,13 @@ namespace Lab2.Controllers
             try
             {
                 var createdUser = userService.Create(user);
+                var uriToCreatedUser = new UriBuilder((Request.IsHttps ? "https://" : "http://") + Request.Host + Request.Path + createdUser.Id).Uri;
 
-                Response.StatusCode = 201;
-
-                return createdUser;
+                return Created(uriToCreatedUser, createdUser);
             }
             catch
             {
-                Response.StatusCode = 500;
-
-                return null;
+                return StatusCode(500);
             }
         }
 
@@ -86,15 +84,15 @@ namespace Lab2.Controllers
             {
                 var updatedUser = userService.Update(id, user);
 
-                Response.StatusCode = 200;
-
-                return updatedUser;
+                return Ok(updatedUser);
             }
-            catch (Exception exception)
+            catch (EntityNotFoundException)
             {
-                Response.StatusCode = exception.Message == Constants.NOT_FOUND_EXCEPTION ? 404 : 500;
-
-                return null;
+                return NotFound();
+            } 
+            catch
+            {
+                return StatusCode(500);
             }
         }
 
@@ -110,15 +108,15 @@ namespace Lab2.Controllers
             {
                 User deletedUser = userService.Delete(id);
 
-                Response.StatusCode = 200;
-
-                return deletedUser;
+                return Ok(deletedUser);
             }
-            catch (Exception exception)
+            catch (EntityNotFoundException)
             {
-                Response.StatusCode = exception.Message == Constants.NOT_FOUND_EXCEPTION ? 404 : 500;
-
-                return null;
+                return NotFound();
+            }
+            catch
+            {
+                return StatusCode(500);
             }
         }
     }

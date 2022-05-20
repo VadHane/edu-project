@@ -1,5 +1,6 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System;
+﻿using System;
+using Microsoft.EntityFrameworkCore;
+
 
 namespace Lab2.Models
 {
@@ -23,6 +24,33 @@ namespace Lab2.Models
                 new Role() { Id = Guid.NewGuid(), Name = "Admin" }
             );
 
+        }
+
+        public Object AddAndSave(Object entity)
+        {
+            var createdEntity = this.Add(entity).Entity;
+
+            this.SaveChanges();
+
+            return createdEntity;
+        }
+
+        public Object UpdateAndSave(Object entity)
+        {
+            var updatedEntity = this.Update(entity).Entity;
+
+            this.SaveChanges();
+
+            return updatedEntity;
+        }
+
+        public Object DeleteAndSave(Object entity)
+        {
+            var deleteEntity = this.Remove(entity).Entity;
+
+            this.SaveChanges();
+
+            return deleteEntity;
         }
     }
 }

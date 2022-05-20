@@ -1,6 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using Microsoft.EntityFrameworkCore;
 using Lab2.Models;
+using Lab2.Exceptions;
 
 namespace Lab2.Services
 {
@@ -10,6 +13,24 @@ namespace Lab2.Services
         /// The context of database.
         /// </summary>
         private readonly UserContext context;
+
+        /// <summary>
+        /// Attach roles to the user.
+        /// </summary>
+        /// <param name="roles">List of roles.</param>
+        /// <param name="user">The model of user.</param>
+        private void AttachUserRole(ICollection<Role> roles, User user)
+        {
+            foreach (var role in roles)
+            {
+                Role foundRole = context.Roles.FirstOrDefault(_role => _role.Id == role.Id);
+
+                if (foundRole != null)
+                {
+                    user.Roles.Add(foundRole);
+                }
+            }
+        }
 
         /// <summary>
         /// Default constructor.
@@ -28,10 +49,10 @@ namespace Lab2.Services
         {
             if (!context.Users.Any())
             {
-                throw new Exception(Constants.DATABASE_IS_EMPTY_TEXT);
+                throw new DatabaseIsEmptyException();
             }
 
-            return context.Users.ToArray();
+            return context.Users.AsNoTracking().Include(user => user.Roles).ToArray();
         }
 
         /// <summary>
@@ -50,18 +71,9 @@ namespace Lab2.Services
                 ImageBlobKey = user.ImageBlobKey,
             };
 
-            foreach (Role role in user.Roles)
-            {
-                Role foundRole = context.Roles.Where(_role => _role.Id == role.Id).First();
+            AttachUserRole(user.Roles, newUser);
 
-                if (foundRole != null)
-                {
-                    newUser.Roles.Add(foundRole);
-                }
-            }
-
-            User createdEntity = context.Add(newUser).Entity;
-            context.SaveChanges();
+            var createdEntity = (User)context.AddAndSave(newUser);
 
             return createdEntity;
         }
@@ -78,7 +90,7 @@ namespace Lab2.Services
 
             if (foundUser == null)
             {
-                throw new Exception(Constants.NOT_FOUND_EXCEPTION);
+                throw new EntityNotFoundException();
             }
 
             User updatedUser = new User()
@@ -90,18 +102,9 @@ namespace Lab2.Services
                 ImageBlobKey = user.ImageBlobKey ?? foundUser.ImageBlobKey
             };
 
-            foreach (Role role in user.Roles)
-            {
-                Role foundRole = context.Roles.Where(_role => _role.Id == role.Id).First();
+            AttachUserRole(user.Roles, updatedUser);
 
-                if (foundRole != null)
-                {
-                    updatedUser.Roles.Add(foundRole);
-                }
-            }
-
-            User updatedEntity = context.Users.Update(user).Entity;
-            context.SaveChanges();
+            var updatedEntity = (User)context.UpdateAndSave(foundUser);
 
             return updatedEntity;
         }
@@ -113,15 +116,14 @@ namespace Lab2.Services
         /// <returns>The entity of deleted user from database.</returns>
         public User Delete(Guid id)
         {
-            User deletedEntity = context.Users.FirstOrDefault(user => user.Id == id);
+            User deletedUser = context.Users.FirstOrDefault(user => user.Id == id);
 
-            if (deletedEntity == null)
+            if (deletedUser == null)
             {
-                throw new Exception(Constants.NOT_FOUND_EXCEPTION);
+                throw new EntityNotFoundException();
             }
 
-            context.Users.Remove(deletedEntity);
-            context.SaveChanges();
+            var deletedEntity = (User)context.DeleteAndSave(deletedUser);
 
             return deletedEntity;
         }
