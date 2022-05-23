@@ -21,7 +21,7 @@ namespace Lab2.Models
         public string Name { get; set; }
 
         /// <summary>
-        /// Collections of users, which have this role.
+        /// Collection of users, which have this role.
         /// </summary>
         public virtual ICollection<User> Users { get; set; }
 
