@@ -21,6 +21,15 @@ namespace Lab2
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors(option =>
+            {
+                option.AddPolicy("CORSPolicy",
+                    policy => 
+                    {
+                        policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
+                    });
+            });
+
             services.AddControllersWithViews().AddNewtonsoftJson(options =>
                 options.SerializerSettings.ReferenceLoopHandling = Newtonsoft.Json.ReferenceLoopHandling.Ignore
             );
@@ -40,6 +49,8 @@ namespace Lab2
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors("CORSPolicy");
 
             app.UseRouting();
 
