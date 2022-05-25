@@ -1,21 +1,17 @@
-import React from 'react';
+import React, {FunctionComponent} from 'react';
 import {BrowserRouter} from 'react-router-dom';
-import UserList from './components/UserList/UsersTable';
+import UserSTable from './components/UsersTable/UsersTable';
 import './App.css';
 
-/**
- *  The main component of this site.
- * @return {JSX.Element} JSX
- */
-function App(): JSX.Element {
+const App: FunctionComponent = () => {
   return (
     <BrowserRouter>
       <div className="">
-        <UserList />
+        <UserSTable />
 
       </div>
     </BrowserRouter>
   );
-}
+};
 
 export default App;

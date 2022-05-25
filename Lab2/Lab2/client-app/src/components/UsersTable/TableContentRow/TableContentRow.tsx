@@ -1,13 +1,8 @@
 import React, {useState, useEffect, FunctionComponent} from 'react';
 import {Role} from '../../../models/Role';
 import {User} from '../../../models/User';
+import {TableContentRowProps} from './TableContentRow.types';
 import './TableContentRow.css';
-
-type TableContentRowProps = {
-  user: User,
-  onDelete: (id: string) => any,
-  onEdit: (id: string) => any,
-}
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
   const [user, setUser] = useState<User>(props.user);
