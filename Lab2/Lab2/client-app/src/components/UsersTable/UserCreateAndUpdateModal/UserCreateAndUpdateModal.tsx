@@ -1,23 +1,14 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {NavLink} from 'react-router-dom';
 import {Role} from '../../../models/Role';
-import {User} from '../../../models/User';
 import AddedRolesList from './AddedRolesList/AddedRolesList';
 import AvailableRolesList from './AvailableRolesList/AvailableRolesList';
+import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
 import './UserCreateAndUpdateModal.css';
 
-type UserCreateAndUpdateModalProps = {
-    user: User,
-    btnCaption: string
-    getAllRolesAsync: () => Promise<Array<Role>>
-    createNewRole: (role: Role) => Promise<Role>
-    deleteImageAsync: (imageBlobKey: string) => Promise<number>
-    postImageAsync: (image: File) => Promise<string>
-    addUserAsync: (user: User, file: any) => Promise<number>
-}
-
 const UserCreateAndUpdateModal:
-FunctionComponent<UserCreateAndUpdateModalProps> = (props) => {
+FunctionComponent<UserCreateAndUpdateModalProps> =
+(props: UserCreateAndUpdateModalProps) => {
   const [firstName, setFirstName] = useState<string>(props.user.firstName);
   const [lastName, setLastName] = useState<string>(props.user.lastName);
   const [email, setEmail] = useState<string>(props.user.email);
@@ -50,7 +41,7 @@ FunctionComponent<UserCreateAndUpdateModalProps> = (props) => {
             value={firstName}
             onChange={(event) => {
               setFirstName(event.target.value);
-            }}/><br></br>
+            }}/><br/>
 
           <input type="text"
             name='title'
@@ -59,7 +50,7 @@ FunctionComponent<UserCreateAndUpdateModalProps> = (props) => {
             value={lastName}
             onChange={(event) => {
               setLastName(event.target.value);
-            }}/><br></br>
+            }}/><br/>
 
           <input type="email"
             name='title'
@@ -68,7 +59,7 @@ FunctionComponent<UserCreateAndUpdateModalProps> = (props) => {
             value={email}
             onChange={(event) => {
               setEmail(event.target.value);
-            }}/><br></br>
+            }}/><br/>
 
           <AddedRolesList
             roles={addedRoles}

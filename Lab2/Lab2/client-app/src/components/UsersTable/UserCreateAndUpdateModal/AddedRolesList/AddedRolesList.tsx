@@ -1,11 +1,7 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {Role} from '../../../../models/Role';
+import AddedRolesListProps from './AddedRolesList.types';
 import './AddedRolesList.css';
-
-interface AddedRolesListProps {
-    roles: Array<Role>,
-    removeAddedRole: (role: Role) => void
-}
 
 const AddedRolesList: FunctionComponent<AddedRolesListProps> =
 (props: AddedRolesListProps) => {

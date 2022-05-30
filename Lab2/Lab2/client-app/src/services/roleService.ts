@@ -1,11 +1,8 @@
 import {Role} from '../models/Role';
 
-const host: string = 'https://localhost:44303/';
-const path: string = 'api/users/roles/';
+const url = `${process.env.REACT_APP_API_URL}users/roles/`;
 
 export const getAllRolesAsync = async (): Promise<Array<Role>> => {
-  const url = `${host}${path}`;
-
   return fetch(url)
       .then((response) => {
         return response.json();
@@ -16,11 +13,10 @@ export const getAllRolesAsync = async (): Promise<Array<Role>> => {
 };
 
 export const createNewRole =async (role:Role): Promise<Role> => {
-  const url = `${host}${path}`;
   const requestBody = new FormData();
 
   requestBody.append('name', `${role.name}`);
-  debugger;
+
   return fetch(url, {
     method: 'POST',
     body: requestBody,

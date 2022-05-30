@@ -1,22 +1,17 @@
 import {User} from '../models/User';
 
-const host: string = 'https://localhost:44303/';
-const path: string = 'api/users/';
+const path: string = 'users/';
 
 export const getAllUsersAsync = async (): Promise<Array<User>> => {
-  const url = `${host}${path}`;
-
+  const url = `${process.env.REACT_APP_API_URL}${path}`;
+  console.log(process.env.REACT_APP_API_URL);
   return fetch(url)
-      .then((response) => {
-        return response.json();
-      })
-      .then((data: Array<User>) => {
-        return data;
-      });
+      .then((response) => response.json())
+      .then((data: Array<User>) => data);
 };
 
-export const addUserAsync =async (user:User, file: any): Promise<number> => {
-  const url = `${host}${path}`;
+export const addUserAsync =async (user:User, file: any): Promise<User> => {
+  const url = `${process.env.REACT_APP_API_URL}${path}`;
 
   const requestBody = new FormData();
   requestBody.append('firstName', user.firstName);
@@ -29,7 +24,6 @@ export const addUserAsync =async (user:User, file: any): Promise<number> => {
   return fetch(url, {
     method: 'POST',
     body: requestBody})
-      .then((response) => {
-        return response.status;
-      });
+      .then((response) => response.json())
+      .then((data: User) => data);
 };

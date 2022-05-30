@@ -10,10 +10,19 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
   useEffect(() => {
     setUser(props.user);
   }, [props.user]);
+
+  const getImagePath = (): string => {
+    if (props.user.imageBlobKey !== '/') {
+      return 'https://localhost:44303/' + props.user.imageBlobKey;
+    }
+
+    return 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
+  };
+
   return (
     <tr>
       <th className="picture">
-        <img src={props.user.imageBlobKey != '/' ? props.user.imageBlobKey : 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'} alt="UserPhoto" />
+        <img src={getImagePath()} alt="UserPhoto" />
       </th>
       <th className="name">{user.firstName}</th>
       <th className="surname">{user.lastName}</th>

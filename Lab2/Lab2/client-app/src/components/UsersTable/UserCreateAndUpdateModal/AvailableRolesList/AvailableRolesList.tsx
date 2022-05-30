@@ -12,6 +12,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> =
 
   useEffect(() => {
     setRoles([...props.roles]);
+    debugger;
   }, [props.roles.length]);
 
   useEffect(() => {
@@ -47,7 +48,6 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> =
       <img src="https://cdn-icons-png.flaticon.com/512/1828/1828743.png"
         alt="Aprove"
         onClick={() => {
-          debugger;
           props.createNewRole({id: '', name: inputNameOfRole});
           setItNewRole(false);
         }}/>

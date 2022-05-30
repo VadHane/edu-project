@@ -51,8 +51,8 @@ namespace Lab2.Services
         {
             string filePath;
             
-            filePath = Path.Combine(env.ContentRootPath, "Images", DateTime.Now.ToBinary().ToString() + "." + file.FileName.Split('.').Last());
-            using var fileStream = new FileStream(filePath, FileMode.Create);
+            filePath = "Images/" + Guid.NewGuid() + "." + file.FileName.Split('.').Last();
+            using var fileStream = new FileStream(Path.Combine(env.WebRootPath, filePath), FileMode.Create);
             file.CopyTo(fileStream);
 
 

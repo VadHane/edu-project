@@ -52,6 +52,8 @@ namespace Lab2
 
             app.UseCors("CORSPolicy");
 
+            app.UseStaticFiles();
+
             app.UseRouting();
 
             app.UseEndpoints(

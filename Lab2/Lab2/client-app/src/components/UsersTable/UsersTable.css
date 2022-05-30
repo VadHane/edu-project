@@ -13,11 +13,9 @@ th {
 }
 td { 
     height: 40px;
-
 } 
 th, td {
     border: 1px solid black;
-    
 }
 .scroll-list {
     height: 80vh;
