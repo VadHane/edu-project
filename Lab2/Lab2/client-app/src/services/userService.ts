@@ -14,12 +14,12 @@ export const addUserAsync =async (user:User, file: any): Promise<User> => {
   const url = `${process.env.REACT_APP_API_URL}${path}`;
 
   const requestBody = new FormData();
+
   requestBody.append('firstName', user.firstName);
   requestBody.append('lastName', user.lastName);
   requestBody.append('email', user.email);
-  requestBody.append('imageBlobKey', user.imageBlobKey);
+  requestBody.append('files', file);
   requestBody.append('roles', JSON.stringify(user.roles));
-  requestBody.append('file', file);
 
   return fetch(url, {
     method: 'POST',
