@@ -34,7 +34,7 @@
     align-items: center;
 }
 
-.window form span {
+.exceptionMessage {
     color: red;
     font: 10px sans-serif;
 }

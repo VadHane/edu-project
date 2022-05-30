@@ -149,7 +149,7 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
       return false;
     }
 
-    if (file.current?.files?.item(0)?.type !== 'image') {
+    if (file.current?.files?.item(0)?.type.split('/')[0] !== 'image') {
       setExceptionMessage('The file must be image.');
       return false;
     }
