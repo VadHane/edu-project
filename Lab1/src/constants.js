@@ -4,7 +4,7 @@
 export const CORS_RES_HEADERS = {
     'Content-Type': 'application/json',
     /** Url address of UI. */
-    'Access-Control-Allow-Origin': 'http://localhost:3005'
+    'Access-Control-Allow-Origin': '*'
 };
 
 export const FILES_WERE_NOT_FOUND_TEXT = 'Files were not found';

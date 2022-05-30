@@ -84,7 +84,7 @@ namespace Lab2.Controllers
         /// <param name="role">The role's model, which generated from request body.</param>
         /// <returns>Return the created role entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
-        public ActionResult<Role> Post([FromBody]Role role)
+        public ActionResult<Role> Post([FromForm]Role role)
         {
             try
             {

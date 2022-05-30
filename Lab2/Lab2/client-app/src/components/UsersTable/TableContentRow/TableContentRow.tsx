@@ -10,11 +10,10 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
   useEffect(() => {
     setUser(props.user);
   }, [props.user]);
-
   return (
     <tr>
       <th className="picture">
-        <img src="https://cdn-icons-png.flaticon.com/512/1077/1077114.png" alt="UserPhoto" />
+        <img src={props.user.imageBlobKey != '/' ? props.user.imageBlobKey : 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'} alt="UserPhoto" />
       </th>
       <th className="name">{user.firstName}</th>
       <th className="surname">{user.lastName}</th>
@@ -31,7 +30,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
           onClick={() => props.onEdit(user.id)}
         />
         <img
-          src="https://cdn-icons.flaticon.com/png/512/484/premium/484611.png?token=exp=1653403061~hmac=228efa035a4b45bca41303d3996a68ea"
+          src="https://cdn-icons.flaticon.com/png/512/484/premium/484611.png?token=exp=1653900152~hmac=38656b6a00192dd1df917508e424bddb"
           alt="Delete"
           onClick={() => props.onDelete(user.id)}
         />

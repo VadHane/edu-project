@@ -1,14 +1,20 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
 import {User} from '../../models/User';
-import {getAllUsers} from '../../services/userService';
+import {Role} from '../../models/Role';
+import {getAllUsersAsync} from '../../services/userService';
 import TableContentRow from './TableContentRow/TableContentRow';
+import {Route, Routes} from 'react-router-dom';
+import UserCreateAndUpdateModal from
+  './UserCreateAndUpdateModal/UserCreateAndUpdateModal';
+import AddUserButton from './AddUserButton/AddUserButton';
+import UsersTableProps from './UsersTable.types';
 import './UsersTable.css';
 
-const UsersTable: FunctionComponent = () => {
+const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
   const [users, setUsers] = useState<Array<User>>([]);
 
   useEffect(() => {
-    getAllUsers().then((data: Array<User>) =>{
+    getAllUsersAsync().then((data: Array<User>) =>{
       setUsers(data);
     });
   }, []);
@@ -46,8 +52,34 @@ const UsersTable: FunctionComponent = () => {
     </table>
   );
 
+  const emptyUser: User = {
+    id: '',
+    firstName: '',
+    lastName: '',
+    email: '',
+    imageBlobKey: '',
+    roles: [],
+  };
+
   return (
     <div className="list">
+
+      <Routes>
+        <Route path='/add' element={
+          <UserCreateAndUpdateModal
+            user={emptyUser}
+            btnCaption={'Add new user'}
+            getAllRolesAsync={() => props.getAllRolesAsync()}
+            createNewRole={(role: Role) => props.createNewRole(role)}
+            deleteImageAsync={(imageBlobKey: string) =>
+              props.deleteImageAsync(imageBlobKey)}
+            postImageAsync={(image: File) => props.postImageAsync(image)}
+            addUserAsync={(user: User, file: File) =>
+              props.addUserAsync(user, file)}
+          />}/>
+      </Routes>
+
+      <AddUserButton />
       {tableHeaderNode}
       {usersRowsNode}
     </div>

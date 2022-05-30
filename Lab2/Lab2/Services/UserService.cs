@@ -4,6 +4,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Lab2.Models;
 using Lab2.Exceptions;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace Lab2.Services
 {
@@ -13,6 +16,8 @@ namespace Lab2.Services
         /// The context of database.
         /// </summary>
         private readonly UserContext context;
+
+        private readonly IWebHostEnvironment env;
 
         /// <summary>
         /// Assign roles to the user.
@@ -36,10 +41,32 @@ namespace Lab2.Services
         /// Default constructor.
         /// </summary>
         /// <param name="_context">The context of database.</param>
-        public UserService(UserContext _context)
+        public UserService(UserContext _context, IWebHostEnvironment _env)
         {
             context = _context;
+            env = _env;
         }
+
+        private string CreateFile(IFormFile file)
+        {
+            string filePath;
+            
+            filePath = Path.Combine(env.ContentRootPath, "Images", DateTime.Now.ToBinary().ToString() + "." + file.FileName.Split('.').Last());
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            file.CopyTo(fileStream);
+
+
+            return filePath;
+        }
+
+        private static void DeleteFile(string path)
+        {
+            if (File.Exists(path))
+            {
+                File.Delete(path);
+            }
+        }
+
 
         /// <summary>
         /// Return all users entity from database.
@@ -82,15 +109,25 @@ namespace Lab2.Services
         /// </summary>
         /// <param name="user">The model of user.</param>
         /// <returns>The entity of created user from database.</returns>
-        public User Create(User user)
+        public User Create(User user, IFormFile file)
         {
+            string filePath;
+
+            if (file != null)
+            {
+                filePath = CreateFile(file);
+            } else
+            {
+                filePath = "/";
+            }
+
             var newUser = new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                ImageBlobKey = user.ImageBlobKey,
+                ImageBlobKey = filePath,
             };
 
             AssignRolesToUser(user.Roles, newUser);
@@ -106,13 +143,27 @@ namespace Lab2.Services
         /// <param name="id">The unique id of user in database.</param>
         /// <param name="user">New model of user.</param>
         /// <returns>The entity of updated user from database.</returns>
-        public User Update(Guid id, User user)
+        public User Update(Guid id, User user, IFormFile file)
         {
             var foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
 
             if (foundUser == null)
             {
                 throw new EntityNotFoundException();
+            }
+
+            if (foundUser.ImageBlobKey != "/")
+            {
+                DeleteFile(foundUser.ImageBlobKey);
+            }
+
+            if (file != null)
+            {
+                user.ImageBlobKey = CreateFile(file);
+            }
+            else
+            {
+                user.ImageBlobKey = "/";
             }
 
             var updatedUser = new User()
@@ -143,6 +194,11 @@ namespace Lab2.Services
             if (deletedUser == null)
             {
                 throw new EntityNotFoundException();
+            }
+
+            if (deletedUser.ImageBlobKey != "")
+            {
+                DeleteFile(deletedUser.ImageBlobKey);
             }
 
             var deletedEntity = (User)context.DeleteAndSave(deletedUser);

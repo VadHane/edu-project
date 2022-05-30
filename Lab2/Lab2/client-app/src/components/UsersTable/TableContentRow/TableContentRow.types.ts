@@ -4,4 +4,4 @@ export type TableContentRowProps = {
     user: User,
     onDelete: (id: string) => any,
     onEdit: (id: string) => any,
-  }
+};

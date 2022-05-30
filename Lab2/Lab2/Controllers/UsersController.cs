@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Lab2.Models;
 using Lab2.Services;
 using Lab2.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace Lab2.Controllers
 {
@@ -84,17 +85,18 @@ namespace Lab2.Controllers
         /// <param name="user">The user's model, which generated from request body.</param>
         /// <returns>Return the created user entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
-        public ActionResult<User> Post([FromBody]User user)
+        public ActionResult<User> Post([FromForm]User user, IFormFile file)
         {
             try
             {
-                var createdUser = userService.Create(user);
+                var createdUser = userService.Create(user, file);
                 var uriToCreatedUser = new UriBuilder(Request.IsHttps ? "https://" : "http://", Request.Host.Host, (int)Request.Host.Port, Request.Path + createdUser.Id).Uri;
 
                 return Created(uriToCreatedUser, createdUser);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return StatusCode(500);
             }
         }
@@ -106,11 +108,11 @@ namespace Lab2.Controllers
         /// <param name="user">The user's model, which generated from request body.</param>
         /// <returns>Return the updated user entity from database as JSON string and send status code 200.</returns>
         [HttpPut("{id}")]
-        public ActionResult<User> Put(Guid id, [FromBody]User user)
+        public ActionResult<User> Put(Guid id, [FromForm]User user, IFormFile file)
         {
             try
             {
-                var updatedUser = userService.Update(id, user);
+                var updatedUser = userService.Update(id, user, file);
 
                 return Ok(updatedUser);
             }
