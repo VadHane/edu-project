@@ -12,7 +12,6 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> =
 
   useEffect(() => {
     setRoles([...props.roles]);
-    debugger;
   }, [props.roles.length]);
 
   useEffect(() => {

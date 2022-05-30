@@ -1,10 +1,11 @@
 import React, {FunctionComponent, useEffect, useState} from 'react';
-import {NavLink} from 'react-router-dom';
+import {NavLink, useNavigate} from 'react-router-dom';
 import {Role} from '../../../models/Role';
 import AddedRolesList from './AddedRolesList/AddedRolesList';
 import AvailableRolesList from './AvailableRolesList/AvailableRolesList';
 import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
 import './UserCreateAndUpdateModal.css';
+import {User} from '../../../models/User';
 
 const UserCreateAndUpdateModal:
 FunctionComponent<UserCreateAndUpdateModalProps> =
@@ -14,6 +15,8 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
   const [email, setEmail] = useState<string>(props.user.email);
   const [addedRoles, setAddedRoles] = useState<Array<Role>>(props.user.roles);
   const [availableRoles, setAvailableRoles] = useState<Array<Role>>([]);
+  const [exceptionMessage, setExceptionMessage] = useState<string>('');
+  const navigate = useNavigate();
 
   const file = React.createRef<HTMLInputElement>();
 
@@ -22,18 +25,28 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
       setAvailableRoles([...roles]));
   }, []);
 
+  useEffect(() => {
+    setExceptionMessage('');
+  }, [firstName, lastName, email]);
+
   const backgroundNode: React.ReactNode = (
     <NavLink to={'/'} title='Close modal window'>
       <div className="background"></div>
     </NavLink>
   );
 
+  const exceptionString: React.ReactNode = (
+    <div>
+      <span>{exceptionMessage}</span>
+    </div>
+  );
+
   const modalWindowNode: React.ReactNode = (
     <div className="window">
       <form>
         <div className="formRows">
-          <img src={props.user.imageBlobKey !== '' ? props.user.imageBlobKey : 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png'} />
           <br/>
+          {exceptionString}
           <input type="text"
             name='title'
             id='title'
@@ -71,24 +84,14 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
             addRole={(role: Role) => addRole(role)}
             createNewRole={(role: Role) => createNewRole(role)}/>
 
-          <input type="file" ref={file}/>
-
-          <NavLink to={'/'}>
-            <button onClick={() => {
-              props.addUserAsync({
-                id: '',
-                firstName: firstName,
-                lastName: lastName,
-                email: email,
-                imageBlobKey: props.user.imageBlobKey,
-                roles: addedRoles,
-              }, file.current?.files?.item(0));
-            }}>
-              {props.btnCaption}
-            </button>
-          </NavLink>
+          <input type="file"
+            accept='image/*'
+            ref={file}/>
         </div>
       </form>
+      <button onClick={() => createNewUser()}>
+        {props.btnCaption}
+      </button>
     </div>
   );
 
@@ -123,6 +126,53 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
       setAvailableRoles((currentValue: Array<Role>) =>
         [...currentValue, role]);
     });
+  };
+
+  const validateInputFields = (): boolean => {
+    if (firstName.trim().length < 3) {
+      setExceptionMessage('Length of username can not be less than 3 symbols.');
+      return false;
+    }
+
+    if (lastName.trim().length < 3) {
+      setExceptionMessage('Length of surname can not be less than 3 symbols.');
+      return false;
+    }
+
+    if (email.trim().length < 3) {
+      setExceptionMessage('Length of email can not be less than 3 symbols.');
+      return false;
+    }
+
+    if (!email.includes('@')) {
+      setExceptionMessage('Email must contain "@" symbol.');
+      return false;
+    }
+
+    if (file.current?.files?.item(0)?.type !== 'image') {
+      setExceptionMessage('The file must be image.');
+      return false;
+    }
+
+    return true;
+  };
+
+  const createNewUser = (): void => {
+    if (!validateInputFields()) return;
+
+    const newUser: User = {
+      id: '',
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      imageBlobKey: props.user.imageBlobKey,
+      roles: addedRoles,
+    };
+
+    const userPhoto = file.current?.files?.item(0);
+
+    props.addUserAsync(newUser, userPhoto);
+    navigate('/');
   };
 
   return (
