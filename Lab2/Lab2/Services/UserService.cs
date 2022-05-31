@@ -49,12 +49,12 @@ namespace Lab2.Services
 
         private string CreateFile(IFormFile file)
         {
-            string filePath;
-            
-            filePath = "Images/" + Guid.NewGuid() + "." + file.FileName.Split('.').Last();
-            using var fileStream = new FileStream(Path.Combine(env.WebRootPath, filePath), FileMode.Create);
-            file.CopyTo(fileStream);
+            string fileExtention = Path.GetExtension(file.FileName);
+            string fileName = Guid.NewGuid() + "." + fileExtention;
+            string filePath = Path.Combine(env.WebRootPath, "Images/", fileName);
 
+            using var fileStream = new FileStream(filePath, FileMode.Create);
+            file.CopyTo(fileStream);
 
             return filePath;
         }

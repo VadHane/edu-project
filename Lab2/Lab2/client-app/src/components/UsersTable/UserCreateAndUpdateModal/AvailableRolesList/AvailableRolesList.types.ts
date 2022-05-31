@@ -1,10 +1,10 @@
-import {Role} from '../../../../models/Role';
+import { Role } from '../../../../models/Role';
 
 type AvailableRolesListProps = {
-    roles: Array<Role>,
-    addedRoles: Array<Role>,
-    addRole: (role: Role) => void,
-    createNewRole: (role: Role) => void,
+    roles: Array<Role>;
+    addedRoles: Array<Role>;
+    addRole: (role: Role) => void;
+    createNewRole: (role: Role) => void;
 };
 
 export default AvailableRolesListProps;
