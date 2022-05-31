@@ -36,7 +36,7 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
   );
 
   const exceptionString: React.ReactNode = (
-    <div>
+    <div className='exceptionMessage'>
       <span>{exceptionMessage}</span>
     </div>
   );
@@ -144,8 +144,9 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
       return false;
     }
 
-    if (!email.includes('@')) {
-      setExceptionMessage('Email must contain "@" symbol.');
+    const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
+    if (!email.match(pattern)) {
+      setExceptionMessage('Incorrect email.');
       return false;
     }
 
@@ -171,8 +172,13 @@ FunctionComponent<UserCreateAndUpdateModalProps> =
 
     const userPhoto = file.current?.files?.item(0);
 
-    props.addUserAsync(newUser, userPhoto);
-    navigate('/');
+    props.resultActionAsync(newUser, userPhoto).then((done: Boolean) => {
+      if (done) {
+        navigate('/');
+      } else {
+        setExceptionMessage('Try again later.');
+      }
+    });
   };
 
   return (

@@ -17,7 +17,7 @@ const App: FunctionComponent = () => {
             <UsersTable
               getAllRolesAsync={() => getAllRolesAsync()}
               createNewRole={(role: Role) => createNewRole(role)}
-              addUserAsync={(user: User, file: File) =>
+              createUserAsync={(user: User, file: File) =>
                 addUserAsync(user, file)}
             />}/>
         </Routes>

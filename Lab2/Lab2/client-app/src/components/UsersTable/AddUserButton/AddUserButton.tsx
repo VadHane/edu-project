@@ -1,11 +1,16 @@
-import {FunctionComponent} from 'react';
-import React, {useNavigate} from 'react-router-dom';
+import React, {FunctionComponent} from 'react';
+import {useNavigate} from 'react-router-dom';
 import './AddUserButton.css';
 
 const AddUserButton: FunctionComponent = () => {
   const navigate = useNavigate();
+
+  const onClickHandler = () => {
+    navigate('/add');
+  };
+
   return (
-    <button onClick={() => navigate('/add')}>Add new user</button>
+    <button onClick={onClickHandler}>Add new user</button>
   );
 };
 

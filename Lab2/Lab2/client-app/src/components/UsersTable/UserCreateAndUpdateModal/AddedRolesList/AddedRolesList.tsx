@@ -9,7 +9,7 @@ const AddedRolesList: FunctionComponent<AddedRolesListProps> =
 
   useEffect(() => {
     setRoles([...props.roles]);
-  }, [props.roles.length]);
+  }, [props.roles]);
 
   return (
     <div className="Roleslist">
@@ -18,7 +18,7 @@ const AddedRolesList: FunctionComponent<AddedRolesListProps> =
           <span >
             {role.name}
             <img
-              src="https://cdn-icons.flaticon.com/png/512/3031/premium/3031143.png?token=exp=1653673161~hmac=2e6de0cbe50df5048cc5778fdd464b40"
+              src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
               alt="Add"
               onClick={() => props.removeAddedRole(role)}/>
           </span>

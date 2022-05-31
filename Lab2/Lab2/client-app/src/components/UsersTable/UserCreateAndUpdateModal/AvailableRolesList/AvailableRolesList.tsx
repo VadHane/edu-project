@@ -12,7 +12,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> =
 
   useEffect(() => {
     setRoles([...props.roles]);
-  }, [props.roles.length]);
+  }, [props.roles]);
 
   useEffect(() => {
     let availableInList: boolean = !roles.find(
@@ -25,7 +25,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> =
 
     setItNewRole(availableInList);
     setItAddedRole(added);
-  }, [inputNameOfRole]);
+  }, [inputNameOfRole, props.addedRoles, roles]);
 
   const inputBox: React.ReactNode = (
     <div>

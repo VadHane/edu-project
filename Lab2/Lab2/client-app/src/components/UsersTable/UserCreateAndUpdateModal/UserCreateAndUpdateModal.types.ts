@@ -6,7 +6,10 @@ type UserCreateAndUpdateModalProps = {
     btnCaption: string
     getAllRolesAsync: () => Promise<Array<Role>>
     createNewRole: (role: Role) => Promise<Role>
-    addUserAsync: (user: User, file: any) => void
+
+    // * Handler for click action for the button of form.
+    // ! It can be add or edit operation.
+    resultActionAsync: (user: User, file: any) => Promise<boolean>
 }
 
 export default UserCreateAndUpdateModalProps;

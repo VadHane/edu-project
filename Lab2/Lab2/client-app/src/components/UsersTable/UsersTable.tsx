@@ -52,13 +52,16 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
     </table>
   );
 
-  const addUser = (user: User, image: File) => {
-    props.addUserAsync(user, image)
-        .then((data: User): void => {
+  const addUser = (user: User, image: File): Promise<boolean> => {
+    return props.createUserAsync(user, image)
+        .then((data: User): boolean => {
           if (data) {
             setUsers((currentValue: Array<User>) => [...currentValue, data]);
+            return true;
           }
-        });
+          return false;
+        })
+        .catch(() => false);
   };
 
   const emptyUser: User = {
@@ -80,7 +83,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
             btnCaption={'Add new user'}
             getAllRolesAsync={() => props.getAllRolesAsync()}
             createNewRole={(role: Role) => props.createNewRole(role)}
-            addUserAsync={(user: User, file: File) =>
+            resultActionAsync={(user: User, file: File) =>
               addUser(user, file)}
           />}/>
       </Routes>

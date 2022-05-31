@@ -4,7 +4,8 @@ import {User} from '../../../models/User';
 import {TableContentRowProps} from './TableContentRow.types';
 import './TableContentRow.css';
 
-const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
+const TableContentRow: FunctionComponent<TableContentRowProps> =
+(props: TableContentRowProps) => {
   const [user, setUser] = useState<User>(props.user);
 
   useEffect(() => {
@@ -13,7 +14,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
 
   const getImagePath = (): string => {
     if (props.user.imageBlobKey !== '/') {
-      return 'https://localhost:44303/' + props.user.imageBlobKey;
+      return `${process.env.REACT_APP_PHOTOS_URL}${props.user.imageBlobKey}`;
     }
 
     return 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
@@ -39,7 +40,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (props) => {
           onClick={() => props.onEdit(user.id)}
         />
         <img
-          src="https://cdn-icons.flaticon.com/png/512/484/premium/484611.png?token=exp=1653900152~hmac=38656b6a00192dd1df917508e424bddb"
+          src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
           alt="Delete"
           onClick={() => props.onDelete(user.id)}
         />

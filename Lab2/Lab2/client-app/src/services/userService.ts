@@ -4,13 +4,12 @@ const path: string = 'users/';
 
 export const getAllUsersAsync = async (): Promise<Array<User>> => {
   const url = `${process.env.REACT_APP_API_URL}${path}`;
-  console.log(process.env.REACT_APP_API_URL);
   return fetch(url)
       .then((response) => response.json())
       .then((data: Array<User>) => data);
 };
 
-export const addUserAsync =async (user:User, file: any): Promise<User> => {
+export const addUserAsync = async (user:User, file: File): Promise<User> => {
   const url = `${process.env.REACT_APP_API_URL}${path}`;
 
   const requestBody = new FormData();
