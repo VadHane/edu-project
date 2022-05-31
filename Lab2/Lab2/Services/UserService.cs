@@ -49,6 +49,7 @@ namespace Lab2.Services
 
         private string CreateFile(IFormFile file)
         {
+            // TODO: Create folders wwwroot/Image if they are missing
             string fileExtention = Path.GetExtension(file.FileName);
             string fileName = Guid.NewGuid() + "." + fileExtention;
             string filePath = Path.Combine(env.WebRootPath, "Images/", fileName);
