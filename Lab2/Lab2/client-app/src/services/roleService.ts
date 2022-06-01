@@ -1,6 +1,6 @@
 import { Role } from '../models/Role';
 
-const url = `${process.env.REACT_APP_API_URL}users/roles/`;
+const url = `${process.env.REACT_APP_HOST_URL}/api/users/roles/`;
 
 export const getAllRolesAsync = async (): Promise<Array<Role>> => {
     return fetch(url)

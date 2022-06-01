@@ -1,12 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Lab2.Models;
 using Lab2.Exceptions;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Hosting;
-using System.IO;
 
 namespace Lab2.Services
 {
@@ -49,25 +49,36 @@ namespace Lab2.Services
 
         private string CreateFile(IFormFile file)
         {
-            // TODO: Create folders wwwroot/Image if they are missing
+            if (env.WebRootPath == null)
+            {
+                string rootPath = env.ContentRootPath;
+                string webRootPath = $"{rootPath}/wwwroot";
+
+                Directory.CreateDirectory(webRootPath);
+
+                env.WebRootPath = $"{rootPath}/wwwroot";
+                Directory.CreateDirectory($"{env.WebRootPath}/Images");
+            }
+            else
+            {
+                string imagesPath = $"{env.WebRootPath}/Images";
+
+                if (!Directory.Exists(imagesPath))
+                {
+                    Directory.CreateDirectory(imagesPath);
+                }
+            }
+
             string fileExtention = Path.GetExtension(file.FileName);
             string fileName = Guid.NewGuid() + "." + fileExtention;
-            string filePath = Path.Combine(env.WebRootPath, "Images/", fileName);
+            string webFilePath = $"Images/{fileName}";
+            string absoluteFilePath = Path.Combine(env.WebRootPath, webFilePath);
 
-            using var fileStream = new FileStream(filePath, FileMode.Create);
+            using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
             file.CopyTo(fileStream);
 
-            return filePath;
+            return webFilePath;
         }
-
-        private static void DeleteFile(string path)
-        {
-            if (File.Exists(path))
-            {
-                File.Delete(path);
-            }
-        }
-
 
         /// <summary>
         /// Return all users entity from database.
@@ -117,9 +128,10 @@ namespace Lab2.Services
             if (file != null)
             {
                 filePath = CreateFile(file);
-            } else
+            }
+            else
             {
-                filePath = "/";
+                filePath = null;
             }
 
             var newUser = new User()
@@ -153,9 +165,10 @@ namespace Lab2.Services
                 throw new EntityNotFoundException();
             }
 
-            if (foundUser.ImageBlobKey != "/")
+            if (foundUser.ImageBlobKey != null)
             {
-                DeleteFile(foundUser.ImageBlobKey);
+                string absoluteFilePath = $"{env.WebRootPath}/{foundUser.ImageBlobKey}";
+                File.Delete(absoluteFilePath);
             }
 
             if (file != null)
@@ -164,7 +177,7 @@ namespace Lab2.Services
             }
             else
             {
-                user.ImageBlobKey = "/";
+                user.ImageBlobKey = null;
             }
 
             var updatedUser = new User()
@@ -197,9 +210,10 @@ namespace Lab2.Services
                 throw new EntityNotFoundException();
             }
 
-            if (deletedUser.ImageBlobKey != "")
+            if (deletedUser.ImageBlobKey != null)
             {
-                DeleteFile(deletedUser.ImageBlobKey);
+                string absoluteFilePath = $"{env.WebRootPath}/{deletedUser.ImageBlobKey}";
+                File.Delete(absoluteFilePath);
             }
 
             var deletedEntity = (User)context.DeleteAndSave(deletedUser);

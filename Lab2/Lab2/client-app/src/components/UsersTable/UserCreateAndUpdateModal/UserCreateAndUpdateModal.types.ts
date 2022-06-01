@@ -3,7 +3,7 @@ import { User } from '../../../models/User';
 
 type UserCreateAndUpdateModalProps = {
     user: User;
-    btnCaption: string;
+    buttonContent: string;
     getAllRolesAsync: () => Promise<Array<Role>>;
     createNewRole: (role: Role) => Promise<Role>;
 

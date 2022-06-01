@@ -1,7 +1,9 @@
+/* eslint-disable indent */
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
 import './AvailableRolesList.css';
+import { APPROVE_IMAGE_URL, CANSEL_IMAGE_URL } from '../../../../constants';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,
@@ -16,10 +18,9 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     }, [props.roles]);
 
     useEffect(() => {
-        let availableInList: boolean = !roles.find(
-            (role: Role) => role.name === inputNameOfRole,
-        );
-        availableInList = availableInList && inputNameOfRole.length > 1;
+        const availableInList: boolean =
+            !roles.find((role: Role) => role.name === inputNameOfRole) &&
+            inputNameOfRole.length > 1;
 
         const added: boolean = props.addedRoles.find(
             (role: Role) => role.name === inputNameOfRole,
@@ -48,11 +49,11 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         </div>
     );
 
-    const aproveAddingNewRole: React.ReactNode = (
+    const approveAddingNewRole: React.ReactNode = (
         <div className="aprove-add-role">
             <span>Would you like to create new role - {inputNameOfRole}?</span> <br />
             <img
-                src="https://cdn-icons-png.flaticon.com/512/1828/1828743.png"
+                src={APPROVE_IMAGE_URL}
                 alt="Aprove"
                 onClick={() => {
                     props.createNewRole({ id: '', name: inputNameOfRole });
@@ -60,7 +61,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 }}
             />
             <img
-                src="https://cdn-icons-png.flaticon.com/512/1828/1828939.png"
+                src={CANSEL_IMAGE_URL}
                 alt="Cancel"
                 onClick={() => setInputNameOfRole('')}
             />
@@ -71,15 +72,15 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         <div className="aprove-add-role">
             <span>Would you like to add this role?</span> <br />
             <img
-                src="https://cdn-icons-png.flaticon.com/512/1828/1828743.png"
-                alt="Aprove"
+                src={APPROVE_IMAGE_URL}
+                alt="Approve"
                 onClick={() => {
                     props.addRole(getRoleByName(inputNameOfRole));
                     setInputNameOfRole('');
                 }}
             />
             <img
-                src="https://cdn-icons-png.flaticon.com/512/1828/1828939.png"
+                src={CANSEL_IMAGE_URL}
                 alt="Cancel"
                 onClick={() => setInputNameOfRole('')}
             />
@@ -88,9 +89,9 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
 
     const roleWasAdd: React.ReactNode = (
         <div>
-            <span>Roles list consist this role.</span> <br />
+            <span>Roles list includes this role.</span> <br />
             <img
-                src="https://cdn-icons-png.flaticon.com/512/1828/1828743.png"
+                src={APPROVE_IMAGE_URL}
                 alt="Ok"
                 onClick={() => setInputNameOfRole('')}
             />
@@ -108,10 +109,10 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
             {itAddedRole
                 ? roleWasAdd
                 : inputNameOfRole.length > 1
-                    ? !itNewRole
-                        ? approveAddingAvailableRole
-                        : aproveAddingNewRole
-                    : ''}
+                ? !itNewRole
+                    ? approveAddingAvailableRole
+                    : approveAddingNewRole
+                : ''}
         </div>
     );
 };

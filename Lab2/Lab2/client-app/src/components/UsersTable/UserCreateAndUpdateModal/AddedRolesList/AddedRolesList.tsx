@@ -2,6 +2,7 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../../models/Role';
 import AddedRolesListProps from './AddedRolesList.types';
 import './AddedRolesList.css';
+import { REMOVE_IMAGE_URL } from '../../../../constants';
 
 const AddedRolesList: FunctionComponent<AddedRolesListProps> = (
     props: AddedRolesListProps,
@@ -13,14 +14,14 @@ const AddedRolesList: FunctionComponent<AddedRolesListProps> = (
     }, [props.roles]);
 
     return (
-        <div className="Roleslist">
+        <div className="role-list">
             {roles?.map((role: Role) => (
-                <div className="listRow" key={role.id}>
+                <div className="list-row" key={role.id}>
                     <span>
                         {role.name}
                         <img
-                            src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
-                            alt="Add"
+                            src={REMOVE_IMAGE_URL}
+                            alt="Remove"
                             onClick={() => props.removeAddedRole(role)}
                         />
                     </span>

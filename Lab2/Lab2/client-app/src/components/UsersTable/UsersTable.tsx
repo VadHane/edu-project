@@ -82,7 +82,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                     element={
                         <UserCreateAndUpdateModal
                             user={emptyUser}
-                            btnCaption={'Add new user'}
+                            buttonContent={'Add new user'}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>

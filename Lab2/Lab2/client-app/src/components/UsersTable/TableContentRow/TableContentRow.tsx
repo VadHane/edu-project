@@ -3,6 +3,7 @@ import { Role } from '../../../models/Role';
 import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
 import './TableContentRow.css';
+import { EDIT_IMAGE_URL, REMOVE_IMAGE_URL, USER_PICTURE_URL } from '../../../constants';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
@@ -14,11 +15,11 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     }, [props.user]);
 
     const getImagePath = (): string => {
-        if (props.user.imageBlobKey !== '/') {
-            return `${process.env.REACT_APP_PHOTOS_URL}${props.user.imageBlobKey}`;
+        if (props.user.imageBlobKey !== null) {
+            return `${process.env.REACT_APP_HOST_URL}/${props.user.imageBlobKey}`;
         }
 
-        return 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
+        return USER_PICTURE_URL;
     };
 
     return (
@@ -34,12 +35,12 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
             </th>
             <th className="actions">
                 <img
-                    src="https://cdn-icons-png.flaticon.com/512/61/61456.png"
+                    src={EDIT_IMAGE_URL}
                     alt="Edit"
                     onClick={() => props.onEdit(user.id)}
                 />
                 <img
-                    src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
+                    src={REMOVE_IMAGE_URL}
                     alt="Delete"
                     onClick={() => props.onDelete(user.id)}
                 />

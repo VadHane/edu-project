@@ -4,8 +4,14 @@ import { Role } from '../../../models/Role';
 import AddedRolesList from './AddedRolesList/AddedRolesList';
 import AvailableRolesList from './AvailableRolesList/AvailableRolesList';
 import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
-import './UserCreateAndUpdateModal.css';
 import { User } from '../../../models/User';
+import {
+    FILE_NOT_IMAGE_EXCEPTION,
+    INCORRECT_EMAIL_EXCEPTION,
+    LENGTH_OF_NAME_EXCEPTION,
+    LENGTH_OF_SURNAME_EXCEPTION,
+} from '../../../constants';
+import './UserCreateAndUpdateModal.css';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = (
     props: UserCreateAndUpdateModalProps,
@@ -37,7 +43,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     );
 
     const exceptionString: React.ReactNode = (
-        <div className="exceptionMessage">
+        <div className="exception-message">
             <span>{exceptionMessage}</span>
         </div>
     );
@@ -99,7 +105,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                     <input type="file" accept="image/*" ref={file} />
                 </div>
             </form>
-            <button onClick={() => createNewUser()}>{props.btnCaption}</button>
+            <button onClick={() => createNewUser()}>{props.buttonContent}</button>
         </div>
     );
 
@@ -143,28 +149,23 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
 
     const validateInputFields = (): boolean => {
         if (firstName.trim().length < 3) {
-            setExceptionMessage('Length of username can not be less than 3 symbols.');
+            setExceptionMessage(LENGTH_OF_NAME_EXCEPTION);
             return false;
         }
 
         if (lastName.trim().length < 3) {
-            setExceptionMessage('Length of surname can not be less than 3 symbols.');
-            return false;
-        }
-
-        if (email.trim().length < 3) {
-            setExceptionMessage('Length of email can not be less than 3 symbols.');
+            setExceptionMessage(LENGTH_OF_SURNAME_EXCEPTION);
             return false;
         }
 
         const pattern = /^[^ ]+@[^ ]+\.[a-z]{2,3}$/;
         if (!email.match(pattern)) {
-            setExceptionMessage('Incorrect email.');
+            setExceptionMessage(INCORRECT_EMAIL_EXCEPTION);
             return false;
         }
 
         if (file.current?.files?.item(0)?.type.split('/')[0] !== 'image') {
-            setExceptionMessage('The file must be image.');
+            setExceptionMessage(FILE_NOT_IMAGE_EXCEPTION);
             return false;
         }
 
