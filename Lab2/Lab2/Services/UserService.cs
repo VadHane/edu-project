@@ -1,6 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Lab2.Models;
 using Lab2.Exceptions;
@@ -13,6 +16,8 @@ namespace Lab2.Services
         /// The context of database.
         /// </summary>
         private readonly UserContext context;
+
+        private readonly IWebHostEnvironment env;
 
         /// <summary>
         /// Assign roles to the user.
@@ -36,9 +41,43 @@ namespace Lab2.Services
         /// Default constructor.
         /// </summary>
         /// <param name="_context">The context of database.</param>
-        public UserService(UserContext _context)
+        public UserService(UserContext _context, IWebHostEnvironment _env)
         {
             context = _context;
+            env = _env;
+        }
+
+        private string CreateFile(IFormFile file)
+        {
+            if (env.WebRootPath == null)
+            {
+                string rootPath = env.ContentRootPath;
+                string webRootPath = $"{rootPath}/wwwroot";
+
+                Directory.CreateDirectory(webRootPath);
+
+                env.WebRootPath = $"{rootPath}/wwwroot";
+                Directory.CreateDirectory($"{env.WebRootPath}/Images");
+            }
+            else
+            {
+                string imagesPath = $"{env.WebRootPath}/Images";
+
+                if (!Directory.Exists(imagesPath))
+                {
+                    Directory.CreateDirectory(imagesPath);
+                }
+            }
+
+            string fileExtention = Path.GetExtension(file.FileName);
+            string fileName = Guid.NewGuid() + "." + fileExtention;
+            string webFilePath = $"Images/{fileName}";
+            string absoluteFilePath = Path.Combine(env.WebRootPath, webFilePath);
+
+            using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
+            file.CopyTo(fileStream);
+
+            return webFilePath;
         }
 
         /// <summary>
@@ -82,15 +121,26 @@ namespace Lab2.Services
         /// </summary>
         /// <param name="user">The model of user.</param>
         /// <returns>The entity of created user from database.</returns>
-        public User Create(User user)
+        public User Create(User user, IFormFile file)
         {
+            string filePath;
+
+            if (file != null)
+            {
+                filePath = CreateFile(file);
+            }
+            else
+            {
+                filePath = null;
+            }
+
             var newUser = new User()
             {
                 Id = Guid.NewGuid(),
                 FirstName = user.FirstName,
                 LastName = user.LastName,
                 Email = user.Email,
-                ImageBlobKey = user.ImageBlobKey,
+                ImageBlobKey = filePath,
             };
 
             AssignRolesToUser(user.Roles, newUser);
@@ -106,13 +156,28 @@ namespace Lab2.Services
         /// <param name="id">The unique id of user in database.</param>
         /// <param name="user">New model of user.</param>
         /// <returns>The entity of updated user from database.</returns>
-        public User Update(Guid id, User user)
+        public User Update(Guid id, User user, IFormFile file)
         {
             var foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
 
             if (foundUser == null)
             {
                 throw new EntityNotFoundException();
+            }
+
+            if (foundUser.ImageBlobKey != null)
+            {
+                string absoluteFilePath = $"{env.WebRootPath}/{foundUser.ImageBlobKey}";
+                File.Delete(absoluteFilePath);
+            }
+
+            if (file != null)
+            {
+                user.ImageBlobKey = CreateFile(file);
+            }
+            else
+            {
+                user.ImageBlobKey = null;
             }
 
             var updatedUser = new User()
@@ -143,6 +208,12 @@ namespace Lab2.Services
             if (deletedUser == null)
             {
                 throw new EntityNotFoundException();
+            }
+
+            if (deletedUser.ImageBlobKey != null)
+            {
+                string absoluteFilePath = $"{env.WebRootPath}/{deletedUser.ImageBlobKey}";
+                File.Delete(absoluteFilePath);
             }
 
             var deletedEntity = (User)context.DeleteAndSave(deletedUser);

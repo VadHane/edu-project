@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Lab2.Models;
 using Lab2.Services;
 using Lab2.Exceptions;
@@ -81,20 +84,31 @@ namespace Lab2.Controllers
         /// <summary>
         /// The endpoint for post method with 'api/users' path.
         /// </summary>
-        /// <param name="user">The user's model, which generated from request body.</param>
+        /// <param name="userCreateRequest">The user's model, which generated from request body.</param>
         /// <returns>Return the created user entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
-        public ActionResult<User> Post([FromBody]User user)
+        public ActionResult<User> Post([FromForm]UserCreateRequest userCreateRequest)
         {
             try
             {
-                var createdUser = userService.Create(user);
+                var image = Request.Form.Files[0];
+                var roles = JsonConvert.DeserializeObject<List<Role>>(userCreateRequest.Roles);
+                var user = new User()
+                {
+                   FirstName = userCreateRequest.FirstName,
+                   LastName = userCreateRequest.LastName,
+                   Email = userCreateRequest.Email,
+                   Roles = roles
+                };
+
+                var createdUser = userService.Create(user, image);
                 var uriToCreatedUser = new UriBuilder(Request.IsHttps ? "https://" : "http://", Request.Host.Host, (int)Request.Host.Port, Request.Path + createdUser.Id).Uri;
 
                 return Created(uriToCreatedUser, createdUser);
             }
-            catch
+            catch (Exception e)
             {
+                Console.WriteLine(e);
                 return StatusCode(500);
             }
         }
@@ -106,11 +120,11 @@ namespace Lab2.Controllers
         /// <param name="user">The user's model, which generated from request body.</param>
         /// <returns>Return the updated user entity from database as JSON string and send status code 200.</returns>
         [HttpPut("{id}")]
-        public ActionResult<User> Put(Guid id, [FromBody]User user)
+        public ActionResult<User> Put(Guid id, [FromForm]User user, IFormFile file)
         {
             try
             {
-                var updatedUser = userService.Update(id, user);
+                var updatedUser = userService.Update(id, user, file);
 
                 return Ok(updatedUser);
             }

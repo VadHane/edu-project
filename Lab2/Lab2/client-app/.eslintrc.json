@@ -4,21 +4,33 @@
         "es2021": true
     },
     "extends": [
-        "plugin:react/recommended",
-        "google"
+        "react-app",
+        "react-app/jest",
+        "prettier"
     ],
-    "parser": "@typescript-eslint/parser",
-    "parserOptions": {
-        "ecmaFeatures": {
-            "jsx": true
-        },
-        "ecmaVersion": "latest",
-        "sourceType": "module"
-    },
+    "parser":"@typescript-eslint/parser",
     "plugins": [
-        "react",
-        "@typescript-eslint"
+        "react"
     ],
     "rules": {
+        "no-debugger": 1,
+        "no-console": 1,
+        "indent": [
+            "error",
+            4
+        ],
+        "linebreak-style": [
+            "error",
+            "unix"
+        ],
+        "quotes": [
+            "error",
+            "single"
+        ],
+        "semi": [
+            "error",
+            "always"
+        ],
+       "eol-last": ["error", "always"]
     }
 }
