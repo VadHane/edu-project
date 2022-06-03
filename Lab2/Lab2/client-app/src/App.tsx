@@ -5,7 +5,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createNewRole, getAllRolesAsync } from './services/roleService';
 import { Role } from './models/Role';
 import { User } from './models/User';
-import { addUserAsync } from './services/userService';
+import { addUserAsync, deleteUserAsync, editUserAsync } from './services/userService';
 
 const App: FunctionComponent = () => {
     return (
@@ -21,6 +21,10 @@ const App: FunctionComponent = () => {
                                 createUserAsync={(user: User, file: File) =>
                                     addUserAsync(user, file)
                                 }
+                                editUserAsync={(user: User, file: File) =>
+                                    editUserAsync(user, file)
+                                }
+                                deleteUserAsync={(user: User) => deleteUserAsync(user)}
                             />
                         }
                     />

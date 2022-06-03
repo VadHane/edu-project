@@ -27,8 +27,9 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                             <TableContentRow
                                 key={user.id}
                                 user={user}
-                                onEdit={(id: string) => {}}
-                                onDelete={(id: string) => {}}
+                                onDelete={(user: User) => {
+                                    deleteUser(user);
+                                }}
                             />
                         ),
                     )}
@@ -52,7 +53,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         </table>
     );
 
-    const addUser = (user: User, image: File): Promise<boolean> => {
+    const createNewUser = (user: User, image: File): Promise<boolean> => {
         return props
             .createUserAsync(user, image)
             .then((data: User): boolean => {
@@ -65,13 +66,65 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
             .catch(() => false);
     };
 
-    const emptyUser: User = {
-        id: '',
-        firstName: '',
-        lastName: '',
-        email: '',
-        imageBlobKey: '',
-        roles: [],
+    const editUser = (user: User, image: File): Promise<boolean> => {
+        return props
+            .editUserAsync(user, image)
+            .then((data: User): boolean => {
+                if (data) {
+                    setUsers((currentValue: Array<User>) => {
+                        const indexOfSelectedUser = currentValue?.findIndex(
+                            (_user: User) => _user.id === user.id,
+                        );
+
+                        const prevList = currentValue.slice(0, indexOfSelectedUser);
+                        const endList = currentValue.slice(
+                            indexOfSelectedUser + 1,
+                            currentValue.length,
+                        );
+
+                        return [...prevList, data, ...endList];
+                    });
+                    return true;
+                }
+                return false;
+            })
+            .catch(() => false);
+    };
+
+    const deleteUser = (user: User): void => {
+        props.deleteUserAsync(user).then((user: User) => {
+            setUsers((currentValue: Array<User>) => {
+                const indexOfSelectedUser = currentValue?.findIndex(
+                    (_user: User) => _user.id === user.id,
+                );
+
+                const prevList = currentValue.slice(0, indexOfSelectedUser);
+                const endList = currentValue.slice(
+                    indexOfSelectedUser + 1,
+                    currentValue.length,
+                );
+
+                return [...prevList, ...endList];
+            });
+        });
+    };
+
+    const getUserById = (id: string | undefined): User => {
+        if (!id) {
+            const emptyUser: User = {
+                id: '',
+                firstName: '',
+                lastName: '',
+                email: '',
+                imageBlobKey: '',
+                roles: [],
+            };
+
+            return emptyUser;
+        }
+
+        const index = users.findIndex((user: User) => user.id === id);
+        return users[index];
     };
 
     return (
@@ -81,12 +134,26 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                     path="/add"
                     element={
                         <UserCreateAndUpdateModal
-                            user={emptyUser}
+                            getUserById={(id: string | undefined) => getUserById(id)}
                             buttonContent={'Add new user'}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>
-                                addUser(user, file)
+                                createNewUser(user, file)
+                            }
+                        />
+                    }
+                />
+                <Route
+                    path="/edit/:id"
+                    element={
+                        <UserCreateAndUpdateModal
+                            getUserById={(id: string | undefined) => getUserById(id)}
+                            buttonContent={'Add new user'}
+                            getAllRolesAsync={() => props.getAllRolesAsync()}
+                            createNewRole={(role: Role) => props.createNewRole(role)}
+                            resultActionAsync={(user: User, file: File) =>
+                                editUser(user, file)
                             }
                         />
                     }

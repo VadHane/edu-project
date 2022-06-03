@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useParams } from 'react-router-dom';
 import { Role } from '../../../models/Role';
 import AddedRolesList from './AddedRolesList/AddedRolesList';
 import AvailableRolesList from './AvailableRolesList/AvailableRolesList';
@@ -16,10 +16,13 @@ import './UserCreateAndUpdateModal.css';
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = (
     props: UserCreateAndUpdateModalProps,
 ) => {
-    const [firstName, setFirstName] = useState<string>(props.user.firstName);
-    const [lastName, setLastName] = useState<string>(props.user.lastName);
-    const [email, setEmail] = useState<string>(props.user.email);
-    const [addedRoles, setAddedRoles] = useState<Array<Role>>(props.user.roles);
+    const { id } = useParams();
+    const foundUser = props.getUserById(id);
+
+    const [firstName, setFirstName] = useState<string>(foundUser.firstName);
+    const [lastName, setLastName] = useState<string>(foundUser.lastName);
+    const [email, setEmail] = useState<string>(foundUser.email);
+    const [addedRoles, setAddedRoles] = useState<Array<Role>>(foundUser.roles);
     const [availableRoles, setAvailableRoles] = useState<Array<Role>>([]);
     const [exceptionMessage, setExceptionMessage] = useState<string>('');
     const navigate = useNavigate();
@@ -105,7 +108,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                     <input type="file" accept="image/*" ref={file} />
                 </div>
             </form>
-            <button onClick={() => createNewUser()}>{props.buttonContent}</button>
+            <button onClick={() => onSubmitAction()}>{props.buttonContent}</button>
         </div>
     );
 
@@ -172,21 +175,20 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
         return true;
     };
 
-    const createNewUser = (): void => {
+    const onSubmitAction = (): void => {
         if (!validateInputFields()) return;
 
-        const newUser: User = {
-            id: '',
+        const user: User = {
+            id: foundUser.id,
             firstName: firstName,
             lastName: lastName,
             email: email,
-            imageBlobKey: props.user.imageBlobKey,
+            imageBlobKey: foundUser.imageBlobKey,
             roles: addedRoles,
         };
 
         const userPhoto = file.current?.files?.item(0);
-
-        props.resultActionAsync(newUser, userPhoto).then((done: Boolean) => {
+        props.resultActionAsync(user, userPhoto).then((done: Boolean) => {
             if (done) {
                 navigate('/');
             } else {
