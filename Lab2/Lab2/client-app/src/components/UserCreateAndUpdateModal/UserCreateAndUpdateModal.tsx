@@ -1,17 +1,19 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { NavLink, useNavigate, useParams } from 'react-router-dom';
-import { Role } from '../../../models/Role';
-import AddedRolesList from './AddedRolesList/AddedRolesList';
-import AvailableRolesList from './AvailableRolesList/AvailableRolesList';
+import { Role } from '../../models/Role';
+import AddedRolesList from './AddedRolesList';
+import AvailableRolesList from './AvailableRolesList';
 import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
-import { User } from '../../../models/User';
+import { User } from '../../models/User';
 import {
     FILE_NOT_IMAGE_EXCEPTION,
     INCORRECT_EMAIL_EXCEPTION,
     LENGTH_OF_NAME_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
-} from '../../../constants';
+} from '../../constants';
 import './UserCreateAndUpdateModal.css';
+import UserWarningModal from '../UserWarningModal';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = (
     props: UserCreateAndUpdateModalProps,
@@ -19,13 +21,17 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     const { id } = useParams();
     const foundUser = props.getUserById(id);
 
+    if (!foundUser) {
+        return <UserWarningModal message="Incorrect user id" />;
+    }
+
+    const navigate = useNavigate();
     const [firstName, setFirstName] = useState<string>(foundUser.firstName);
     const [lastName, setLastName] = useState<string>(foundUser.lastName);
     const [email, setEmail] = useState<string>(foundUser.email);
     const [addedRoles, setAddedRoles] = useState<Array<Role>>(foundUser.roles);
     const [availableRoles, setAvailableRoles] = useState<Array<Role>>([]);
     const [exceptionMessage, setExceptionMessage] = useState<string>('');
-    const navigate = useNavigate();
 
     const file = React.createRef<HTMLInputElement>();
 

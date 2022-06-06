@@ -5,6 +5,6 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
-    imageBlobKey: string;
+    imageBlobKey: string | null;
     roles: Array<Role>;
 }

@@ -1,4 +1,4 @@
-import { Role } from '../../../../models/Role';
+import { Role } from '../../../models/Role';
 
 type AddedRolesListProps = {
     roles: Array<Role>;

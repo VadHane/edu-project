@@ -1,9 +1,9 @@
 /* eslint-disable indent */
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Role } from '../../../../models/Role';
+import { Role } from '../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
 import './AvailableRolesList.css';
-import { APPROVE_IMAGE_URL, CANSEL_IMAGE_URL } from '../../../../constants';
+import { APPROVE_IMAGE_URL, CANSEL_IMAGE_URL } from '../../../constants';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,

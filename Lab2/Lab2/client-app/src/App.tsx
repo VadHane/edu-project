@@ -1,5 +1,5 @@
 import React, { FunctionComponent } from 'react';
-import UsersTable from './components/UsersTable/UsersTable';
+import UsersTable from './components/UsersTable';
 import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createNewRole, getAllRolesAsync } from './services/roleService';
@@ -10,26 +10,24 @@ import { addUserAsync, deleteUserAsync, editUserAsync } from './services/userSer
 const App: FunctionComponent = () => {
     return (
         <BrowserRouter>
-            <div className="">
-                <Routes>
-                    <Route
-                        path="*"
-                        element={
-                            <UsersTable
-                                getAllRolesAsync={() => getAllRolesAsync()}
-                                createNewRole={(role: Role) => createNewRole(role)}
-                                createUserAsync={(user: User, file: File) =>
-                                    addUserAsync(user, file)
-                                }
-                                editUserAsync={(user: User, file: File) =>
-                                    editUserAsync(user, file)
-                                }
-                                deleteUserAsync={(user: User) => deleteUserAsync(user)}
-                            />
-                        }
-                    />
-                </Routes>
-            </div>
+            <Routes>
+                <Route
+                    path="*"
+                    element={
+                        <UsersTable
+                            getAllRolesAsync={() => getAllRolesAsync()}
+                            createNewRole={(role: Role) => createNewRole(role)}
+                            createUserAsync={(user: User, file: File) =>
+                                addUserAsync(user, file)
+                            }
+                            editUserAsync={(user: User, file: File) =>
+                                editUserAsync(user, file)
+                            }
+                            deleteUserAsync={(user: User) => deleteUserAsync(user)}
+                        />
+                    }
+                />
+            </Routes>
         </BrowserRouter>
     );
 };

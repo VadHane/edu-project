@@ -2,12 +2,13 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { User } from '../../models/User';
 import { Role } from '../../models/Role';
 import { getAllUsersAsync } from '../../services/userService';
-import TableContentRow from './TableContentRow/TableContentRow';
+import TableContentRow from './TableContentRow';
 import { Route, Routes } from 'react-router-dom';
-import UserCreateAndUpdateModal from './UserCreateAndUpdateModal/UserCreateAndUpdateModal';
-import AddUserButton from '../AddUserButton/AddUserButton';
+import UserCreateAndUpdateModal from '../UserCreateAndUpdateModal';
+import AddUserButton from '../AddUserButton';
 import UsersTableProps from './UsersTable.types';
 import './UsersTable.css';
+import UserWarningModal from '../UserWarningModal';
 
 const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
     const [users, setUsers] = useState<Array<User>>([]);
@@ -109,32 +110,34 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         });
     };
 
-    const getUserById = (id: string | undefined): User => {
-        if (!id) {
-            const emptyUser: User = {
-                id: '',
-                firstName: '',
-                lastName: '',
-                email: '',
-                imageBlobKey: '',
-                roles: [],
-            };
+    const emptyUser: User = {
+        id: '',
+        firstName: '',
+        lastName: '',
+        email: '',
+        imageBlobKey: null,
+        roles: [],
+    };
 
-            return emptyUser;
-        }
+    const getUserById = (id?: string): User | undefined => {
+        if (!id) return undefined;
 
         const index = users.findIndex((user: User) => user.id === id);
+
+        if (index === -1) return undefined;
+
         return users[index];
     };
 
     return (
         <div className="list">
             <Routes>
+                <Route path="/" />
                 <Route
                     path="/add"
                     element={
                         <UserCreateAndUpdateModal
-                            getUserById={(id: string | undefined) => getUserById(id)}
+                            getUserById={(id?: string) => emptyUser}
                             buttonContent={'Add new user'}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
@@ -148,8 +151,8 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                     path="/edit/:id"
                     element={
                         <UserCreateAndUpdateModal
-                            getUserById={(id: string | undefined) => getUserById(id)}
-                            buttonContent={'Add new user'}
+                            getUserById={(id?: string) => getUserById(id)}
+                            buttonContent={'Edit'}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>
@@ -157,6 +160,10 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                             }
                         />
                     }
+                />
+                <Route
+                    path="*"
+                    element={<UserWarningModal message="Incorrect query path." />}
                 />
             </Routes>
 

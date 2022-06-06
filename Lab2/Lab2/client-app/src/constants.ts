@@ -1,4 +1,5 @@
-export const USER_PICTURE_URL = 'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
+export const USER_DEFAULT_PICTURE_URL =
+    'https://cdn-icons-png.flaticon.com/512/1077/1077114.png';
 export const REMOVE_IMAGE_URL = 'https://cdn-icons-png.flaticon.com/512/3096/3096687.png';
 export const EDIT_IMAGE_URL = 'https://cdn-icons-png.flaticon.com/512/61/61456.png';
 export const APPROVE_IMAGE_URL =

@@ -1,10 +1,10 @@
-import { Role } from '../../../models/Role';
-import { User } from '../../../models/User';
+import { Role } from '../../models/Role';
+import { User } from '../../models/User';
 
 type UserCreateAndUpdateModalProps = {
     buttonContent: string;
     getAllRolesAsync: () => Promise<Array<Role>>;
-    getUserById: (id: string | undefined) => User;
+    getUserById: (id?: string) => User | undefined;
     createNewRole: (role: Role) => Promise<Role>;
 
     // * Handler for click action for the button of form.

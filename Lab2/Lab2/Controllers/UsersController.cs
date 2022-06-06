@@ -87,7 +87,7 @@ namespace Lab2.Controllers
         /// <param name="userCreateRequest">The user's model, which generated from request body.</param>
         /// <returns>Return the created user entity from database as JSON string and send status code 201.</returns>
         [HttpPost]
-        public ActionResult<User> Post([FromForm]UserCreateRequest userCreateRequest)
+        public ActionResult<User> Post([FromForm]UserCreateUpdateRequest userCreateRequest)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace Lab2.Controllers
         /// <param name="user">The user's model, which generated from request body.</param>
         /// <returns>Return the updated user entity from database as JSON string and send status code 200.</returns>
         [HttpPut("{id}")]
-        public ActionResult<User> Put(Guid id, [FromForm]UserCreateRequest userCreateRequest)
+        public ActionResult<User> Put(Guid id, [FromForm]UserCreateUpdateRequest userCreateRequest)
         {
             try
             {

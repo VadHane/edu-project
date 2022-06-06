@@ -3,25 +3,32 @@ import { Role } from '../../../models/Role';
 import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
 import './TableContentRow.css';
-import { EDIT_IMAGE_URL, REMOVE_IMAGE_URL, USER_PICTURE_URL } from '../../../constants';
+import {
+    EDIT_IMAGE_URL,
+    REMOVE_IMAGE_URL,
+    USER_DEFAULT_PICTURE_URL,
+} from '../../../constants';
 import { useNavigate } from 'react-router-dom';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
 ) => {
     const [user, setUser] = useState<User>(props.user);
+    const [userPhotoUrl, setUserPhotoUrl] = useState<string>('');
     const navigate = useNavigate();
 
     useEffect(() => {
         setUser(props.user);
     }, [props.user]);
 
-    const getImagePath = (): string => {
-        if (props.user.imageBlobKey !== '') {
-            return `${process.env.REACT_APP_HOST_URL}/${props.user.imageBlobKey}`;
-        }
+    useEffect(() => {
+        const photoUrl = `${process.env.REACT_APP_HOST_URL}/${props.user.imageBlobKey}`;
 
-        return USER_PICTURE_URL;
+        setUserPhotoUrl(photoUrl);
+    }, [props.user.imageBlobKey]);
+
+    const onFailedLoadPhoto = () => {
+        setUserPhotoUrl(USER_DEFAULT_PICTURE_URL);
     };
 
     const onEditHandler = () => {
@@ -37,7 +44,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     return (
         <tr>
             <th className="picture">
-                <img src={getImagePath()} alt="UserPhoto" />
+                <img src={userPhotoUrl} alt="UserPhoto" onError={onFailedLoadPhoto} />
             </th>
             <th className="name">{user.firstName}</th>
             <th className="surname">{user.lastName}</th>
