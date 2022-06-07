@@ -87,6 +87,10 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         </div>
     );
 
+    const approveAddingNode: React.ReactNode = (
+        <>{!isRoleNew ? approveAddingAvailableRoleNode : approveAddingNewRoleNode}</>
+    );
+
     const roleWasAddedNode: React.ReactNode = (
         <div>
             <span>Roles list includes this role.</span> <br />
@@ -109,9 +113,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
             {isRoleAdded
                 ? roleWasAddedNode
                 : inputNameOfRole.length > 1
-                ? !isRoleNew
-                    ? approveAddingAvailableRoleNode
-                    : approveAddingNewRoleNode
+                ? approveAddingNode
                 : ''}
         </div>
     );
