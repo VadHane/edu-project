@@ -1,13 +1,15 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
+import { Route, Routes } from 'react-router-dom';
 import { User } from '../../models/User';
 import { Role } from '../../models/Role';
 import { getAllUsersAsync } from '../../services/userService';
-import TableContentRow from './TableContentRow/TableContentRow';
-import { Route, Routes } from 'react-router-dom';
-import UserCreateAndUpdateModal from './UserCreateAndUpdateModal/UserCreateAndUpdateModal';
-import AddUserButton from '../AddUserButton/AddUserButton';
+import TableContentRow from './TableContentRow';
+import UserCreateAndUpdateModal from '../UserCreateAndUpdateModal';
+import AddUserButton from '../AddUserButton';
 import UsersTableProps from './UsersTable.types';
+import UserWarningModal from '../UserWarningModal';
 import './UsersTable.css';
+import { Maybe } from '../../types';
 
 const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
     const [users, setUsers] = useState<Array<User>>([]);
@@ -27,8 +29,9 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                             <TableContentRow
                                 key={user.id}
                                 user={user}
-                                onEdit={(id: string) => {}}
-                                onDelete={(id: string) => {}}
+                                onDelete={(user: User) => {
+                                    deleteUser(user);
+                                }}
                             />
                         ),
                     )}
@@ -52,17 +55,64 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         </table>
     );
 
-    const addUser = (user: User, image: File): Promise<boolean> => {
-        return props
-            .createUserAsync(user, image)
-            .then((data: User): boolean => {
-                if (data) {
-                    setUsers((currentValue: Array<User>) => [...currentValue, data]);
-                    return true;
-                }
+    const createNewUser = async (user: User, image: File): Promise<boolean> => {
+        try {
+            const createdUser = await props.createUserAsync(user, image);
+
+            if (!createdUser) {
                 return false;
-            })
-            .catch(() => false);
+            }
+
+            setUsers((currentValue: Array<User>) => [...currentValue, createdUser]);
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    const editUser = async (user: User, image: File): Promise<boolean> => {
+        try {
+            const editedUser = await props.editUserAsync(user, image);
+
+            if (!editUser) {
+                return false;
+            }
+
+            setUsers((currentValue: Array<User>) => {
+                const indexOfSelectedUser = currentValue?.findIndex(
+                    (_user: User) => _user.id === user.id,
+                );
+
+                const prevList = currentValue.slice(0, indexOfSelectedUser);
+                const endList = currentValue.slice(
+                    indexOfSelectedUser + 1,
+                    currentValue.length,
+                );
+
+                return [...prevList, editedUser, ...endList];
+            });
+            return true;
+        } catch {
+            return false;
+        }
+    };
+
+    const deleteUser = (user: User): void => {
+        props.deleteUserAsync(user).then((user: User) => {
+            setUsers((currentValue: Array<User>) => {
+                const indexOfSelectedUser = currentValue?.findIndex(
+                    (_user: User) => _user.id === user.id,
+                );
+
+                const prevList = currentValue.slice(0, indexOfSelectedUser);
+                const endList = currentValue.slice(
+                    indexOfSelectedUser + 1,
+                    currentValue.length,
+                );
+
+                return [...prevList, ...endList];
+            });
+        });
     };
 
     const emptyUser: User = {
@@ -70,26 +120,59 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         firstName: '',
         lastName: '',
         email: '',
-        imageBlobKey: '',
+        imageBlobKey: null,
         roles: [],
+    };
+
+    const getUserById = (id?: string): Maybe<User> => {
+        if (!id) {
+            return undefined;
+        }
+
+        const index = users.findIndex((user: User) => user.id === id);
+
+        if (index === -1) {
+            return undefined;
+        }
+
+        return users[index];
     };
 
     return (
         <div className="list">
             <Routes>
+                <Route path="/" />
                 <Route
                     path="/add"
                     element={
                         <UserCreateAndUpdateModal
-                            user={emptyUser}
+                            getUserById={(id?: string) => emptyUser}
                             buttonContent={'Add new user'}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>
-                                addUser(user, file)
+                                createNewUser(user, file)
                             }
                         />
                     }
+                />
+                <Route
+                    path="/edit/:id"
+                    element={
+                        <UserCreateAndUpdateModal
+                            getUserById={(id?: string) => getUserById(id)}
+                            buttonContent={'Edit'}
+                            getAllRolesAsync={() => props.getAllRolesAsync()}
+                            createNewRole={(role: Role) => props.createNewRole(role)}
+                            resultActionAsync={(user: User, file: File) =>
+                                editUser(user, file)
+                            }
+                        />
+                    }
+                />
+                <Route
+                    path="*"
+                    element={<UserWarningModal message="Incorrect query path." />}
                 />
             </Routes>
 

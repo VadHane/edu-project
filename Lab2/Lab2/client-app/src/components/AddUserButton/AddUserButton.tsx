@@ -6,7 +6,9 @@ const AddUserButton: FunctionComponent = () => {
     const navigate = useNavigate();
 
     const onClickHandler = () => {
-        navigate('/add');
+        const pathToAddingUser = '/add';
+
+        navigate(pathToAddingUser);
     };
 
     return <button onClick={onClickHandler}>Add new user</button>;

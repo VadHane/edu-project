@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Lab2.Models
 {
-   public class UserCreateRequest
+   public class UserCreateUpdateRequest
    {
       public string FirstName { get; set; }
 

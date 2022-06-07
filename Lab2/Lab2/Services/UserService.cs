@@ -165,7 +165,7 @@ namespace Lab2.Services
                 throw new EntityNotFoundException();
             }
 
-            if (foundUser.ImageBlobKey != null)
+            if (foundUser.ImageBlobKey != null && file != null)
             {
                 string absoluteFilePath = $"{env.WebRootPath}/{foundUser.ImageBlobKey}";
                 File.Delete(absoluteFilePath);

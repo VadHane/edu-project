@@ -1,17 +1,17 @@
 /* eslint-disable indent */
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Role } from '../../../../models/Role';
+import { Role } from '../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
+import { APPROVE_IMAGE, CANSEL_IMAGE } from '../../../constants';
 import './AvailableRolesList.css';
-import { APPROVE_IMAGE_URL, CANSEL_IMAGE_URL } from '../../../../constants';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,
 ) => {
     const [roles, setRoles] = useState<Array<Role>>(props.roles);
     const [inputNameOfRole, setInputNameOfRole] = useState<string>('');
-    const [itNewRole, setItNewRole] = useState<boolean>(false);
-    const [itAddedRole, setItAddedRole] = useState<boolean>(false);
+    const [isRoleNew, setItNewRole] = useState<boolean>(false);
+    const [isRoleAdded, setItAddedRole] = useState<boolean>(false);
 
     useEffect(() => {
         setRoles([...props.roles]);
@@ -32,7 +32,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         setItAddedRole(added);
     }, [inputNameOfRole, props.addedRoles, roles]);
 
-    const inputBox: React.ReactNode = (
+    const inputBoxNode: React.ReactNode = (
         <div>
             <datalist id="available-roles-list">
                 {roles?.map((role: Role) => (
@@ -49,50 +49,54 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         </div>
     );
 
-    const approveAddingNewRole: React.ReactNode = (
+    const approveAddingNewRoleNode: React.ReactNode = (
         <div className="aprove-add-role">
             <span>Would you like to create new role - {inputNameOfRole}?</span> <br />
             <img
-                src={APPROVE_IMAGE_URL}
-                alt="Aprove"
+                src={APPROVE_IMAGE.URL}
+                alt={APPROVE_IMAGE.ALT}
                 onClick={() => {
                     props.createNewRole({ id: '', name: inputNameOfRole });
                     setItNewRole(false);
                 }}
             />
             <img
-                src={CANSEL_IMAGE_URL}
-                alt="Cancel"
+                src={CANSEL_IMAGE.URL}
+                alt={CANSEL_IMAGE.ALT}
                 onClick={() => setInputNameOfRole('')}
             />
         </div>
     );
 
-    const approveAddingAvailableRole: React.ReactNode = (
+    const approveAddingAvailableRoleNode: React.ReactNode = (
         <div className="aprove-add-role">
             <span>Would you like to add this role?</span> <br />
             <img
-                src={APPROVE_IMAGE_URL}
-                alt="Approve"
+                src={APPROVE_IMAGE.URL}
+                alt={APPROVE_IMAGE.ALT}
                 onClick={() => {
                     props.addRole(getRoleByName(inputNameOfRole));
                     setInputNameOfRole('');
                 }}
             />
             <img
-                src={CANSEL_IMAGE_URL}
-                alt="Cancel"
+                src={CANSEL_IMAGE.URL}
+                alt={CANSEL_IMAGE.ALT}
                 onClick={() => setInputNameOfRole('')}
             />
         </div>
     );
 
-    const roleWasAdd: React.ReactNode = (
+    const approveAddingNode: React.ReactNode = (
+        <>{!isRoleNew ? approveAddingAvailableRoleNode : approveAddingNewRoleNode}</>
+    );
+
+    const roleWasAddedNode: React.ReactNode = (
         <div>
             <span>Roles list includes this role.</span> <br />
             <img
-                src={APPROVE_IMAGE_URL}
-                alt="Ok"
+                src={APPROVE_IMAGE.URL}
+                alt={APPROVE_IMAGE.ALT}
                 onClick={() => setInputNameOfRole('')}
             />
         </div>
@@ -105,13 +109,11 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
 
     return (
         <div>
-            {inputBox}
-            {itAddedRole
-                ? roleWasAdd
+            {inputBoxNode}
+            {isRoleAdded
+                ? roleWasAddedNode
                 : inputNameOfRole.length > 1
-                ? !itNewRole
-                    ? approveAddingAvailableRole
-                    : approveAddingNewRole
+                ? approveAddingNode
                 : ''}
         </div>
     );
