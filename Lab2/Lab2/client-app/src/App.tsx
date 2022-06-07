@@ -1,6 +1,5 @@
 import React, { FunctionComponent } from 'react';
 import UsersTable from './components/UsersTable';
-import './App.css';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { createNewRole, getAllRolesAsync } from './services/roleService';
 import { Role } from './models/Role';

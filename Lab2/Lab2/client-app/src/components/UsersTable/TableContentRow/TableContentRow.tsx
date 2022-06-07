@@ -1,14 +1,10 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../models/Role';
 import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
+import { EDIT_IMAGE, REMOVE_IMAGE, USER_DEFAULT_PICTURE } from '../../../constants';
 import './TableContentRow.css';
-import {
-    EDIT_IMAGE_URL,
-    REMOVE_IMAGE_URL,
-    USER_DEFAULT_PICTURE_URL,
-} from '../../../constants';
-import { useNavigate } from 'react-router-dom';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
@@ -28,7 +24,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     }, [props.user.imageBlobKey]);
 
     const onFailedLoadPhoto = () => {
-        setUserPhotoUrl(USER_DEFAULT_PICTURE_URL);
+        setUserPhotoUrl(USER_DEFAULT_PICTURE.URL);
     };
 
     const onEditHandler = () => {
@@ -44,7 +40,11 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     return (
         <tr>
             <th className="picture">
-                <img src={userPhotoUrl} alt="UserPhoto" onError={onFailedLoadPhoto} />
+                <img
+                    src={userPhotoUrl}
+                    alt={USER_DEFAULT_PICTURE.ALT}
+                    onError={onFailedLoadPhoto}
+                />
             </th>
             <th className="name">{user.firstName}</th>
             <th className="surname">{user.lastName}</th>
@@ -53,8 +53,12 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
                 {user.roles.map((role: Role): string => `${role.name}; `)}
             </th>
             <th className="actions">
-                <img src={EDIT_IMAGE_URL} alt="Edit" onClick={onEditHandler} />
-                <img src={REMOVE_IMAGE_URL} alt="Delete" onClick={onDeleteHandler} />
+                <img src={EDIT_IMAGE.URL} alt={EDIT_IMAGE.ALT} onClick={onEditHandler} />
+                <img
+                    src={REMOVE_IMAGE.URL}
+                    alt={REMOVE_IMAGE.ALT}
+                    onClick={onDeleteHandler}
+                />
             </th>
         </tr>
     );

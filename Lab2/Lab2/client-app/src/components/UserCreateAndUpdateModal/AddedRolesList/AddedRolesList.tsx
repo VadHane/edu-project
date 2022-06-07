@@ -1,8 +1,8 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../models/Role';
 import AddedRolesListProps from './AddedRolesList.types';
+import { REMOVE_IMAGE } from '../../../constants';
 import './AddedRolesList.css';
-import { REMOVE_IMAGE_URL } from '../../../constants';
 
 const AddedRolesList: FunctionComponent<AddedRolesListProps> = (
     props: AddedRolesListProps,
@@ -20,8 +20,8 @@ const AddedRolesList: FunctionComponent<AddedRolesListProps> = (
                     <span>
                         {role.name}
                         <img
-                            src={REMOVE_IMAGE_URL}
-                            alt="Remove"
+                            src={REMOVE_IMAGE.URL}
+                            alt={REMOVE_IMAGE.ALT}
                             onClick={() => props.removeAddedRole(role)}
                         />
                     </span>

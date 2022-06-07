@@ -11,6 +11,7 @@ import {
     INCORRECT_EMAIL_EXCEPTION,
     LENGTH_OF_NAME_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
+    TRY_AGAIN_LATER_EXCEPTION,
 } from '../../constants';
 import './UserCreateAndUpdateModal.css';
 import UserWarningModal from '../UserWarningModal';
@@ -198,7 +199,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             if (done) {
                 navigate('/');
             } else {
-                setExceptionMessage('Try again later.');
+                setExceptionMessage(TRY_AGAIN_LATER_EXCEPTION);
             }
         });
     };

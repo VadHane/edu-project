@@ -1,3 +1,4 @@
+import { Nullable } from '../types';
 import { Role } from './Role';
 
 export interface User {
@@ -5,6 +6,6 @@ export interface User {
     firstName: string;
     lastName: string;
     email: string;
-    imageBlobKey: string | null;
+    imageBlobKey: Nullable<string>;
     roles: Array<Role>;
 }

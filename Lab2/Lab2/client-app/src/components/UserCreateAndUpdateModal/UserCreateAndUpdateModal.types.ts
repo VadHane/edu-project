@@ -1,10 +1,11 @@
 import { Role } from '../../models/Role';
 import { User } from '../../models/User';
+import { Maybe } from '../../types';
 
 type UserCreateAndUpdateModalProps = {
     buttonContent: string;
     getAllRolesAsync: () => Promise<Array<Role>>;
-    getUserById: (id?: string) => User | undefined;
+    getUserById: (id?: string) => Maybe<User>;
     createNewRole: (role: Role) => Promise<Role>;
 
     // * Handler for click action for the button of form.

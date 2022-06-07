@@ -1,6 +1,6 @@
 /* The Modal (background) */
 .warning-modal-wrapper {
-    display: absolute; /* Hidden by default */
+    display: absolute;
     position: fixed; /* Stay in place */
     z-index: 1; /* Sit on top */
     left: 0;
