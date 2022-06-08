@@ -2,8 +2,13 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
-import { APPROVE_IMAGE, CANSEL_IMAGE } from '../../../constants';
+import { APPROVE_IMAGE, CANCEL_IMAGE } from '../../../App.constants';
 import './AvailableRolesList.css';
+import {
+    ADD_ROLE_MESSAGE,
+    GET_CREATE_ROLE_MESSAGE,
+    LIST_INCLUDES_ROLE_MESSAGE,
+} from './AvailableRolesList.constants';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,
@@ -51,7 +56,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
 
     const approveAddingNewRoleNode: React.ReactNode = (
         <div className="aprove-add-role">
-            <span>Would you like to create new role - {inputNameOfRole}?</span> <br />
+            <span>{GET_CREATE_ROLE_MESSAGE}</span> <br />
             <img
                 src={APPROVE_IMAGE.URL}
                 alt={APPROVE_IMAGE.ALT}
@@ -61,8 +66,8 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 }}
             />
             <img
-                src={CANSEL_IMAGE.URL}
-                alt={CANSEL_IMAGE.ALT}
+                src={CANCEL_IMAGE.URL}
+                alt={CANCEL_IMAGE.ALT}
                 onClick={() => setInputNameOfRole('')}
             />
         </div>
@@ -70,7 +75,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
 
     const approveAddingAvailableRoleNode: React.ReactNode = (
         <div className="aprove-add-role">
-            <span>Would you like to add this role?</span> <br />
+            <span>{ADD_ROLE_MESSAGE}</span> <br />
             <img
                 src={APPROVE_IMAGE.URL}
                 alt={APPROVE_IMAGE.ALT}
@@ -80,8 +85,8 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 }}
             />
             <img
-                src={CANSEL_IMAGE.URL}
-                alt={CANSEL_IMAGE.ALT}
+                src={CANCEL_IMAGE.URL}
+                alt={CANCEL_IMAGE.ALT}
                 onClick={() => setInputNameOfRole('')}
             />
         </div>
@@ -93,7 +98,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
 
     const roleWasAddedNode: React.ReactNode = (
         <div>
-            <span>Roles list includes this role.</span> <br />
+            <span>{LIST_INCLUDES_ROLE_MESSAGE}</span> <br />
             <img
                 src={APPROVE_IMAGE.URL}
                 alt={APPROVE_IMAGE.ALT}

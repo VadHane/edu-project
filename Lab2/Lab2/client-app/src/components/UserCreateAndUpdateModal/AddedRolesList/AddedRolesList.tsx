@@ -1,7 +1,7 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../models/Role';
 import AddedRolesListProps from './AddedRolesList.types';
-import { REMOVE_IMAGE } from '../../../constants';
+import { REMOVE_IMAGE } from '../../../App.constants';
 import './AddedRolesList.css';
 
 const AddedRolesList: FunctionComponent<AddedRolesListProps> = (

@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../models/Role';
 import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
-import { EDIT_IMAGE, REMOVE_IMAGE, USER_DEFAULT_PICTURE } from '../../../constants';
+import { EDIT_IMAGE, REMOVE_IMAGE, USER_DEFAULT_PICTURE } from '../../../App.constants';
 import './TableContentRow.css';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (

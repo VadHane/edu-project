@@ -8,11 +8,12 @@ import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
 import { User } from '../../models/User';
 import {
     FILE_NOT_IMAGE_EXCEPTION,
+    INCORECT_USER_ID_EXCEPTION,
     INCORRECT_EMAIL_EXCEPTION,
     LENGTH_OF_NAME_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
     TRY_AGAIN_LATER_EXCEPTION,
-} from '../../constants';
+} from '../../App.constants';
 import './UserCreateAndUpdateModal.css';
 import UserWarningModal from '../UserWarningModal';
 
@@ -23,7 +24,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     const foundUser = props.getUserById(id);
 
     if (!foundUser) {
-        return <UserWarningModal message="Incorrect user id" />;
+        return <UserWarningModal message={INCORECT_USER_ID_EXCEPTION} />;
     }
 
     const navigate = useNavigate();
@@ -66,8 +67,8 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                     {exceptionString}
                     <input
                         type="text"
-                        name="title"
-                        id="title"
+                        name="first_name"
+                        id="first_name"
                         placeholder="First name"
                         value={firstName}
                         onChange={(event) => {
@@ -78,8 +79,8 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
 
                     <input
                         type="text"
-                        name="title"
-                        id="title"
+                        name="last_name"
+                        id="last_name"
                         placeholder="Last name"
                         value={lastName}
                         onChange={(event) => {
@@ -90,8 +91,8 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
 
                     <input
                         type="email"
-                        name="title"
-                        id="title"
+                        name="email"
+                        id="email"
                         placeholder="email"
                         value={email}
                         onChange={(event) => {
