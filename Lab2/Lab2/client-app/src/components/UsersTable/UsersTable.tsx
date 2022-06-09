@@ -2,23 +2,31 @@ import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import { User } from '../../models/User';
 import { Role } from '../../models/Role';
-import { getAllUsersAsync } from '../../services/userService';
 import TableContentRow from './TableContentRow';
 import UserCreateAndUpdateModal from '../UserCreateAndUpdateModal';
 import AddUserButton from '../AddUserButton';
 import UsersTableProps from './UsersTable.types';
 import UserWarningModal from '../UserWarningModal';
-import './UsersTable.css';
 import { Maybe } from '../../types';
+import { INCORRECT_PATH_EXCEPTION } from '../../App.constants';
+import './UsersTable.css';
+import {
+    ACTIONS_COLUMNHEADER,
+    EMAIL_COLUMNHEADER,
+    FIRST_NAME_COLUMNHEADER,
+    LAST_NAME_COLUMNHEADER,
+    PICTURE_COLUMNHEADER,
+    ROLES_COLUMNHEADER,
+} from './UsersTable.constants';
 
 const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
     const [users, setUsers] = useState<Array<User>>([]);
 
     useEffect(() => {
-        getAllUsersAsync().then((data: Array<User>) => {
+        props.getAllUsersAsync().then((data: Array<User>) => {
             setUsers(data);
         });
-    }, []);
+    }, [props]);
 
     const usersRowsNode: React.ReactNode = (
         <div className="scroll-list">
@@ -44,12 +52,12 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         <table>
             <thead>
                 <tr>
-                    <th className="picture">Picture</th>
-                    <th className="name">First name</th>
-                    <th className="surname">Last name</th>
-                    <th className="email">Email</th>
-                    <th className="roles">Roles</th>
-                    <th className="actions">Actions</th>
+                    <th className="picture">{PICTURE_COLUMNHEADER}</th>
+                    <th className="name">{FIRST_NAME_COLUMNHEADER}</th>
+                    <th className="surname">{LAST_NAME_COLUMNHEADER}</th>
+                    <th className="email">{EMAIL_COLUMNHEADER}</th>
+                    <th className="roles">{ROLES_COLUMNHEADER}</th>
+                    <th className="actions">{ACTIONS_COLUMNHEADER}</th>
                 </tr>
             </thead>
         </table>
@@ -141,7 +149,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
     return (
         <div className="list">
             <Routes>
-                <Route path="/" />
+                <Route path="/" element={<AddUserButton />} />
                 <Route
                     path="/add"
                     element={
@@ -172,11 +180,10 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                 />
                 <Route
                     path="*"
-                    element={<UserWarningModal message="Incorrect query path." />}
+                    element={<UserWarningModal message={INCORRECT_PATH_EXCEPTION} />}
                 />
             </Routes>
 
-            <AddUserButton />
             {tableHeaderNode}
             {usersRowsNode}
         </div>
