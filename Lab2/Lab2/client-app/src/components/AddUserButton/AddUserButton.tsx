@@ -1,5 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { ADD_USER_BUTTON_TEXT } from '../UsersTable/UsersTable.constants';
 import './AddUserButton.css';
 
 const AddUserButton: FunctionComponent = () => {
@@ -11,7 +12,7 @@ const AddUserButton: FunctionComponent = () => {
         navigate(pathToAddingUser);
     };
 
-    return <button onClick={onClickHandler}>Add new user</button>;
+    return <button onClick={onClickHandler}>{ADD_USER_BUTTON_TEXT}</button>;
 };
 
 export default AddUserButton;
