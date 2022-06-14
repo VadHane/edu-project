@@ -11,12 +11,14 @@ import { Maybe } from '../../types';
 import { INCORRECT_PATH_EXCEPTION } from '../../App.constants';
 import './UsersTable.css';
 import {
-    ACTIONS_COLUMNHEADER,
-    EMAIL_COLUMNHEADER,
-    FIRST_NAME_COLUMNHEADER,
-    LAST_NAME_COLUMNHEADER,
-    PICTURE_COLUMNHEADER,
-    ROLES_COLUMNHEADER,
+    ACTIONS_COLUMN_HEADER,
+    ADD_USER_BUTTON_TEXT,
+    EDIT_USER_BUTTON_TEXT,
+    EMAIL_COLUMN_HEADER,
+    FIRST_NAME_COLUMN_HEADER,
+    LAST_NAME_COLUMN_HEADER,
+    PICTURE_COLUMN_HEADER,
+    ROLES_COLUMN_HEADER,
 } from './UsersTable.constants';
 
 const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
@@ -52,12 +54,12 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
         <table>
             <thead>
                 <tr>
-                    <th className="picture">{PICTURE_COLUMNHEADER}</th>
-                    <th className="name">{FIRST_NAME_COLUMNHEADER}</th>
-                    <th className="surname">{LAST_NAME_COLUMNHEADER}</th>
-                    <th className="email">{EMAIL_COLUMNHEADER}</th>
-                    <th className="roles">{ROLES_COLUMNHEADER}</th>
-                    <th className="actions">{ACTIONS_COLUMNHEADER}</th>
+                    <th className="picture">{PICTURE_COLUMN_HEADER}</th>
+                    <th className="name">{FIRST_NAME_COLUMN_HEADER}</th>
+                    <th className="surname">{LAST_NAME_COLUMN_HEADER}</th>
+                    <th className="email">{EMAIL_COLUMN_HEADER}</th>
+                    <th className="roles">{ROLES_COLUMN_HEADER}</th>
+                    <th className="actions">{ACTIONS_COLUMN_HEADER}</th>
                 </tr>
             </thead>
         </table>
@@ -155,7 +157,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                     element={
                         <UserCreateAndUpdateModal
                             getUserById={(id?: string) => emptyUser}
-                            buttonContent={'Add new user'}
+                            buttonContent={ADD_USER_BUTTON_TEXT}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>
@@ -169,7 +171,7 @@ const UsersTable: FunctionComponent<UsersTableProps> = (props) => {
                     element={
                         <UserCreateAndUpdateModal
                             getUserById={(id?: string) => getUserById(id)}
-                            buttonContent={'Edit'}
+                            buttonContent={EDIT_USER_BUTTON_TEXT}
                             getAllRolesAsync={() => props.getAllRolesAsync()}
                             createNewRole={(role: Role) => props.createNewRole(role)}
                             resultActionAsync={(user: User, file: File) =>

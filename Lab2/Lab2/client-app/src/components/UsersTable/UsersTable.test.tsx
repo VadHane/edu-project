@@ -3,12 +3,12 @@ import { cleanup, render, screen } from '@testing-library/react';
 import UsersTable from './UsersTable';
 import { User } from '../../models/User';
 import {
-    ACTIONS_COLUMNHEADER,
-    EMAIL_COLUMNHEADER,
-    FIRST_NAME_COLUMNHEADER,
-    LAST_NAME_COLUMNHEADER,
-    PICTURE_COLUMNHEADER,
-    ROLES_COLUMNHEADER,
+    ACTIONS_COLUMN_HEADER,
+    EMAIL_COLUMN_HEADER,
+    FIRST_NAME_COLUMN_HEADER,
+    LAST_NAME_COLUMN_HEADER,
+    PICTURE_COLUMN_HEADER,
+    ROLES_COLUMN_HEADER,
 } from './UsersTable.constants';
 
 jest.mock('react-router-dom', () => ({
@@ -50,22 +50,22 @@ describe('Test users table.', () => {
         render(<>{UsersTableNode}</>);
 
         expect(
-            screen.getByRole('columnheader', { name: PICTURE_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: PICTURE_COLUMN_HEADER }),
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('columnheader', { name: FIRST_NAME_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: FIRST_NAME_COLUMN_HEADER }),
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('columnheader', { name: LAST_NAME_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: LAST_NAME_COLUMN_HEADER }),
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('columnheader', { name: EMAIL_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: EMAIL_COLUMN_HEADER }),
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('columnheader', { name: ROLES_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: ROLES_COLUMN_HEADER }),
         ).toBeInTheDocument();
         expect(
-            screen.getByRole('columnheader', { name: ACTIONS_COLUMNHEADER }),
+            screen.getByRole('columnheader', { name: ACTIONS_COLUMN_HEADER }),
         ).toBeInTheDocument();
     });
 

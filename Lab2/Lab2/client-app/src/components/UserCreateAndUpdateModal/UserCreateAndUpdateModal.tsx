@@ -16,6 +16,11 @@ import {
 } from '../../App.constants';
 import './UserCreateAndUpdateModal.css';
 import UserWarningModal from '../UserWarningModal';
+import {
+    EMAIL_PLACEHOLDER,
+    FIRST_NAME_PLACEHOLDER,
+    LAST_NAME_PLACEHOLDER,
+} from './UserCreateAndUpdateModal.constants';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = (
     props: UserCreateAndUpdateModalProps,
@@ -69,7 +74,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                         type="text"
                         name="first_name"
                         id="first_name"
-                        placeholder="First name"
+                        placeholder={FIRST_NAME_PLACEHOLDER}
                         value={firstName}
                         onChange={(event) => {
                             setFirstName(event.target.value);
@@ -81,7 +86,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                         type="text"
                         name="last_name"
                         id="last_name"
-                        placeholder="Last name"
+                        placeholder={LAST_NAME_PLACEHOLDER}
                         value={lastName}
                         onChange={(event) => {
                             setLastName(event.target.value);
@@ -93,7 +98,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                         type="email"
                         name="email"
                         id="email"
-                        placeholder="email"
+                        placeholder={EMAIL_PLACEHOLDER}
                         value={email}
                         onChange={(event) => {
                             setEmail(event.target.value);

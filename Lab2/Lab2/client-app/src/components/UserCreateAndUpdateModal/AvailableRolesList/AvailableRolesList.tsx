@@ -8,6 +8,7 @@ import {
     ADD_ROLE_MESSAGE,
     GET_CREATE_ROLE_MESSAGE,
     LIST_INCLUDES_ROLE_MESSAGE,
+    MAX_LENGTH_INPUT_BOX,
 } from './AvailableRolesList.constants';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
@@ -47,8 +48,9 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
             <input
                 type="text"
                 list="available-roles-list"
+                id="available-roles-list-input"
                 value={inputNameOfRole}
-                maxLength={30}
+                maxLength={MAX_LENGTH_INPUT_BOX}
                 onChange={(e) => setInputNameOfRole(e.target.value)}
             />
         </div>

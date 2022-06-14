@@ -1,6 +1,9 @@
-export const PICTURE_COLUMNHEADER = 'Picture';
-export const FIRST_NAME_COLUMNHEADER = 'First name';
-export const LAST_NAME_COLUMNHEADER = 'Last name';
-export const EMAIL_COLUMNHEADER = 'Email';
-export const ROLES_COLUMNHEADER = 'Roles';
-export const ACTIONS_COLUMNHEADER = 'Actions';
+export const PICTURE_COLUMN_HEADER = 'Picture';
+export const FIRST_NAME_COLUMN_HEADER = 'First name';
+export const LAST_NAME_COLUMN_HEADER = 'Last name';
+export const EMAIL_COLUMN_HEADER = 'Email';
+export const ROLES_COLUMN_HEADER = 'Roles';
+export const ACTIONS_COLUMN_HEADER = 'Actions';
+
+export const ADD_USER_BUTTON_TEXT = 'Add new user';
+export const EDIT_USER_BUTTON_TEXT = 'Edit';
