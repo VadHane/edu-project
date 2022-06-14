@@ -1,4 +1,7 @@
-import { ADD_USER_BUTTON_TEXT } from './../../src/components/UsersTable/UsersTable.constants';
+import {
+    ADD_USER_BUTTON_TEXT,
+    EDIT_USER_BUTTON_TEXT,
+} from './../../src/components/UsersTable/UsersTable.constants';
 import {
     APPROVE_IMAGE,
     CANCEL_IMAGE,
@@ -14,8 +17,25 @@ import {
     GET_CREATE_ROLE_MESSAGE,
     LIST_INCLUDES_ROLE_MESSAGE,
 } from './../../src/components/UserCreateAndUpdateModal/AvailableRolesList/AvailableRolesList.constants';
+import { User } from '../../src/models/User';
 
 const host = 'http://localhost:3000';
+
+const testUser: User = {
+    id: '',
+    firstName: 'testName',
+    lastName: 'testSurname',
+    email: 'testEmail@test.ts',
+    imageBlobKey: null,
+    roles: [
+        {
+            id: '',
+            name: 'Admin',
+        },
+    ],
+};
+
+const testUserPhotoPath = './images/testUserPhoto.png';
 
 describe('End to end test aplication.', () => {
     it('Start page should send request to API and the response should not be null.', () => {
@@ -157,6 +177,108 @@ describe('End to end test aplication.', () => {
 
         cy.get('@email').then((email) => {
             cy.get('input#email').should('have.value', email);
+        });
+    });
+
+    it('Add user algorithm should function without errors.', () => {
+        cy.visit(host);
+
+        cy.contains(ADD_USER_BUTTON_TEXT).click();
+
+        cy.get('input#first_name')
+            .should('have.value', '')
+            .type(testUser.firstName)
+            .should('have.value', testUser.firstName);
+
+        cy.get('input#last_name')
+            .should('have.value', '')
+            .type(testUser.lastName)
+            .should('have.value', testUser.lastName);
+
+        cy.get('input#email')
+            .should('have.value', '')
+            .type(testUser.email)
+            .should('have.value', testUser.email);
+
+        cy.get('input#available-roles-list-input')
+            .should('have.value', '')
+            .type(testUser.roles[0].name)
+            .should('have.value', testUser.roles[0].name);
+        cy.contains(ADD_ROLE_MESSAGE);
+
+        cy.get(`[alt=${APPROVE_IMAGE.ALT}]`).click();
+
+        cy.get('input[type="file"]').attachFile(testUserPhotoPath);
+
+        cy.url().should('eq', `${host}/add`);
+
+        cy.contains(ADD_USER_BUTTON_TEXT).click();
+
+        cy.url().should('eq', `${host}/`);
+
+        cy.contains(testUser.firstName);
+        cy.contains(testUser.lastName);
+        cy.contains(testUser.email);
+    });
+
+    it('Edit user algorithm should function without errors.', () => {
+        cy.visit(host);
+        const editedTestUser: User = {
+            id: '',
+            firstName: testUser.firstName + 'test',
+            lastName: testUser.lastName + 'test',
+            email: 'test' + testUser.email,
+            imageBlobKey: null,
+            roles: [...testUser.roles],
+        };
+
+        cy.contains(testUser.email)
+            .parent()
+            .find(`th.actions [alt=${EDIT_IMAGE.ALT}]`)
+            .click();
+
+        cy.get('input#first_name')
+            .should('have.value', testUser.firstName)
+            .clear()
+            .type(editedTestUser.firstName)
+            .should('have.value', editedTestUser.firstName);
+
+        cy.get('input#last_name')
+            .should('have.value', testUser.lastName)
+            .clear()
+            .type(editedTestUser.lastName)
+            .should('have.value', editedTestUser.lastName);
+
+        cy.get('input#email')
+            .should('have.value', testUser.email)
+            .clear()
+            .type(editedTestUser.email)
+            .should('have.value', editedTestUser.email);
+
+        cy.get('input[type="file"]').attachFile(testUserPhotoPath);
+
+        cy.contains(EDIT_USER_BUTTON_TEXT).click();
+        cy.url().should('eq', `${host}/`);
+
+        cy.contains(editedTestUser.firstName);
+        cy.contains(editedTestUser.lastName);
+        cy.contains(editedTestUser.email);
+    });
+
+    it('Delete user algorithm shoult function without errors.', () => {
+        cy.visit(host);
+
+        cy.get('tbody').children().its('length').as('lengthOfRowsBefore');
+
+        cy.contains(testUser.email)
+            .parent()
+            .find(`th.actions [alt=${REMOVE_IMAGE.ALT}]`)
+            .click();
+
+        cy.get('@lengthOfRowsBefore').then((lengthOfRowsBefore) => {
+            cy.get('tbody')
+                .children()
+                .should('have.length', +lengthOfRowsBefore - 1);
         });
     });
 });
