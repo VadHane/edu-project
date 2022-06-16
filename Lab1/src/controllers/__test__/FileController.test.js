@@ -1,5 +1,7 @@
 import request from 'supertest';
 import express from 'express';
+import cors from 'cors';
+import { CORS_RES_HEADERS } from './../../constants.js';
 import file from './../../routes/fileRoutes.js';
 import path from 'path';
 import { FILE_WAS_NOT_FOUND_TEXT } from './../../constants.js';
@@ -26,6 +28,11 @@ const url = '/api/file/';
 
 const app = express();
 
+app.use(
+    cors({
+        origin: CORS_RES_HEADERS['Access-Control-Allow-Origin'],
+    })
+);
 app.use('/api/file', file);
 
 describe('API tests for file controller.', () => {

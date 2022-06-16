@@ -1,5 +1,4 @@
 import {
-    CORS_RES_HEADERS,
     FILE_WAS_NOT_FOUND_TEXT,
     FILES_WERE_NOT_FOUND_TEXT,
 } from '../constants.js';
@@ -31,8 +30,6 @@ export default class FileController {
         try {
             const files = await this.fileService.getAll();
 
-            res.set(CORS_RES_HEADERS);
-
             if (!files) {
                 res.status(204).send(FILES_WERE_NOT_FOUND_TEXT).end();
             } else {
@@ -58,16 +55,9 @@ export default class FileController {
             const filePath = await this.fileService.get(req.params.id);
 
             if (!filePath) {
-                res.set(CORS_RES_HEADERS);
-
                 res.status(404).json(FILE_WAS_NOT_FOUND_TEXT).end();
                 return;
             }
-
-            res.set({
-                ...CORS_RES_HEADERS,
-                'Content-Type': 'image/jpeg',
-            });
 
             res.status(200).sendFile(filePath);
         } catch (e) {
@@ -87,8 +77,6 @@ export default class FileController {
     async createFile(req, res) {
         try {
             const document = await this.fileService.create(req.files?.file);
-
-            res.set(CORS_RES_HEADERS);
 
             res.status(200).json(document).end();
         } catch (e) {
@@ -113,8 +101,6 @@ export default class FileController {
                 req.files?.file
             );
 
-            res.set(CORS_RES_HEADERS);
-
             if (!document) {
                 res.status(404).json(FILE_WAS_NOT_FOUND_TEXT).end();
             } else {
@@ -137,8 +123,6 @@ export default class FileController {
     async deleteFile(req, res) {
         try {
             const document = await this.fileService.delete(req.params.id);
-
-            res.set(CORS_RES_HEADERS);
 
             if (!document) {
                 res.status(404).json(FILE_WAS_NOT_FOUND_TEXT).end();

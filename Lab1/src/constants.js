@@ -2,7 +2,6 @@
  * Headers for the response.
  */
 export const CORS_RES_HEADERS = {
-    'Content-Type': 'application/json',
     /** Url address of UI. */
     'Access-Control-Allow-Origin': '*',
 };
