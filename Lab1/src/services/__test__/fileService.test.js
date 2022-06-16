@@ -3,7 +3,14 @@ import FileService from '../fileService.js';
 import db from '../../models/File.js';
 import fs from 'fs';
 import path from 'path';
-import { CORS_RES_HEADERS, FILE_NOT_IMAGE_EXCEPTION, INCORRECT_FILE_EXCEPTION, INCORRECT_ID_EXCEPTION, NEEDED_FIELDS_ARE_MISSING_EXCEPTION } from '../../constants.js';
+import {
+    CORS_RES_HEADERS,
+    FILE_NOT_IMAGE_EXCEPTION,
+    INCORRECT_FILE_EXCEPTION,
+    INCORRECT_ID_EXCEPTION,
+    NEEDED_FIELDS_ARE_MISSING_EXCEPTION,
+} from '../../constants.js';
+
 const service = new FileService();
 
 const testData = [
@@ -13,7 +20,7 @@ const testData = [
             contentType: 'json',
         },
         createdAt: 10,
-        updateAt: 10
+        updateAt: 10,
     },
     {
         _id: 2,
@@ -21,7 +28,7 @@ const testData = [
             contentType: 'json',
         },
         createdAt: 11,
-        updateAt: 11
+        updateAt: 11,
     },
     {
         _id: 3,
@@ -30,7 +37,7 @@ const testData = [
             contentType: 'json',
         },
         createdAt: 12,
-        updateAt: 12
+        updateAt: 12,
     },
 ];
 
@@ -38,7 +45,7 @@ const testFile = {
     name: 'testName.jpg',
     mimetype: 'image/jpeg',
     encoding: '7bit',
-    mv: jest.fn()
+    mv: jest.fn(),
 };
 
 describe('Testing async method "getAll"', () => {
@@ -70,19 +77,19 @@ describe('Testing async method "getAll"', () => {
                 id: 1,
                 contentType: 'json',
                 createAt: 10,
-                updateAt: 10
+                updateAt: 10,
             },
             {
                 id: 2,
                 contentType: 'json',
                 createAt: 11,
-                updateAt: 11
+                updateAt: 11,
             },
             {
                 id: 3,
                 contentType: 'json',
                 createAt: 12,
-                updateAt: 12
+                updateAt: 12,
             },
         ];
 
@@ -97,8 +104,12 @@ describe('Testing async method "get(id)"', () => {
     });
 
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.get()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
-        await expect(service.get(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.get()).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
+        await expect(service.get(null)).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
     });
 
     test('Returning null if id is out of range.', async () => {
@@ -118,24 +129,36 @@ describe('Testing async method "get(id)"', () => {
     });
 });
 
-describe('Testing async method "create(new file)"', () => { 
+describe('Testing async method "create(new file)"', () => {
     beforeAll(() => {
-        db.create = jest.fn(obj => obj);
+        db.create = jest.fn((obj) => obj);
     });
 
     test('Throw error if new file is undefined or null.', async () => {
-        await expect(service.create()).rejects.toThrowError(INCORRECT_FILE_EXCEPTION);
-        await expect(service.create(null)).rejects.toThrowError(INCORRECT_FILE_EXCEPTION);
+        await expect(service.create()).rejects.toThrowError(
+            INCORRECT_FILE_EXCEPTION
+        );
+        await expect(service.create(null)).rejects.toThrowError(
+            INCORRECT_FILE_EXCEPTION
+        );
     });
 
     test('Throw error if new file is not image.', async () => {
-        await expect(service.create({...testFile, name: 'testName.txt'})).rejects.toThrowError(FILE_NOT_IMAGE_EXCEPTION);
+        await expect(
+            service.create({ ...testFile, name: 'testName.txt' })
+        ).rejects.toThrowError(FILE_NOT_IMAGE_EXCEPTION);
     });
 
-    test('Throw erroe if new file doesn\'t contain needed fields: name, mimetype, encoding.', async () => {
-        await expect(service.create({...testFile, mimetype: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
-        await expect(service.create({...testFile, name: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
-        await expect(service.create({...testFile, encoding: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+    test('Throw erroe if new file doesnt contain needed fields: name, mimetype, encoding.', async () => {
+        await expect(
+            service.create({ ...testFile, mimetype: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(
+            service.create({ ...testFile, name: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(
+            service.create({ ...testFile, encoding: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
     });
 
     test('Correctly returning data.', async () => {
@@ -150,23 +173,34 @@ describe('Testing async method "create(new file)"', () => {
                 contentEncoding: '7bit',
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin: CORS_RES_HEADERS.AccessControlAllowOrigin
-            }
+                AccessControlAllowOrigin:
+                    CORS_RES_HEADERS.AccessControlAllowOrigin,
+            },
         });
     });
 });
 
 describe('Testing async method "update(id)"', () => {
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.update()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
-        await expect(service.update(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.update()).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
+        await expect(service.update(null)).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
     });
 
-    test('Throw erroe if new file doesn\'t contain needed fields: name, mimetype, encoding.', async () => {
+    test('Throw erroe if new file doesnt contain needed fields: name, mimetype, encoding.', async () => {
         // 1 is random number
-        await expect(service.update(1, {...testFile, mimetype: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
-        await expect(service.update(1, {...testFile, name: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
-        await expect(service.update(1, {...testFile, encoding: undefined})).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(
+            service.update(1, { ...testFile, mimetype: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(
+            service.update(1, { ...testFile, name: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
+        await expect(
+            service.update(1, { ...testFile, encoding: undefined })
+        ).rejects.toThrowError(NEEDED_FIELDS_ARE_MISSING_EXCEPTION);
     });
 
     test('Returning null if id is out of range.', async () => {
@@ -191,15 +225,19 @@ describe('Testing async method "update(id)"', () => {
                 contentType: 'image/jpeg',
                 contentEncoding: '7bit',
             },
-            updateAt: 'test'
+            updateAt: 'test',
         });
     });
 });
 
 describe('Testing async method "update(id)"', () => {
     test('Throw error if id is undefined or null.', async () => {
-        await expect(service.delete()).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
-        await expect(service.delete(null)).rejects.toThrowError(INCORRECT_ID_EXCEPTION);
+        await expect(service.delete()).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
+        await expect(service.delete(null)).rejects.toThrowError(
+            INCORRECT_ID_EXCEPTION
+        );
     });
 
     test('Returning null if id is out of range.', async () => {
@@ -218,10 +256,10 @@ describe('Testing async method "update(id)"', () => {
                 contentEncoding: '7bit',
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin: '*'
+                AccessControlAllowOrigin: '*',
             },
             createdAt: '1',
-            updateAt: '1'
+            updateAt: '1',
         };
 
         fs.unlink = jest.fn();
