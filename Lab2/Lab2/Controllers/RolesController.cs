@@ -16,13 +16,13 @@ namespace Lab2.Controllers
         /// <summary>
         /// The instance of RoleService for interaction with database.
         /// </summary>
-        private readonly RoleService roleService;
+        private readonly IRoleService roleService;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="service">The instance of RoleService for interaction with database.</param>
-        public RolesController(RoleService service)
+        public RolesController(IRoleService service)
         {
             roleService = service;
         }
@@ -56,7 +56,7 @@ namespace Lab2.Controllers
         /// <param name="id">The unique id of role.</param>
         /// <returns>Return one role's entity from database by id as JSON string and send status code 200.</returns>
         [HttpGet("{id}")]
-        public ActionResult<User> Get(Guid id)
+        public ActionResult<Role> Get(Guid id)
         {
             try
             {

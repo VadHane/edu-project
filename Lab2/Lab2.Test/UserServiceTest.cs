@@ -16,7 +16,7 @@ namespace Lab2.Test
 {
     public class UserServiceTest
     {
-        private UserService service;
+        private IUserService service;
         private UserContext context;
 
         [SetUp]
@@ -35,9 +35,9 @@ namespace Lab2.Test
             service = new UserService(context, env.Object);
         }
         
-        private void ClearTestDataBase()
+        private async Task ClearTestDataBase()
         {
-            var userList = context.Users.ToArrayAsync().Result;
+            var userList = await context.Users.ToArrayAsync();
 
             foreach (var user in userList)
             {
@@ -67,9 +67,9 @@ namespace Lab2.Test
         }
 
         [Test]
-        public void ReadAll_InputEmptyDB_ShouldThrowException()
+        public async Task ReadAll_InputEmptyDB_ShouldThrowException()
         {
-            ClearTestDataBase();
+            await ClearTestDataBase();
 
             Assert.Catch<DatabaseIsEmptyException>(() => service.ReadAll());
         }
@@ -86,11 +86,11 @@ namespace Lab2.Test
         }
 
         [Test]
-        public void ReadOne_InputEmptyDB_ShouldThrowException()
+        public async Task ReadOne_InputEmptyDB_ShouldThrowException()
         {
             var randomUserId = Guid.NewGuid();
 
-            ClearTestDataBase();
+            await ClearTestDataBase();
 
             Assert.Catch<DatabaseIsEmptyException>(() => service.ReadOne(randomUserId));
         }

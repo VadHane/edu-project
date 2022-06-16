@@ -6,7 +6,7 @@ using Lab2.Models;
 
 namespace Lab2.Services
 {
-    public class RoleService
+    public class RoleService : IRoleService
     {
         /// <summary>
         /// The context of database.
