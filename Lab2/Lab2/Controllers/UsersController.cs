@@ -19,13 +19,13 @@ namespace Lab2.Controllers
         /// <summary>
         /// The instance of UserService for interaction with database.
         /// </summary>
-        private readonly UserService userService;
+        private readonly IUserService userService;
 
         /// <summary>
         /// Default constructor.
         /// </summary>
         /// <param name="service">The instance of UserService for interaction with database.</param>
-        public UsersController(UserService service)
+        public UsersController(IUserService service)
         {
             userService = service;
         }
@@ -91,7 +91,7 @@ namespace Lab2.Controllers
         {
             try
             {
-                var image = Request.Form.Files[0];
+                var image = Request?.Form?.Files[0];
                 var roles = JsonConvert.DeserializeObject<List<Role>>(userCreateRequest.Roles);
                 var user = new User()
                 {
@@ -124,7 +124,7 @@ namespace Lab2.Controllers
         {
             try
             {
-                var image = Request.Form.Files[0];
+                var image = Request?.Form?.Files[0];
                 var roles = JsonConvert.DeserializeObject<List<Role>>(userCreateRequest.Roles);
                 var user = new User()
                 {

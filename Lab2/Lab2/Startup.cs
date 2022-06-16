@@ -38,7 +38,7 @@ namespace Lab2
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("local")
                 ));
-            services.AddScoped<UserService>();
+            services.AddScoped<IUserService>();
             services.AddScoped<RoleService>();
         }
 

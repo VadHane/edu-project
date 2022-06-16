@@ -6,7 +6,7 @@ using Lab2.Models;
 
 namespace Lab2.Services
 {
-    public class RoleService
+    public class RoleService : IRoleService
     {
         /// <summary>
         /// The context of database.
@@ -43,7 +43,7 @@ namespace Lab2.Services
         /// <returns>The entity of found role from database.</returns>
         public Role ReadOne(Guid id)
         {
-            if (!context.Users.Any())
+            if (!context.Roles.Any())
             {
                 throw new DatabaseIsEmptyException();
             }

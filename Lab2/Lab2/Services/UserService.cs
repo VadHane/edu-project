@@ -10,7 +10,7 @@ using Lab2.Exceptions;
 
 namespace Lab2.Services
 {
-    public class UserService
+    public class UserService: IUserService
     {
         /// <summary>
         /// The context of database.
