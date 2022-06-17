@@ -1,12 +1,8 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 
-
 namespace Lab2.Models
 {
-    /// <summary>
-    /// Context of 'Users' database.
-    /// </summary>
     public class UserContext : DbContext
     {
         public DbSet<User> Users { get; set; }

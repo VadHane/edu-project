@@ -1,17 +1,17 @@
+using System;
+using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using Lab2.Exceptions;
 using Lab2.Models;
 using Lab2.Services;
-using Microsoft.EntityFrameworkCore;
-using NUnit.Framework;
-using System;
-using System.Threading.Tasks;
 
 namespace Lab2.Test
 {
     public class RoleServiceTest
     {
-        private RoleService service;
-        private UserContext context;
+        private RoleService _roleService;
+        private UserContext _DBContext;
 
         [SetUp]
         public void Setup()
@@ -20,20 +20,20 @@ namespace Lab2.Test
                 .UseInMemoryDatabase("Test DB")
                 .Options;
 
-            context = new UserContext(optionts);
-            service = new RoleService(context);
+            _DBContext = new UserContext(optionts);
+            _roleService = new RoleService(_DBContext);
         }
 
         [Test]
         public async Task Create_InputInstanceOfRole_ShouldCreateDBEntityAndSave()
         {
             var testRole = new Role() { Name = "testRole1" };
-            var numberOfRowsDBBefore = await context.Roles.CountAsync();
+            var numberOfRowsDBBefore = await _DBContext.Roles.CountAsync();
 
-            var createdEntity = service.Create(testRole);
+            var createdEntity = _roleService.Create(testRole);
 
-            var numberOfRowsDBAfter = await context.Roles.CountAsync();
-            var foundRole = await context.Roles.FindAsync(createdEntity.Id);
+            var numberOfRowsDBAfter = await _DBContext.Roles.CountAsync();
+            var foundRole = await _DBContext.Roles.FindAsync(createdEntity.Id);
 
             Assert.AreEqual(numberOfRowsDBAfter, numberOfRowsDBBefore + 1);
             Assert.NotNull(foundRole);
@@ -43,15 +43,16 @@ namespace Lab2.Test
         public async Task ReadOne_InputAvailableRoleId_ShouldReturnRoleEntity()
         {
             var testRole = new Role() { Name = "testRole2", Id = Guid.NewGuid() };
-            var createdTestEntity = await context.Roles.AddAsync(testRole);
-            context.SaveChanges();
+            var createdTestEntity = await _DBContext.Roles.AddAsync(testRole);
+
+            _DBContext.SaveChanges();
 
             if (createdTestEntity == null)
             {
                 Assert.Fail("Created test entity is null.");
             }
 
-            var foundRole = service.ReadOne(createdTestEntity.Entity.Id);
+            var foundRole = _roleService.ReadOne(createdTestEntity.Entity.Id);
 
             Assert.AreEqual(createdTestEntity.Entity.Id, foundRole.Id);
         }
@@ -61,15 +62,15 @@ namespace Lab2.Test
         {
             var randomRoleId = Guid.NewGuid();
 
-            Assert.Catch<EntityNotFoundException>(() => service.ReadOne(randomRoleId));
+            Assert.Catch<EntityNotFoundException>(() => _roleService.ReadOne(randomRoleId));
         }
 
         [Test]
         public void ReadAll_InputNotEmptyDB_ShouldReturnAllRoleFromDB()
         {
-            var expectedRoleList = context.Roles.ToArrayAsync().Result;
+            var expectedRoleList = _DBContext.Roles.ToArrayAsync().Result;
 
-            var foundRoleList = service.ReadAll();
+            var foundRoleList = _roleService.ReadAll();
 
             Assert.AreEqual(expectedRoleList.Length, foundRoleList.Length);
         }
@@ -77,18 +78,19 @@ namespace Lab2.Test
         [Test]
         public void ReadOneAndReadAll_InputEmptyDB_ShouldThrowException()
         {
-            var roleList = context.Roles.ToArrayAsync().Result;
+            var roleList = _DBContext.Roles.ToArrayAsync().Result;
 
             foreach (var role in roleList)
             {
-                context.Roles.Remove(role);
+                _DBContext.Roles.Remove(role);
             }
-            context.SaveChanges();
+
+            _DBContext.SaveChanges();
 
             var randomRoleId = Guid.NewGuid();
 
-            Assert.Catch<DatabaseIsEmptyException>(() => service.ReadOne(randomRoleId));
-            Assert.Catch<DatabaseIsEmptyException>(() => service.ReadAll());
+            Assert.Catch<DatabaseIsEmptyException>(() => _roleService.ReadOne(randomRoleId));
+            Assert.Catch<DatabaseIsEmptyException>(() => _roleService.ReadAll());
         }
     }
 }

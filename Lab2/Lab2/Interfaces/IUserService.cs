@@ -1,16 +1,13 @@
-﻿using Lab2.Models;
-using Microsoft.AspNetCore.Http;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Lab2.Models;
 
 namespace Lab2.Services
 {
     public interface IUserService
     {
-        User[] ReadAll();
+        IEnumerable<User> ReadAll();
 
         User ReadOne(Guid id);
 

@@ -9,22 +9,22 @@ namespace Lab2.Test.ControlerTests
 {
     class RolesControllerTest
     {
-        private Mock<IRoleService> service;
-        private RolesController controller;
+        private Mock<IRoleService> _roleService;
+        private RolesController _roleController;
 
         [SetUp]
         public void Setup()
         {
-            service = new Mock<IRoleService>();
-            controller = new RolesController(service.Object);
+            _roleService = new Mock<IRoleService>();
+            _roleController = new RolesController(_roleService.Object);
         }
 
         [Test]
         public void Get_InputNothing_ShouldCallReadAllMethodFromService()
         {
-            controller.Get();
+            _roleController.Get();
 
-            service.Verify(m => m.ReadAll(), Times.Once);
+            _roleService.Verify(m => m.ReadAll(), Times.Once);
         }
 
         [Test]
@@ -32,9 +32,9 @@ namespace Lab2.Test.ControlerTests
         {
             var testRoleId = Guid.NewGuid();
 
-            controller.Get(testRoleId);
+            _roleController.Get(testRoleId);
 
-            service.Verify(m => m.ReadOne(testRoleId), Times.Once);
+            _roleService.Verify(m => m.ReadOne(testRoleId), Times.Once);
         }
 
         [Test]
@@ -46,9 +46,9 @@ namespace Lab2.Test.ControlerTests
                 Name = "testRole",
             };
 
-            controller.Post(testRole);
+            _roleController.Post(testRole);
 
-            service.Verify(m => m.Create(testRole), Times.Once);
+            _roleService.Verify(m => m.Create(testRole), Times.Once);
         }
     }
 }
