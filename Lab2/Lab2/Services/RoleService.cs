@@ -16,6 +16,8 @@ namespace Lab2.Services
             context = _context;
         }
 
+
+        /// <inheritdoc cref="IRoleService.ReadAll"/>
         public IEnumerable<Role> ReadAll()
         {
             if (!context.Roles.Any())
@@ -26,6 +28,7 @@ namespace Lab2.Services
             return context.Roles.AsNoTracking().Include(role => role.Users).ToArray();
         }
 
+        /// <inheritdoc cref="IRoleService.ReadOne"/>
         public Role ReadOne(Guid id)
         {
             if (!context.Roles.Any())
@@ -43,6 +46,7 @@ namespace Lab2.Services
             return foundRole;
         }
 
+        /// <inheritdoc cref="IRoleService.Create(Role)"/>
         public Role Create(Role role)
         {
             role.Id = Guid.NewGuid();

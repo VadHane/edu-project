@@ -69,6 +69,7 @@ namespace Lab2.Services
             return webFilePath;
         }
 
+        /// <inheritdoc cref="IUserService.ReadAll"/>
         public IEnumerable<User> ReadAll()
         {
             if (!context.Users.Any())
@@ -79,6 +80,7 @@ namespace Lab2.Services
             return context.Users.AsNoTracking().Include(user => user.Roles).ToArray();
         }
 
+        /// <inheritdoc cref="IUserService.ReadOne(Guid)"/>
         public User ReadOne(Guid id)
         {
             if (!context.Users.Any())
@@ -96,6 +98,7 @@ namespace Lab2.Services
             return foundUser;
         }
 
+        /// <inheritdoc cref="IUserService.Create(User, IFormFile)"/>
         public User Create(User user, IFormFile file)
         {
             string filePath = null;
@@ -121,6 +124,7 @@ namespace Lab2.Services
             return createdEntity;
         }
 
+        /// <inheritdoc cref="IUserService.Update(Guid, User, IFormFile)"/>
         public User Update(Guid id, User user, IFormFile file)
         {
             var foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
@@ -161,6 +165,7 @@ namespace Lab2.Services
             return updatedEntity;
         }
 
+        /// <inheritdoc cref="IUserService.Delete(Guid)"/>
         public User Delete(Guid id)
         {
             var deletedUser = context.Users.FirstOrDefault(user => user.Id == id);

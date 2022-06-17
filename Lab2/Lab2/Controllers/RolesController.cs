@@ -17,6 +17,10 @@ namespace Lab2.Controllers
             _roleService = service;
         }
 
+        /// <summary>
+        /// The endpoint for GET method with 'api/users/roles' path.
+        /// </summary>
+        /// <returns>Return all roles entities from the database as JSON strings and send status code 200.</returns>
         [HttpGet]
         public ActionResult<Role[]> Get()
         {
@@ -36,6 +40,11 @@ namespace Lab2.Controllers
             }
         }
 
+        /// <summary>
+        /// The endpoint for GET method with 'api/users/roles/:id' path.
+        /// </summary>
+        /// <param name="id">The unique role id.</param>
+        /// <returns>Return one role's entity from the database by id as JSON string and send status code 200.</returns>
         [HttpGet("{id}")]
         public ActionResult<Role> Get(Guid id)
         {
@@ -59,6 +68,11 @@ namespace Lab2.Controllers
             }
         }
 
+        /// <summary>
+        /// The endpoint for POST method with 'api/users' path.
+        /// </summary>
+        /// <param name="role">The role instance which is generated from the request body.</param>
+        /// <returns>Return the created role entity from the database as a JSON string and send status code 201.</returns>
         [HttpPost]
         public ActionResult<Role> Post([FromForm]Role role)
         {
