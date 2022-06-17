@@ -13,9 +13,10 @@ mongoose.connect(config.MONGO_URL);
 /** Middleware for uploading files. */
 app.use(fileUpload());
 
-/** Middleware for using json answers. */
+/** Middleware for using JSON answers. */
 app.use(express.json());
 
+/** Middleware for CORS rules. */
 app.use(
     cors({
         origin: CORS_RES_HEADERS['Access-Control-Allow-Origin'],
@@ -25,10 +26,10 @@ app.use(
 /** Using router for API. (/api/file/*) */
 app.use('/api/file', file);
 
-/** Listen all request from port. */
+/** Listen all requests from the port. */
 app.listen(config.PORT, () => {});
 
-/** Default answer for all request, that dont fit for any endpoints.*/
+/** The default answer for all requests, that dont fit any endpoints. */
 app.all('/*', (req, res) => {
     res.status(400).json('Bad request!');
 });

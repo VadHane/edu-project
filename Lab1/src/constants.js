@@ -10,7 +10,7 @@ export const FILES_WERE_NOT_FOUND_TEXT = 'Files were not found';
 export const FILE_WAS_NOT_FOUND_TEXT = 'File was not found';
 
 /**
- * Exeptions for controller and services
+ * Exceptions  for controller and services
  */
 export const INCORRECT_ID_EXCEPTION = 'Id is undefined or null';
 export const INCORRECT_FILE_EXCEPTION = 'File is undefined or null';

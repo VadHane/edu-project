@@ -1,7 +1,7 @@
 import Mongoose from 'mongoose';
 
 /**
- * Schema of document for collection in Mongo DB.
+ * Schema of document for Mongo DB collection.
  */
 const fileSchema = new Mongoose.Schema({
     path: {
@@ -27,8 +27,8 @@ const fileSchema = new Mongoose.Schema({
 });
 
 /**
- * Model of collection from Mongo DB.
- * Using this file, u can send any requests to database.
+ * Model of Mongo DB collection.
+ * Using this instance, u can send any requests to the database.
  */
 const fileContext = Mongoose.model('file', fileSchema);
 

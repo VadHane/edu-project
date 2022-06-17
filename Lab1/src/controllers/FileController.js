@@ -6,7 +6,7 @@ import FileService from '../services/fileService.js';
 
 /** Class with endpoints for API router. */
 export default class FileController {
-    /** Binding all methods and creating new object (fileServise) to working with database. */
+    /** They are binding all methods and create a new object (fileServise) to work with the database. */
     constructor() {
         this.getAllFiles = this.getAllFiles.bind(this);
         this.getFile = this.getFile.bind(this);
@@ -17,14 +17,14 @@ export default class FileController {
     }
 
     /**
-     * Get all files as array of json objects.
+     * Get all files as an array of JSON objects.
      *
-     * @param {Request} req - The request that user send to API.
-     * @param {Response} res - The response that API send to user.
+     * @param {Request} req - The request that the user sends to API.
+     * @param {Response} res - The response that API sends to the user.
      *
-     * @returns Status code 200 and array of json objects of photo from database.
-     * @returns Status code 404 and json string - 'Files was not found', if database dont contains any file.
-     * @returns Status code 500, if there was exception.
+     * @returns Status code 200 and an array of JSON objects of photo from the database.
+     * @returns Status code 404 and JSON string - 'Files was not found', if the database doesnt contain any file.
+     * @returns Status code 500, if there was an exception.
      */
     async getAllFiles(req, res) {
         try {
@@ -43,12 +43,12 @@ export default class FileController {
     /**
      * Get file by id.
      *
-     * @param {Request} req - The request that user send to API.
-     * @param {Response} res - The response that API send to user.
+     * @param {Request} req - The request that the user sends to API.
+     * @param {Response} res - The response that API sends to the user.
      *
-     * @returns Status code 200 and json objects of photo from database.
-     * @returns Status code 404 and json string - 'Files was not found', if database dont contains file with id from request.params.id
-     * @returns Status code 500, if there was exception.
+     * @returns Status code 200 and JSON objects of photo from the database.
+     * @returns Status code 404 and JSON string - 'Files was not found', if the database doesnt contain a file with id from request.params.id
+     * @returns Status code 500, if there was an exception.
      */
     async getFile(req, res) {
         try {
@@ -66,13 +66,13 @@ export default class FileController {
     }
 
     /**
-     * Create and safe in database new file from request.files.
+     * Create and save in database new file from request.files.
      *
-     * @param {Request} req - The request that user send to API.
-     * @param {Response} res - The response that API send to user.
+     * @param {Request} req - The request that the user sends to API.
+     * @param {Response} res - The response that API sends to the user.
      *
-     * @returns Status code 200 and view of new file as json object from database.
-     * @returns Status code 500, if there was exception.
+     * @returns Status code 200 and view of new file as JSON object from the database.
+     * @returns Status code 500, if there was an exception.
      */
     async createFile(req, res) {
         try {
@@ -85,14 +85,14 @@ export default class FileController {
     }
 
     /**
-     * Find and replase file from database with id = request.params.id with new file from request.files.
+     * Find and replace the file from the database with id = request.params.id with a new file from request.files.
      *
-     * @param {Request} req - The request that user send to API.
-     * @param {Response} res - The response that API send to user.
+     * @param {Request} req - The request that the user sends to API.
+     * @param {Response} res - The response that API sends to the user.
      *
-     * @returns Status code 200 and view of updated file as json object from database.
-     * @returns Status code 404 and json string - 'Files was not found'.
-     * @returns Status code 500, if there is some exeption.
+     * @returns Status code 200 and view of the updated file as a JSON object from the database.
+     * @returns Status code 404 and JSON string - 'Files was not found'.
+     * @returns Status code 500, if there was some exception.
      */
     async updateFile(req, res) {
         try {
@@ -114,11 +114,11 @@ export default class FileController {
     /**
      * Find and delete file with id = request.params.id from database.
      *
-     * @param {Request} req - The request that user send to API.
-     * @param {Response} res - The response that API send to user.
+     * @param {Request} req - The request that the user sends to API.
+     * @param {Response} res - The response that API sends to the user.
      *
-     * @returns Status code 200 and view of deleted file as json object from database.
-     * @returns Status code 500, if there is some exeption.
+     * @returns Status code 200 and view of deleted file as a JSON object from the database.
+     * @returns Status code 500, if there was some exception.
      */
     async deleteFile(req, res) {
         try {

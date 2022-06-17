@@ -56,13 +56,13 @@ describe('API tests for file controller.', () => {
         expect(response.body._id).toEqual(expectValue._id);
     });
 
-    test('Get endpoint (~/api/file/) should return 204 status code if database is empty.', async () => {
+    test('Get endpoint (~/api/file/) should return 204 status code if the database is empty.', async () => {
         mockedGetAll.mockReturnValue(null);
 
         await request(app).get('/api/file/').expect(204);
     });
 
-    test('Get endpoint (~/api/file/:id) should return 404 status code if DB dont consist file with this id.', async () => {
+    test('Get endpoint (~/api/file/:id) should return a 404 status code if DB dont consist file with this id.', async () => {
         const testFileId = 'test';
         const requestPath = `${url}${testFileId}`;
 
@@ -97,7 +97,7 @@ describe('API tests for file controller.', () => {
         expect(response.headers['access-control-allow-origin']).toMatch('*');
     });
 
-    test('Post endpoint (~/api/file/) should return 500 status code if request dont includes the file.', async () => {
+    test('Post endpoint (~/api/file/) should return a 500 status code if the request doesnt include the file.', async () => {
         mockedCreate.mockImplementation(() => {
             throw Error();
         });
@@ -125,7 +125,7 @@ describe('API tests for file controller.', () => {
         expect(response.body._id).toEqual(expectValue._id);
     });
 
-    test('Put endpoint (~/api/file/:id) should return 404 status code if DB dont consist file with this id.', async () => {
+    test('Put endpoint (~/api/file/:id) should return a 404 status code if DB doesnt consist file with this id.', async () => {
         const testFileId = 'test';
         const requestPath = `${url}${testFileId}`;
 
@@ -139,7 +139,7 @@ describe('API tests for file controller.', () => {
         expect(response.headers['access-control-allow-origin']).toMatch('*');
     });
 
-    test('Put endpoint ~/api/file/:id) should update and return a updated entity of file.', async () => {
+    test('Put endpoint ~/api/file/:id) should update and return an updated entity of the file.', async () => {
         const testFileId = 'test';
         const requestPath = `${url}${testFileId}`;
         const expectValue = {
@@ -159,7 +159,7 @@ describe('API tests for file controller.', () => {
         expect(response.body._id).toEqual(expectValue._id);
     });
 
-    test('Delete endpoint (~/api/file/:id) should return 404 status code if DB dont consist file with this id.', async () => {
+    test('Delete endpoint (~/api/file/:id) should return a 404 status code if DB doesnt consist file with this id.', async () => {
         const testFileId = 'test';
         const requestPath = `${url}${testFileId}`;
 
@@ -173,7 +173,7 @@ describe('API tests for file controller.', () => {
         expect(response.headers['access-control-allow-origin']).toMatch('*');
     });
 
-    test('Delete endpoint ~/api/file/:id) should delete and return a delete entity of file.', async () => {
+    test('Delete endpoint ~/api/file/:id) should delete and return a deleted entity of the file.', async () => {
         const testFileId = 'test';
         const requestPath = `${url}${testFileId}`;
         const expectValue = {

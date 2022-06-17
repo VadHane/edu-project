@@ -22,10 +22,10 @@ export default class FileService {
     }
 
     /**
-     * Get all files from database as array of json objects. Async method.
+     * Get all files from the database as an array of JSON objects. Async method.
      *
-     * @returns Array of json objects.
-     * @returns Empty array, if database dont contains any file.
+     * @returns Array of JSON objects.
+     * @returns Empty array, if the database doesnt contain any file.
      */
     async getAll() {
         const documents = await DataBase.find();
@@ -45,12 +45,12 @@ export default class FileService {
     }
 
     /**
-     * Get path of file from database by id. Async method.
+     * Get the path of the file from the database by id. Async method.
      *
      * @param {Number} id - Unique identifier of file.
      *
-     * @returns Json objects of photo from database.
-     * @returns Null, if database dont contains file with id.
+     * @returns JSON object of photo from the database.
+     * @returns Null, if the database doesnt contain a file with id.
      *
      * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
      */
@@ -68,7 +68,7 @@ export default class FileService {
     }
 
     /**
-     * The private method. Validate inputing file.
+     * The private method. Validate input file.
      *
      * @param {*} file - The file for validating.
      *
@@ -94,11 +94,11 @@ export default class FileService {
     }
 
     /**
-     * Get absolute path for some file.
+     * Get absolute path for the file.
      *
      * @param {String} fileName - The name of file.
      *
-     * @returns Absolute path for file.
+     * @returns Absolute path for the file.
      */
     #generateFilePath(fileName) {
         const fileExtension = path.extname(fileName);
@@ -107,11 +107,11 @@ export default class FileService {
     }
 
     /**
-     * Create new document about file in database. Async method.
+     * Create a new document about the file in the database. Async method.
      *
-     * @param {*} newFile - New file for adding in database.
+     * @param {*} newFile - New file for adding to the database.
      *
-     * @returns View of new file as json object from database.
+     * @returns View of new file as JSON object from the database.
      *
      * @throws {'File is undefined or null'} Argument newFile must be non-undefined and non-null.
      * @throws {'File doesn\'t contain needed fields'} Argument newFile must contains next fields: name, mimetype, encoding.
@@ -143,12 +143,12 @@ export default class FileService {
     }
 
     /**
-     * Find and replase file with id in database with updFile. Async method.
+     * Find and replace the file with id in the database with updFile. Async method.
      *
      * @param {Number} id - Unique identifier of file.
      * @param {File} updFile - The file for updating.
      *
-     * @returns View of updated file as json object from database.
+     * @returns View of the updated file as JSON object from the database.
      *
      * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
      * @throws {'File is undefined or null'} Argument newFile must be non-undefined and non-null.
@@ -193,10 +193,10 @@ export default class FileService {
     }
 
     /**
-     * Find and delete file with id. Async method.
+     * Find and delete the file with id. Async method.
      *
      * @param {*} id - Unique identifier of file.
-     * @returns View of deleted file as json object from database.
+     * @returns View of deleted file as JSON object from the database.
      *
      * @throws {'Id is undefined or null'} Argument id must be non-undefined and non-null.
      */
