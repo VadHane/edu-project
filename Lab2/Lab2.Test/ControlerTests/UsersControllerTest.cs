@@ -1,32 +1,31 @@
 ﻿using System;
-using NUnit.Framework;
 using Moq;
+using NUnit.Framework;
 using Lab2.Models;
 using Lab2.Services;
 using Lab2.Controllers;
-using System.Collections.Generic;
 
 namespace Lab2.Test.ControlerTests
 {
     class UsersControllerTest
     {
 
-        private Mock<IUserService> service;
-        private UsersController controller;
+        private Mock<IUserService> _userService;
+        private UsersController _userController;
 
         [SetUp]
         public void Setup()
         {
-            service = new Mock<IUserService>();
-            controller = new UsersController(service.Object);
+            _userService = new Mock<IUserService>();
+            _userController = new UsersController(_userService.Object);
         }
 
         [Test]
         public void Get_InputNothing_ShouldCallReadAllMethodFromService()
         {
-            controller.Get();
+            _userController.Get();
 
-            service.Verify(m => m.ReadAll(), Times.Once);
+            _userService.Verify(m => m.ReadAll(), Times.Once);
         }
 
         [Test]
@@ -34,9 +33,9 @@ namespace Lab2.Test.ControlerTests
         {
             var testUserId = Guid.NewGuid();
 
-            controller.Get(testUserId);
+            _userController.Get(testUserId);
 
-            service.Verify(m => m.ReadOne(testUserId), Times.Once);
+            _userService.Verify(m => m.ReadOne(testUserId), Times.Once);
         }
 
         [Test]
@@ -50,9 +49,9 @@ namespace Lab2.Test.ControlerTests
                 Roles = ""
             };
 
-            controller.Post(testUserCreateUpdateRequest);
+            _userController.Post(testUserCreateUpdateRequest);
 
-            service.Verify(m => m.Create(It.IsAny<User>(), null), Times.Once);
+            _userService.Verify(m => m.Create(It.IsAny<User>(), null), Times.Once);
         }
 
         [Test]
@@ -67,9 +66,9 @@ namespace Lab2.Test.ControlerTests
             };
             var userId = Guid.NewGuid();
 
-            controller.Put(userId, testUserCreateUpdateRequest);
+            _userController.Put(userId, testUserCreateUpdateRequest);
 
-            service.Verify(m => m.Update(It.IsAny<Guid>(), It.IsAny<User>(), null), Times.Once);
+            _userService.Verify(m => m.Update(It.IsAny<Guid>(), It.IsAny<User>(), null), Times.Once);
         }
 
         [Test]
@@ -77,9 +76,9 @@ namespace Lab2.Test.ControlerTests
         {
             var testUserId = Guid.NewGuid();
 
-            controller.Delete(testUserId);
+            _userController.Delete(testUserId);
 
-            service.Verify(m => m.Delete(testUserId), Times.Once);
+            _userService.Verify(m => m.Delete(testUserId), Times.Once);
         }
     }
 }

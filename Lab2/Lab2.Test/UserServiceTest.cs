@@ -1,23 +1,23 @@
-﻿using Lab2.Exceptions;
-using Lab2.Models;
-using Lab2.Services;
+﻿using System;
+using System.IO;
+using System.Text;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
 using Moq;
 using NUnit.Framework;
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Net.WebRequestMethods;
+using Lab2.Exceptions;
+using Lab2.Models;
+using Lab2.Services;
+using System.Linq;
 
 namespace Lab2.Test
 {
     public class UserServiceTest
     {
-        private IUserService service;
-        private UserContext context;
+        private IUserService _userService;
+        private UserContext _DBContext;
 
         [SetUp]
         public void Setup()
@@ -31,19 +31,19 @@ namespace Lab2.Test
 
             env.Setup(m => m.WebRootPath).Returns(envWebRootPath);
 
-            context = new UserContext(optionts);
-            service = new UserService(context, env.Object);
+            _DBContext = new UserContext(optionts);
+            _userService = new UserService(_DBContext, env.Object);
         }
         
         private async Task ClearTestDataBase()
         {
-            var userList = await context.Users.ToArrayAsync();
+            var userList = await _DBContext.Users.ToArrayAsync();
 
             foreach (var user in userList)
             {
-                context.Users.Remove(user);
+                _DBContext.Users.Remove(user);
             }
-            context.SaveChanges();
+            _DBContext.SaveChanges();
         }
 
         private User AddUserIntoTestDB(User user = null)
@@ -60,8 +60,8 @@ namespace Lab2.Test
                 };
             }
 
-            var createdEntity = context.Users.Add(user);
-            context.SaveChanges();
+            var createdEntity = _DBContext.Users.Add(user);
+            _DBContext.SaveChanges();
 
             return createdEntity.Entity;
         }
@@ -71,18 +71,19 @@ namespace Lab2.Test
         {
             await ClearTestDataBase();
 
-            Assert.Catch<DatabaseIsEmptyException>(() => service.ReadAll());
+            Assert.Catch<DatabaseIsEmptyException>(() => _userService.ReadAll());
         }
 
         [Test]
         public void ReadAll_InputNotEmptyDB_ShouldReturnAllUsersFromDB()
         {
             AddUserIntoTestDB();
-            var expectedUserList = context.Users.ToArrayAsync().Result;
 
-            var foundUserList = service.ReadAll();
+            var expectedUserList = _DBContext.Users.ToArrayAsync().Result;
 
-            Assert.AreEqual(expectedUserList.Length, foundUserList.Length);
+            var foundUserList = _userService.ReadAll().ToList();
+
+            Assert.AreEqual(expectedUserList.Length, foundUserList.Count);
         }
 
         [Test]
@@ -92,7 +93,7 @@ namespace Lab2.Test
 
             await ClearTestDataBase();
 
-            Assert.Catch<DatabaseIsEmptyException>(() => service.ReadOne(randomUserId));
+            Assert.Catch<DatabaseIsEmptyException>(() => _userService.ReadOne(randomUserId));
         }
 
         [Test]
@@ -102,7 +103,7 @@ namespace Lab2.Test
 
             AddUserIntoTestDB();
 
-            Assert.Catch<EntityNotFoundException>(() => service.ReadOne(randomUserId));
+            Assert.Catch<EntityNotFoundException>(() => _userService.ReadOne(randomUserId));
         }
 
         [Test]
@@ -115,7 +116,7 @@ namespace Lab2.Test
                 Assert.Fail("Created test entity is null.");
             }
 
-            var foundUser = service.ReadOne(createdTestEntity.Id);
+            var foundUser = _userService.ReadOne(createdTestEntity.Id);
 
             Assert.AreEqual(createdTestEntity.Id, foundUser.Id);
         }
@@ -133,11 +134,10 @@ namespace Lab2.Test
                 ImageBlobKey = "test",
             };
 
-            var createdUserEntity = service.Create(testUser, testFile);
-
+            var createdUserEntity = _userService.Create(testUser, testFile);
 
             Assert.AreEqual(createdUserEntity.Email, testUser.Email);
-            Assert.DoesNotThrow(() => context.Users.Find(createdUserEntity.Id));
+            Assert.DoesNotThrow(() => _DBContext.Users.Find(createdUserEntity.Id));
         }
 
         [Test]
@@ -154,7 +154,7 @@ namespace Lab2.Test
                 ImageBlobKey = "test",
             };
 
-            var updatedUser = service.Update(createdUser.Id, update, testFile);
+            var updatedUser = _userService.Update(createdUser.Id, update, testFile);
 
             Assert.AreEqual(update.Email, updatedUser.Email);
         }
@@ -174,7 +174,7 @@ namespace Lab2.Test
                 "testFile.txt"
             ).Object;
 
-            Assert.Catch<EntityNotFoundException>(() => service.Update(randomUserId, emptyUser, emptyFile));
+            Assert.Catch<EntityNotFoundException>(() => _userService.Update(randomUserId, emptyUser, emptyFile));
         }
 
         [Test]
@@ -182,7 +182,7 @@ namespace Lab2.Test
         {
             var randomUserId = Guid.NewGuid();
 
-            Assert.Catch<EntityNotFoundException>(() => service.Delete(randomUserId));
+            Assert.Catch<EntityNotFoundException>(() => _userService.Delete(randomUserId));
         }
 
         [Test]
@@ -190,9 +190,9 @@ namespace Lab2.Test
         {
             var createdUser = AddUserIntoTestDB();
 
-            service.Delete(createdUser.Id);
+            _userService.Delete(createdUser.Id);
 
-            Assert.Catch<EntityNotFoundException>(() => service.Delete(createdUser.Id));
+            Assert.Catch<EntityNotFoundException>(() => _userService.Delete(createdUser.Id));
         }
     }
 }

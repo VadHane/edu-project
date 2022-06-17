@@ -7,7 +7,7 @@ import FileController from '../controllers/FileController.js';
 const router = Router();
 
 /**
- * Object with endpoints for this router.
+ * Object with router endpoints.
  */
 const controller = new FileController();
 
