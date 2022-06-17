@@ -1,5 +1,6 @@
 using System;
 using System.Threading.Tasks;
+using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using Lab2.Exceptions;
@@ -70,9 +71,9 @@ namespace Lab2.Test
         {
             var expectedRoleList = _DBContext.Roles.ToArrayAsync().Result;
 
-            var foundRoleList = _roleService.ReadAll();
+            var foundRoleList = _roleService.ReadAll().ToList();
 
-            Assert.AreEqual(expectedRoleList.Length, foundRoleList.Length);
+            Assert.AreEqual(expectedRoleList.Length, foundRoleList.Count);
         }
 
         [Test]

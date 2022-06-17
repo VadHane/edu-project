@@ -18,7 +18,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for GET method with 'api/users/roles' path.
+        /// The endpoint for get all roles.
         /// </summary>
         /// <returns>Return all roles entities from the database as JSON strings and send status code 200.</returns>
         [HttpGet]
@@ -41,7 +41,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for GET method with 'api/users/roles/:id' path.
+        /// The endpoint for get one role by id.
         /// </summary>
         /// <param name="id">The unique role id.</param>
         /// <returns>Return one role's entity from the database by id as JSON string and send status code 200.</returns>
@@ -69,7 +69,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for POST method with 'api/users' path.
+        /// The endpoint for create new role.
         /// </summary>
         /// <param name="role">The role instance which is generated from the request body.</param>
         /// <returns>Return the created role entity from the database as a JSON string and send status code 201.</returns>

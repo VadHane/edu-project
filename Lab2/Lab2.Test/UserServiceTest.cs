@@ -10,6 +10,7 @@ using NUnit.Framework;
 using Lab2.Exceptions;
 using Lab2.Models;
 using Lab2.Services;
+using System.Linq;
 
 namespace Lab2.Test
 {
@@ -80,9 +81,9 @@ namespace Lab2.Test
 
             var expectedUserList = _DBContext.Users.ToArrayAsync().Result;
 
-            var foundUserList = _userService.ReadAll();
+            var foundUserList = _userService.ReadAll().ToList();
 
-            Assert.AreEqual(expectedUserList.Length, foundUserList.Length);
+            Assert.AreEqual(expectedUserList.Length, foundUserList.Count);
         }
 
         [Test]

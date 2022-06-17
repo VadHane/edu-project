@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Lab2.Models;
@@ -20,7 +21,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for GET method with 'api/users' path.
+        /// The endpoint for get all users.
         /// </summary>
         /// <returns>Return all user instances from the database as JSON strings and send status code 200.</returns>
         [HttpGet]
@@ -30,7 +31,7 @@ namespace Lab2.Controllers
             {
                 var users = userService.ReadAll();
 
-                return Ok(users);
+                return Ok(users.ToList());
             }
             catch (DatabaseIsEmptyException)
             {
@@ -43,7 +44,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for GET method with 'api/users/:id' path.
+        /// The endpoint for get one user by id.
         /// </summary>
         /// <param name="id">The unique user id.</param>
         /// <returns>Return one user's instance from the database by id as JSON string and send status code 200.</returns>
@@ -71,7 +72,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for POST method with 'api/users' path.
+        /// The endpoint for create new user.
         /// </summary>
         /// <param name="userCreateRequest">The user instance witch was generated from the request body.</param>
         /// <returns>Return the created user instance from the database as a JSON string and send status code 201.</returns>
@@ -104,7 +105,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for PUT method with 'api/users/:id' path.
+        /// The endpoint for update user by id.
         /// </summary>
         /// <param name="id">The unique user id.</param>
         /// <param name="userCreateRequest">The user instance witch was generated from the request body.</param>
@@ -139,7 +140,7 @@ namespace Lab2.Controllers
         }
 
         /// <summary>
-        /// The endpoint for DELETE method with 'api/users/:id' path.
+        /// The endpoint for delete user by id.
         /// </summary>
         /// <param name="id">The unique user id.</param>
         /// <returns>Return the deleted user instance from the database as a JSON string and send status code 200.</returns>

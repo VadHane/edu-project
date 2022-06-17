@@ -37,8 +37,8 @@ namespace Lab2
                 options => options.UseSqlServer(
                     Configuration.GetConnectionString("local")
                 ));
-            services.AddScoped<IUserService>();
-            services.AddScoped<RoleService>();
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IRoleService, RoleService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

@@ -15,6 +15,7 @@ exports[`Test available role list Available roles list Snapshots. 1`] = `
         />
       </datalist>
       <input
+        id="available-roles-list-input"
         list="available-roles-list"
         maxlength="30"
         type="text"
@@ -33,6 +34,7 @@ exports[`Test available role list Available roles list Snapshots. 2`] = `
         id="available-roles-list"
       />
       <input
+        id="available-roles-list-input"
         list="available-roles-list"
         maxlength="30"
         type="text"
@@ -61,6 +63,7 @@ Object {
             />
           </datalist>
           <input
+            id="available-roles-list-input"
             list="available-roles-list"
             maxlength="30"
             type="text"
@@ -101,6 +104,7 @@ Object {
           />
         </datalist>
         <input
+          id="available-roles-list-input"
           list="available-roles-list"
           maxlength="30"
           type="text"
@@ -198,6 +202,7 @@ Object {
             />
           </datalist>
           <input
+            id="available-roles-list-input"
             list="available-roles-list"
             maxlength="30"
             type="text"
@@ -232,6 +237,7 @@ Object {
           />
         </datalist>
         <input
+          id="available-roles-list-input"
           list="available-roles-list"
           maxlength="30"
           type="text"
@@ -323,6 +329,7 @@ Object {
             />
           </datalist>
           <input
+            id="available-roles-list-input"
             list="available-roles-list"
             maxlength="30"
             type="text"
@@ -363,6 +370,7 @@ Object {
           />
         </datalist>
         <input
+          id="available-roles-list-input"
           list="available-roles-list"
           maxlength="30"
           type="text"
