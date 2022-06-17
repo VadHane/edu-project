@@ -23,7 +23,7 @@ const fileSchema = new Mongoose.Schema({
     updateAt: {
         type: Date,
         default: Date.now(),
-    }
+    },
 });
 
 /**

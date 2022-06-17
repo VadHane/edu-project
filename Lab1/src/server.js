@@ -18,9 +18,7 @@ app.use(express.json());
 app.use('/api/file', file);
 
 /** Listen all request from port. */
-app.listen(config.PORT, () => {
-    console.log('Server is running');
-});
+app.listen(config.PORT, () => {});
 
 /** Default answer for all request, that dont fit for any endpoints.*/
 app.all('/*', (req, res) => {
