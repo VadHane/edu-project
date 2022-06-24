@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Test for table content row. Snapshot without data. 1`] = `
+<div>
+  <table>
+    <tbody>
+      <tr>
+        <th
+          class="picture"
+        >
+          <img
+            alt="UserPhoto"
+            src="https://localhost:44303/"
+          />
+        </th>
+        <th
+          class="name"
+        />
+        <th
+          class="surname"
+        />
+        <th
+          class="email"
+        />
+        <th
+          class="roles"
+        />
+        <th
+          class="actions"
+        >
+          <img
+            alt="Edit"
+            src="https://cdn-icons-png.flaticon.com/512/61/61456.png"
+          />
+          <img
+            alt="Remove"
+            src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
+          />
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
+
+exports[`Test for table content row. Snapshot. 1`] = `
+<div>
+  <table>
+    <tbody>
+      <tr>
+        <th
+          class="picture"
+        >
+          <img
+            alt="UserPhoto"
+            src="https://localhost:44303//"
+          />
+        </th>
+        <th
+          class="name"
+        >
+          TestName
+        </th>
+        <th
+          class="surname"
+        >
+          TestSurname
+        </th>
+        <th
+          class="email"
+        >
+          email@gmail.com
+        </th>
+        <th
+          class="roles"
+        />
+        <th
+          class="actions"
+        >
+          <img
+            alt="Edit"
+            src="https://cdn-icons-png.flaticon.com/512/61/61456.png"
+          />
+          <img
+            alt="Remove"
+            src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
+          />
+        </th>
+      </tr>
+    </tbody>
+  </table>
+</div>
+`;
