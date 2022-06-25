@@ -71,6 +71,8 @@ namespace Lab3.Migrations.Model
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uniqueidentifier");
 
+                    b.HasIndex("ModelId");
+
                     b.ToTable("ModelHistories");
                 });
 
@@ -103,6 +105,17 @@ namespace Lab3.Migrations.Model
                     b.HasIndex("TagsId");
 
                     b.ToTable("ModelTag");
+                });
+
+            modelBuilder.Entity("Lab3.Models.ModelHistory", b =>
+                {
+                    b.HasOne("Lab3.Models.Model", "Model")
+                        .WithMany()
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Model");
                 });
 
             modelBuilder.Entity("ModelTag", b =>

@@ -7,9 +7,6 @@ namespace Lab3.Models
     [Keyless]
     public class ModelHistory
     {
-        [Required]
-        public Guid ModelId { get; set; }
-
         public string FileKey { get; set; }
 
         [Required]
@@ -17,5 +14,8 @@ namespace Lab3.Models
 
         [Required]
         public Guid CreatedBy { get; set; }
+
+        public Guid ModelId { get; set; }
+        public Model Model { get; set; }
     }
 }

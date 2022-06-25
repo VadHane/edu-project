@@ -8,19 +8,6 @@ namespace Lab3.Migrations.Model
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.CreateTable(
-                name: "ModelHistories",
-                columns: table => new
-                {
-                    ModelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    FileKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
-                },
-                constraints: table =>
-                {
-                });
-
-            migrationBuilder.CreateTable(
                 name: "Models",
                 columns: table => new
                 {
@@ -52,6 +39,25 @@ namespace Lab3.Migrations.Model
                 });
 
             migrationBuilder.CreateTable(
+                name: "ModelHistories",
+                columns: table => new
+                {
+                    FileKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    ModelId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.ForeignKey(
+                        name: "FK_ModelHistories_Models_ModelId",
+                        column: x => x.ModelId,
+                        principalTable: "Models",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "ModelTag",
                 columns: table => new
                 {
@@ -74,6 +80,11 @@ namespace Lab3.Migrations.Model
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Cascade);
                 });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ModelHistories_ModelId",
+                table: "ModelHistories",
+                column: "ModelId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ModelTag_TagsId",
