@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Lab3.Models;
 using Lab3.Exceptions;
+using Lab3.Interfaces;
 
 namespace Lab3.Services
 {

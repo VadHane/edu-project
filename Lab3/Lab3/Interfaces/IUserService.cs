@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.AspNetCore.Http;
 using Lab3.Models;
 
-namespace Lab3.Services
+namespace Lab3.Interfaces
 {
     public interface IUserService
     {
