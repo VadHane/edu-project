@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Lab3.Models;
 using Lab3.Services;
+using Lab3.Interfaces;
 
 namespace Lab3
 {
@@ -45,6 +46,9 @@ namespace Lab3
 
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IRoleService, RoleService>();
+            services.AddScoped<IHistoryService, HistoryService>();
+            services.AddScoped<ITagService, TagService>();
+            services.AddScoped<IModelService, ModelService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

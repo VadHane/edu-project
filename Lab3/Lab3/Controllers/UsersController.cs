@@ -4,8 +4,8 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Lab3.Models;
-using Lab3.Services;
 using Lab3.Exceptions;
+using Lab3.Interfaces;
 
 namespace Lab3.Controllers
 {
