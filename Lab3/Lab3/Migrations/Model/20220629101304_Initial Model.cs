@@ -42,6 +42,7 @@ namespace Lab3.Migrations.Model
                 name: "ModelHistories",
                 columns: table => new
                 {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
                     FileKey = table.Column<string>(type: "nvarchar(max)", nullable: true),
                     CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
                     CreatedBy = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
@@ -49,6 +50,7 @@ namespace Lab3.Migrations.Model
                 },
                 constraints: table =>
                 {
+                    table.PrimaryKey("PK_ModelHistories", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ModelHistories_Models_ModelId",
                         column: x => x.ModelId,
