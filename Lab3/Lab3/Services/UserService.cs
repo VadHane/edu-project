@@ -13,15 +13,15 @@ namespace Lab3.Services
 {
     public class UserService: IUserService
     {
-        private readonly UserContext context;
+        private readonly UserContext _context;
 
-        private readonly IWebHostEnvironment env;
+        private readonly IWebHostEnvironment _env;
 
         private void AssignRolesToUser(ICollection<Role> roles, User user)
         {
             foreach (var role in roles)
             {
-                var foundRole = context.Roles.FirstOrDefault(_role => _role.Id == role.Id);
+                var foundRole = _context.Roles.FirstOrDefault(_role => _role.Id == role.Id);
 
                 if (foundRole != null)
                 {
@@ -30,28 +30,28 @@ namespace Lab3.Services
             }
         }
 
-        public UserService(UserContext _context, IWebHostEnvironment _env)
+        public UserService(UserContext context, IWebHostEnvironment env)
         {
-            context = _context;
-            env = _env;
+            _context = context;
+            _env = env;
         }
 
         private string CreateFile(IFormFile file)
         {
-            if (env.WebRootPath == null)
+            if (_env.WebRootPath == null)
             {
-                string rootPath = env.ContentRootPath;
+                string rootPath = _env.ContentRootPath;
                 string webRootPath = $"{rootPath}/wwwroot";
 
                 Directory.CreateDirectory(webRootPath);
 
-                env.WebRootPath = $"{rootPath}/wwwroot";
+                _env.WebRootPath = $"{rootPath}/wwwroot";
 
-                Directory.CreateDirectory($"{env.WebRootPath}/Images");
+                Directory.CreateDirectory($"{_env.WebRootPath}/Images");
             }
             else
             {
-                string imagesPath = $"{env.WebRootPath}/Images";
+                string imagesPath = $"{_env.WebRootPath}/Images";
 
                 if (!Directory.Exists(imagesPath))
                 {
@@ -62,7 +62,7 @@ namespace Lab3.Services
             string fileExtention = Path.GetExtension(file.FileName);
             string fileName = Guid.NewGuid() + "." + fileExtention;
             string webFilePath = $"Images/{fileName}";
-            string absoluteFilePath = Path.Combine(env.WebRootPath, webFilePath);
+            string absoluteFilePath = Path.Combine(_env.WebRootPath, webFilePath);
 
             using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
             file.CopyTo(fileStream);
@@ -73,23 +73,23 @@ namespace Lab3.Services
         /// <inheritdoc cref="IUserService.ReadAll"/>
         public IEnumerable<User> ReadAll()
         {
-            if (!context.Users.Any())
+            if (!_context.Users.Any())
             {
                 throw new DatabaseIsEmptyException();
             }
 
-            return context.Users.AsNoTracking().Include(user => user.Roles).ToArray();
+            return _context.Users.AsNoTracking().Include(user => user.Roles).ToArray();
         }
 
         /// <inheritdoc cref="IUserService.ReadOne(Guid)"/>
         public User ReadOne(Guid id)
         {
-            if (!context.Users.Any())
+            if (!_context.Users.Any())
             {
                 throw new DatabaseIsEmptyException();
             }
 
-            var foundUser = context.Users.AsNoTracking().Include(user => user.Roles).FirstOrDefault(user => user.Id == id);
+            var foundUser = _context.Users.AsNoTracking().Include(user => user.Roles).FirstOrDefault(user => user.Id == id);
 
             if (foundUser == null)
             {
@@ -120,7 +120,7 @@ namespace Lab3.Services
 
             AssignRolesToUser(user.Roles, newUser);
 
-            var createdEntity = (User)context.AddAndSave(newUser);
+            var createdEntity = (User)_context.AddAndSave(newUser);
 
             return createdEntity;
         }
@@ -128,7 +128,7 @@ namespace Lab3.Services
         /// <inheritdoc cref="IUserService.Update(Guid, User, IFormFile)"/>
         public User Update(Guid id, User user, IFormFile file)
         {
-            var foundUser = context.Users.FirstOrDefault(_user => _user.Id == id);
+            var foundUser = _context.Users.FirstOrDefault(_user => _user.Id == id);
 
             if (foundUser == null)
             {
@@ -137,7 +137,7 @@ namespace Lab3.Services
 
             if (foundUser.ImageBlobKey != null && file != null)
             {
-                string absoluteFilePath = $"{env.WebRootPath}/{foundUser.ImageBlobKey}";
+                string absoluteFilePath = $"{_env.WebRootPath}/{foundUser.ImageBlobKey}";
                 File.Delete(absoluteFilePath);
             }
 
@@ -161,7 +161,7 @@ namespace Lab3.Services
 
             AssignRolesToUser(user.Roles, updatedUser);
 
-            var updatedEntity = (User)context.UpdateAndSave(foundUser, updatedUser);
+            var updatedEntity = (User)_context.UpdateAndSave(foundUser, updatedUser);
 
             return updatedEntity;
         }
@@ -169,7 +169,7 @@ namespace Lab3.Services
         /// <inheritdoc cref="IUserService.Delete(Guid)"/>
         public User Delete(Guid id)
         {
-            var deletedUser = context.Users.FirstOrDefault(user => user.Id == id);
+            var deletedUser = _context.Users.FirstOrDefault(user => user.Id == id);
 
             if (deletedUser == null)
             {
@@ -178,11 +178,11 @@ namespace Lab3.Services
 
             if (deletedUser.ImageBlobKey != null)
             {
-                string absoluteFilePath = $"{env.WebRootPath}/{deletedUser.ImageBlobKey}";
+                string absoluteFilePath = $"{_env.WebRootPath}/{deletedUser.ImageBlobKey}";
                 File.Delete(absoluteFilePath);
             }
 
-            var deletedEntity = (User)context.DeleteAndSave(deletedUser);
+            var deletedEntity = (User)_context.DeleteAndSave(deletedUser);
 
             return deletedEntity;
         }

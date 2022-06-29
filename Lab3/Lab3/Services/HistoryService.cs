@@ -10,22 +10,22 @@ namespace Lab3.Services
 {
     public class HistoryService : IHistoryService
     {
-        private readonly ModelContext context;
+        private readonly ModelContext _context;
 
-        public HistoryService(ModelContext _context)
+        public HistoryService(ModelContext context)
         {
-            context = _context;
+            _context = context;
         }
 
         /// <inheritdoc cref="IHistoryService.ReadAll(Guid)"/>
         public IEnumerable<ModelHistory> ReadAll(Guid modelId)
         {
-            if (context.Models.Where(model => modelId == model.Id) != null)
+            if (_context.Models.Where(model => modelId == model.Id) != null)
             {
                 throw new EntityNotFoundException();
             }
 
-            return context.ModelHistories.AsNoTracking().Where(history => history.Model.Id == modelId).ToArray();
+            return _context.ModelHistories.AsNoTracking().Where(history => history.Model.Id == modelId).ToArray();
         }
     }
 }

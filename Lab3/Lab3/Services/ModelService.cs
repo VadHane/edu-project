@@ -19,7 +19,7 @@ namespace Lab3.Services
 
         public ModelService(ModelContext context, IWebHostEnvironment _env)
         {
-            this._context = context;
+            _context = context;
             env = _env;
         }
 
@@ -42,7 +42,7 @@ namespace Lab3.Services
             }
         }
 
-        private void AssignHistoryToModel(ICollection<ModelHistory> history, Model model)
+        private static void AssignHistoryToModel(ICollection<ModelHistory> history, Model model)
         {
             foreach (var historyRow in history)
             {

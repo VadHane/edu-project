@@ -13,11 +13,11 @@ namespace Lab3.Controllers
     [Route("api/users")]
     public class UsersController : Controller
     {
-        private readonly IUserService userService;
+        private readonly IUserService _userService;
 
         public UsersController(IUserService service)
         {
-            userService = service;
+            _userService = service;
         }
 
         /// <summary>
@@ -29,7 +29,7 @@ namespace Lab3.Controllers
         {
             try
             {
-                var users = userService.ReadAll();
+                var users = _userService.ReadAll();
 
                 return Ok(users.ToList());
             }
@@ -53,7 +53,7 @@ namespace Lab3.Controllers
         {
             try
             {
-                var user = userService.ReadOne(id);
+                var user = _userService.ReadOne(id);
 
                 return Ok(user);
             }
@@ -91,7 +91,7 @@ namespace Lab3.Controllers
                    Roles = roles
                 };
 
-                var createdUser = userService.Create(user, image);
+                var createdUser = _userService.Create(user, image);
                 var protocol = Request.IsHttps ? "https://" : "http://";
                 var path = Request.Path + createdUser.Id;
                 var uriToCreatedUser = new UriBuilder(protocol, Request.Host.Host, (int)Request.Host.Port, path).Uri;
@@ -125,7 +125,7 @@ namespace Lab3.Controllers
                     Roles = roles
                 };
 
-                var updatedUser = userService.Update(id, user, image);
+                var updatedUser = _userService.Update(id, user, image);
 
                 return Ok(updatedUser);
             }
@@ -149,7 +149,7 @@ namespace Lab3.Controllers
         {
             try
             {
-                var deletedUser = userService.Delete(id);
+                var deletedUser = _userService.Delete(id);
 
                 return Ok(deletedUser);
             }

@@ -9,11 +9,11 @@ namespace Lab3.Controllers
 {
     [ApiController]
     [Route("api/models/{id}")]
-    public class HistoryController : Controller
+    public class HistoriesController : Controller
     {
         private readonly IHistoryService _historyService;
 
-        public HistoryController(IHistoryService service)
+        public HistoriesController(IHistoryService service)
         {
             _historyService = service;
         }

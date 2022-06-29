@@ -1,38 +1,35 @@
-﻿using Lab3.Exceptions;
-using Lab3.Interfaces;
-using Lab3.Models;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using Lab3.Exceptions;
+using Lab3.Interfaces;
+using Lab3.Models;
 
 namespace Lab3.Controllers
 {
     [ApiController]
     [Route("api/models")]
-    public class ModelController : Controller
+    public class ModelsController : Controller
     {
         private readonly IModelService _modelService;
+        private readonly string[] CADFileExtentions = { ".cad" };
+        private readonly string[] previewFileExtentions = { ".png", ".jpeg", ".jpg" };
 
-        public ModelController(IModelService modelService)
+        public ModelsController(IModelService modelService)
         {
             _modelService = modelService;
         }
 
-        private static (IFormFile file, IFormFile preview) ValidateFiles(IFormFileCollection files)
+        private (IFormFile file, IFormFile preview) ValidateFiles(IFormFileCollection files)
         {
             if (files == null || files.Count < 2)
             {
                 return (null, null);
             }
-
-            // TODO: Constants file
-            string[] CADFileExctentions = { ".cad" };
-            string[] previewFileExtentions = { ".png", ".jpeg", ".jpg" };
 
             IFormFile file = null, preview = null;
 
@@ -40,7 +37,7 @@ namespace Lab3.Controllers
             {
                 var formFileExtention = Path.GetExtension(formFile.FileName);
 
-                if (CADFileExctentions.Contains(formFileExtention) && file == null)
+                if (CADFileExtentions.Contains(formFileExtention) && file == null)
                 {
                     file = formFile;
                 }
@@ -160,7 +157,7 @@ namespace Lab3.Controllers
             {
                 return NotFound();
             }
-            catch (Exception e)
+            catch
             {
                 return StatusCode(500);
             }

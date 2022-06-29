@@ -10,11 +10,11 @@ namespace Lab3.Services
 {
     public class TagService : ITagService
     {
-        private readonly ModelContext context;
+        private readonly ModelContext _context;
 
-        public TagService(ModelContext _context)
+        public TagService(ModelContext context)
         {
-            context = _context;
+            _context = context;
         }
 
         /// <inheritdoc cref="ITagService.Create(Tag)"/>
@@ -22,7 +22,7 @@ namespace Lab3.Services
         {
             tag.Id = Guid.NewGuid();
 
-            var createdEntity = (Tag)context.AddAndSave(tag);
+            var createdEntity = (Tag)_context.AddAndSave(tag);
 
             return createdEntity;
         }
@@ -30,13 +30,13 @@ namespace Lab3.Services
         /// <inheritdoc cref="ITagService.ReadAll"/>
         public IEnumerable<Tag> ReadAll()
         {
-            return context.Tags.AsNoTracking().Include(tag => tag.Models).ToArray();
+            return _context.Tags.AsNoTracking().Include(tag => tag.Models).ToArray();
         }
 
         /// <inheritdoc cref="ITagService.ReadOne(Guid)"/>
         public Tag ReadOne(Guid id)
         {
-            var foundTag = context.Tags.AsNoTracking().Include(tag => tag.Models).FirstOrDefault(tag => tag.Id == id);
+            var foundTag = _context.Tags.AsNoTracking().Include(tag => tag.Models).FirstOrDefault(tag => tag.Id == id);
 
             if (foundTag == null)
             {

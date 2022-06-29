@@ -10,11 +10,11 @@ namespace Lab3.Controllers
 {
     [ApiController]
     [Route("api/models/tags/")]
-    public class TagController : Controller
+    public class TagsController : Controller
     {
         private readonly ITagService _tagService;
 
-        public TagController(ITagService service)
+        public TagsController(ITagService service)
         {
             _tagService = service;
         }
