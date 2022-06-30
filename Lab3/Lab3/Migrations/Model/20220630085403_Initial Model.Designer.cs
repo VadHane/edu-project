@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Lab3.Migrations.Model
 {
     [DbContext(typeof(ModelContext))]
-    [Migration("20220629101304_Initial Model")]
+    [Migration("20220630085403_Initial Model")]
     partial class InitialModel
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -48,11 +48,11 @@ namespace Lab3.Migrations.Model
                     b.Property<string>("PrevBlobKey")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

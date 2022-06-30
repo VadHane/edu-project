@@ -49,6 +49,7 @@ namespace Lab3
             services.AddScoped<IHistoryService, HistoryService>();
             services.AddScoped<ITagService, TagService>();
             services.AddScoped<IModelService, ModelService>();
+            services.AddScoped<IFileService, FileService>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

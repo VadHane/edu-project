@@ -14,19 +14,14 @@ namespace Lab3.Services
     public class ModelService : IModelService
     {
         private readonly ModelContext _context;
+        private readonly IFileService _fileService;
         private readonly IWebHostEnvironment env;
-        private readonly string[] fileTypes = { "File", "Preview" };
 
-        public ModelService(ModelContext context, IWebHostEnvironment _env)
+        public ModelService(ModelContext context, IWebHostEnvironment _env, IFileService fileService)
         {
             _context = context;
+            _fileService = fileService;
             env = _env;
-        }
-
-        private enum FileTypeEnum
-        {
-            file = 0,
-            preview = 1
         }
 
         private void AssignTagsToModel(ICollection<Tag> tags, Model model)
@@ -60,53 +55,6 @@ namespace Lab3.Services
             model.ModelHistory.Add(newHistory);
         }
 
-        private void CreateDirectoryForFile(FileTypeEnum fileType)
-        {
-            if (env.WebRootPath == null)
-            {
-                var rootPath = env.ContentRootPath;
-                var webRootPath = Path.Combine(rootPath, "wwwroot");
-
-                Directory.CreateDirectory(webRootPath);
-
-                env.WebRootPath = webRootPath;
-
-                // Get the directory name from the array by file type as the index
-                var nameOfDirectory = fileTypes[((int)fileType)];
-                var absoluteDirectoryPath = Path.Combine(env.WebRootPath, nameOfDirectory);
-
-                Directory.CreateDirectory(absoluteDirectoryPath);
-            }
-            else
-            {
-                // Get the directory name from the array by file type as the index
-                var nameOfDirectory = fileTypes[((int)fileType)];
-                var filePath = Path.Combine(env.WebRootPath, nameOfDirectory);
-
-                if (!Directory.Exists(filePath))
-                {
-                    Directory.CreateDirectory(filePath);
-                }
-            }
-        }
-
-        private string SaveFile(IFormFile file, FileTypeEnum fileType)
-        {
-            CreateDirectoryForFile(fileType);
-
-            var fileExtention = Path.GetExtension(file.FileName);
-            var fileName = $"{Guid.NewGuid()}{fileExtention}";
-            // Get the directory name from the array by file type as the index
-            var nameOfDirectory = fileTypes[((int)fileType)];
-            var webFilePath = Path.Combine(nameOfDirectory, fileName);
-            var absoluteFilePath = Path.Combine(env.WebRootPath, webFilePath);
-
-            using var fileStream = new FileStream(absoluteFilePath, FileMode.Create);
-            file.CopyTo(fileStream);
-
-            return webFilePath;
-        }
-
         /// <inheritdoc cref="IModelService.Create(Model, IFormFile, IFormFile)"/>
         public Model Create(Model model, IFormFile file, IFormFile preview)
         {
@@ -114,12 +62,12 @@ namespace Lab3.Services
 
             if (file != null)
             {
-                filePath = SaveFile(file, FileTypeEnum.file);
+                filePath = _fileService.SaveFile(file, FileTypeEnum.File);
             }
 
             if (preview != null)
             {
-                previewPath = SaveFile(preview, FileTypeEnum.preview);
+                previewPath = _fileService.SaveFile(preview, FileTypeEnum.Preview);
             }
 
             var newModel = new Model()
@@ -156,8 +104,8 @@ namespace Lab3.Services
             var absoluteFilePath = Path.Combine(env.WebRootPath, foundModel.Filekey);
             var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
 
-            File.Delete(absoluteFilePath);
-            File.Delete(absolutePreviewPath);
+            _fileService.DeleteFile(absoluteFilePath);
+            _fileService.DeleteFile(absolutePreviewPath);
 
             var deletedEntity = (Model)_context.DeleteAndSave(foundModel);
 
@@ -165,7 +113,7 @@ namespace Lab3.Services
             {
                 absoluteFilePath = Path.Combine(env.WebRootPath, history.FileKey);
 
-                File.Delete(absoluteFilePath);
+                _fileService.DeleteFile(absoluteFilePath);
             }
 
             return deletedEntity;
@@ -200,20 +148,23 @@ namespace Lab3.Services
                 throw new EntityNotFoundException();
             }
 
-            var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
+            if (foundModel.PrevBlobKey != null)
+            {
+                var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
 
-            File.Delete(absolutePreviewPath);
+                _fileService.DeleteFile(absolutePreviewPath);
+            }
 
             string filePath = null, previewPath = null;
 
             if (file != null)
             {
-                filePath = SaveFile(file, FileTypeEnum.file);
+                filePath = _fileService.SaveFile(file, FileTypeEnum.File);
             }
 
             if (preview != null)
             {
-                previewPath = SaveFile(preview, FileTypeEnum.preview);
+                previewPath = _fileService.SaveFile(preview, FileTypeEnum.Preview);
             }
 
             foundModel.Filekey = filePath;

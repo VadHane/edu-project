@@ -46,11 +46,11 @@ namespace Lab3.Migrations.Model
                     b.Property<string>("PrevBlobKey")
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<Guid>("UpdatedBy")
-                        .HasColumnType("uniqueidentifier");
-
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime2");
+
+                    b.Property<Guid>("UpdatedBy")
+                        .HasColumnType("uniqueidentifier");
 
                     b.HasKey("Id");
 

@@ -121,7 +121,7 @@ namespace Lab3.Controllers
 
                 return Created(uriToCreatedModel, createdModel);
             }
-            catch
+            catch (Exception e)
             {
                 return StatusCode(500);
             }
