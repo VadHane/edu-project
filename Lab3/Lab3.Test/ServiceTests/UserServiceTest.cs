@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -10,13 +11,14 @@ using NUnit.Framework;
 using Lab3.Exceptions;
 using Lab3.Models;
 using Lab3.Services;
-using System.Linq;
+using Lab3.Interfaces;
 
-namespace Lab3.Test
+namespace Lab3.Test.ServiceTests
 {
     public class UserServiceTest
     {
         private IUserService _userService;
+        private Mock<IFileService> _fileService;
         private UserContext _DBContext;
 
         [SetUp]
@@ -31,8 +33,10 @@ namespace Lab3.Test
 
             env.Setup(m => m.WebRootPath).Returns(envWebRootPath);
 
+            _fileService = new Mock<IFileService>();
+
             _DBContext = new UserContext(optionts);
-            _userService = new UserService(_DBContext, env.Object);
+            _userService = new UserService(_DBContext, env.Object, _fileService.Object);
         }
         
         private async Task ClearTestDataBase()
@@ -107,7 +111,7 @@ namespace Lab3.Test
         }
 
         [Test]
-        public void ReadOne_InputAvailableUserId_ShouldThrowException()
+        public void ReadOne_InputAvailableUserId_ShouldReturnUserFromDBById()
         {
             var createdTestEntity = AddUserIntoTestDB();
 

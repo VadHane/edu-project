@@ -7,7 +7,7 @@ using Lab3.Exceptions;
 using Lab3.Models;
 using Lab3.Services;
 
-namespace Lab3.Test
+namespace Lab3.Test.ServiceTests
 {
     public class RoleServiceTest
     {
