@@ -2,8 +2,8 @@
 using Moq;
 using NUnit.Framework;
 using Lab3.Models;
-using Lab3.Services;
 using Lab3.Controllers;
+using Lab3.Interfaces;
 
 namespace Lab3.Test.ControlerTests
 {
