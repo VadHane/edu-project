@@ -25,15 +25,18 @@ namespace Lab3.Models
         [Required]
         public Guid CreatedBy { get; set; }
 
-        public DateTime UpdateddAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
 
         public Guid UpdatedBy { get; set; }
 
         public virtual ICollection<Tag> Tags { get; set; }
 
+        public virtual ICollection<ModelHistory> ModelHistory { get; set; }
+
         public Model()
         {
             Tags = new List<Tag>();
+            ModelHistory = new List<ModelHistory>();
         }
     }
 }

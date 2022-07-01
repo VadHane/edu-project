@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Lab3.Models;
 
-namespace Lab3.Services
+namespace Lab3.Interfaces
 {
     public interface IRoleService
     {

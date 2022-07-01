@@ -46,11 +46,11 @@ namespace Lab3.Migrations.Model
                     b.Property<string>("PrevBlobKey")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<DateTime>("UpdatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<Guid>("UpdatedBy")
                         .HasColumnType("uniqueidentifier");
-
-                    b.Property<DateTime>("UpdateddAt")
-                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -59,6 +59,10 @@ namespace Lab3.Migrations.Model
 
             modelBuilder.Entity("Lab3.Models.ModelHistory", b =>
                 {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uniqueidentifier");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime2");
 
@@ -70,6 +74,10 @@ namespace Lab3.Migrations.Model
 
                     b.Property<Guid>("ModelId")
                         .HasColumnType("uniqueidentifier");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ModelId");
 
                     b.ToTable("ModelHistories");
                 });
@@ -105,6 +113,17 @@ namespace Lab3.Migrations.Model
                     b.ToTable("ModelTag");
                 });
 
+            modelBuilder.Entity("Lab3.Models.ModelHistory", b =>
+                {
+                    b.HasOne("Lab3.Models.Model", "Model")
+                        .WithMany("ModelHistory")
+                        .HasForeignKey("ModelId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Model");
+                });
+
             modelBuilder.Entity("ModelTag", b =>
                 {
                     b.HasOne("Lab3.Models.Model", null)
@@ -118,6 +137,11 @@ namespace Lab3.Migrations.Model
                         .HasForeignKey("TagsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("Lab3.Models.Model", b =>
+                {
+                    b.Navigation("ModelHistory");
                 });
 #pragma warning restore 612, 618
         }

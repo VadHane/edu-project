@@ -1,14 +1,11 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using Microsoft.EntityFrameworkCore;
 
 namespace Lab3.Models
 {
-    [Keyless]
     public class ModelHistory
     {
-        [Required]
-        public Guid ModelId { get; set; }
+        public Guid Id { get; set; }
 
         public string FileKey { get; set; }
 
@@ -17,5 +14,9 @@ namespace Lab3.Models
 
         [Required]
         public Guid CreatedBy { get; set; }
+
+        public Guid ModelId { get; set; }
+
+        public Model Model { get; set; }
     }
 }
