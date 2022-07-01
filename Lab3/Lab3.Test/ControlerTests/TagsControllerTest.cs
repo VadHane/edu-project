@@ -30,25 +30,25 @@ namespace Lab3.Test.ControlerTests
         [Test]
         public void Get_InputSomeTagId_ShouldCallReadOneMethodFromService()
         {
-            var testRoleId = Guid.NewGuid();
+            var testId = Guid.NewGuid();
 
-            _tagsController.Get(testRoleId);
+            _tagsController.Get(testId);
 
-            _tagService.Verify(m => m.ReadOne(testRoleId), Times.Once);
+            _tagService.Verify(m => m.ReadOne(testId), Times.Once);
         }
 
         [Test]
         public void Post_InputSomeTag_ShouldCallCreateMethodFromService()
         {
-            var testRole = new Tag()
+            var testTag = new Tag()
             {
                 Id = Guid.NewGuid(),
                 Name = "testTag",
             };
 
-            _tagsController.Post(testRole);
+            _tagsController.Post(testTag);
 
-            _tagService.Verify(m => m.Create(testRole), Times.Once);
+            _tagService.Verify(m => m.Create(testTag), Times.Once);
         }
     }
 }

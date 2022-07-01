@@ -2,12 +2,12 @@
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Hosting;
 using NUnit.Framework;
+using Moq;
 using Lab3.Exceptions;
 using Lab3.Models;
 using Lab3.Services;
-using Moq;
-using Microsoft.AspNetCore.Hosting;
 using Lab3.Interfaces;
 
 namespace Lab3.Test.ServiceTests
@@ -44,6 +44,7 @@ namespace Lab3.Test.ServiceTests
             {
                 _DBContext.Models.Remove(user);
             }
+
             _DBContext.SaveChanges();
         }
 
@@ -66,6 +67,7 @@ namespace Lab3.Test.ServiceTests
             }
 
             var createdEntity = _DBContext.Models.Add(model);
+
             _DBContext.SaveChanges();
 
             return createdEntity.Entity;
