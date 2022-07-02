@@ -1,15 +1,15 @@
 import React, { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { UserWarningModalProps } from './UserWarningModal.types';
-import './UserWarningModal.css';
+import { UserWarningModalProps as WarningModalProps } from './WarningModal.types';
+import './WarningModal.css';
 
-const UserWarningModal: FunctionComponent<UserWarningModalProps> = (
-    props: UserWarningModalProps,
+const UserWarningModal: FunctionComponent<WarningModalProps> = (
+    props: WarningModalProps,
 ) => {
     const navigate = useNavigate();
 
     const onClickDefaultHandler = (): void => {
-        navigate('/');
+        navigate(props.navigateTo || '/');
     };
 
     return (

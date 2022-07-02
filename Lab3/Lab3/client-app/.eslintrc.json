@@ -3,34 +3,15 @@
         "browser": true,
         "es2021": true
     },
-    "extends": [
-        "react-app",
-        "react-app/jest",
-        "prettier"
-    ],
-    "parser":"@typescript-eslint/parser",
-    "plugins": [
-        "react"
-    ],
+    "extends": ["react-app", "react-app/jest", "prettier"],
+    "parser": "@typescript-eslint/parser",
+    "plugins": ["react"],
     "rules": {
         "no-debugger": 1,
         "no-console": 1,
-        "indent": [
-            "error",
-            4
-        ],
-        "linebreak-style": [
-            "error",
-            "unix"
-        ],
-        "quotes": [
-            "error",
-            "single"
-        ],
-        "semi": [
-            "error",
-            "always"
-        ],
-       "eol-last": ["error", "always"]
+        "linebreak-style": ["error", "unix"],
+        "quotes": ["error", "single"],
+        "semi": ["error", "always"],
+        "eol-last": ["error", "always"]
     }
 }

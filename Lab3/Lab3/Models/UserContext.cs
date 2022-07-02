@@ -8,7 +8,7 @@ namespace Lab3.Models
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
 
-        public UserContext(DbContextOptions contextOptions) : base(contextOptions) { }
+        public UserContext(DbContextOptions<UserContext> contextOptions) : base(contextOptions) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {

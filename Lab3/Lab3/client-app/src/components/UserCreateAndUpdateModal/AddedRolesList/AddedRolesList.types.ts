@@ -1,7 +1,7 @@
 import { Role } from '../../../models/Role';
 
 type AddedRolesListProps = {
-    roles: Array<Role>;
+    addedRoles: Array<Role>;
     removeAddedRole: (role: Role) => void;
 };
 

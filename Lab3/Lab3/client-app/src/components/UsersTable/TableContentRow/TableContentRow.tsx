@@ -5,6 +5,7 @@ import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
 import { EDIT_IMAGE, REMOVE_IMAGE, USER_DEFAULT_PICTURE } from '../../../App.constants';
 import './TableContentRow.css';
+import { useUserActions } from '../../../hooks/useUserActions';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
@@ -12,6 +13,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     const [user, setUser] = useState<User>(props.user);
     const [userPhotoUrl, setUserPhotoUrl] = useState<string>('');
     const navigate = useNavigate();
+    const { DeleteUserAsync } = useUserActions();
 
     useEffect(() => {
         setUser(props.user);
@@ -28,13 +30,13 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     };
 
     const onEditHandler = () => {
-        const navigateTo = `/edit/${user.id}`;
+        const navigateTo = `/users/edit/${user.id}`;
 
         navigate(navigateTo);
     };
 
     const onDeleteHandler = () => {
-        props.onDelete(user);
+        DeleteUserAsync(user);
     };
 
     return (

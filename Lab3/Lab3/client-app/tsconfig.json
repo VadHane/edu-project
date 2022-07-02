@@ -17,5 +17,5 @@
         "jsx": "react-jsx",
         "types": ["cypress"]
     },
-    "include": ["**/*.ts"]
+    "include": ["**/*.ts", "src/routers/index.tsx"]
 }

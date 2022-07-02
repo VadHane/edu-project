@@ -10,7 +10,7 @@ namespace Lab3.Models
 
         public DbSet<ModelHistory> ModelHistories { get; set; }
 
-        public ModelContext(DbContextOptions options) : base(options) { }
+        public ModelContext(DbContextOptions<ModelContext> options) : base(options) { }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
