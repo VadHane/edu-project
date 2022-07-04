@@ -3,6 +3,7 @@ import { UserState, UserActions, UserActionTypes } from '../../types/UserTypes';
 const initialState: UserState = {
     users: [],
     loading: false,
+    loaded: false,
     error: null,
     actionWasDone: null,
 };
@@ -12,6 +13,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.GET_ALL:
             return {
                 loading: true,
+                loaded: false,
                 error: null,
                 users: [],
                 actionWasDone: null,
@@ -19,6 +21,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.GET_ALL_SUCCESS:
             return {
                 loading: false,
+                loaded: true,
                 error: null,
                 users: [...action.payload],
                 actionWasDone: null,
@@ -26,6 +29,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.GET_ALL_ERROR:
             return {
                 loading: false,
+                loaded: false,
                 error: action.payload,
                 users: [],
                 actionWasDone: null,
@@ -33,6 +37,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.ADD_USER:
             return {
                 users: state.users,
+                loaded: true,
                 loading: true,
                 error: null,
                 actionWasDone: null,
@@ -40,6 +45,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.ADD_USER_SUCCESS:
             return {
                 loading: false,
+                loaded: false,
                 error: null,
                 users: [...state.users, action.payload],
                 actionWasDone: true,
@@ -47,6 +53,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.ADD_USER_ERROR:
             return {
                 loading: false,
+                loaded: false,
                 error: action.payload,
                 users: state.users,
                 actionWasDone: null,
@@ -54,6 +61,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.EDIT_USER:
             return {
                 users: state.users,
+                loaded: true,
                 loading: true,
                 error: null,
                 actionWasDone: null,
@@ -61,6 +69,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.EDIT_USER_SUCCESS:
             return {
                 loading: false,
+                loaded: false,
                 error: null,
                 actionWasDone: true,
                 users: [
@@ -71,6 +80,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.EDIT_USER_ERROR:
             return {
                 loading: false,
+                loaded: false,
                 error: action.payload,
                 users: state.users,
                 actionWasDone: false,
@@ -78,6 +88,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.DELETE_USER:
             return {
                 loading: true,
+                loaded: true,
                 error: null,
                 users: state.users,
                 actionWasDone: null,
@@ -85,6 +96,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.DELETE_USER_SUCCESS:
             return {
                 loading: false,
+                loaded: false,
                 error: null,
                 actionWasDone: false,
                 users: state.users.filter((user) => user.id !== action.payload.id),
@@ -92,6 +104,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
         case UserActionTypes.DELETE_USER_ERROR:
             return {
                 loading: false,
+                loaded: false,
                 error: action.payload,
                 users: state.users,
                 actionWasDone: false,

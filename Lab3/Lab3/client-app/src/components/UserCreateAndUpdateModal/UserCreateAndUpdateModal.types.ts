@@ -1,9 +1,6 @@
-import { User } from '../../models/User';
-
 type UserCreateAndUpdateModalProps = {
     buttonContent: string;
     resultActionType: ResultActions;
-    user?: User;
 };
 
 export enum ResultActions {

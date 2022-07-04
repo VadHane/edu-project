@@ -27,11 +27,11 @@ import Preloader from '../Preloader';
 import { useUserActions } from '../../hooks/useUserActions';
 import { RouteNamesEnum } from '../../types';
 import { withCreateUpdateModal } from './../../hoc/withCreateUpdateModal';
+import { withLoading } from '../../hoc/withLoading';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = ({
     resultActionType,
     buttonContent,
-    user,
 }) => {
     const { id } = useParams();
 
@@ -212,4 +212,6 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     );
 };
 
-export default withCreateUpdateModal(UserCreateAndUpdateModal);
+export default withLoading<UserCreateAndUpdateModalProps>(
+    withCreateUpdateModal(UserCreateAndUpdateModal),
+);

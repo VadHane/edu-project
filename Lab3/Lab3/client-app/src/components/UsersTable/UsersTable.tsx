@@ -1,7 +1,6 @@
 import React, { FunctionComponent, useEffect } from 'react';
 import { User } from '../../models/User';
 import TableContentRow from './TableContentRow';
-import UserWarningModal from '../WarningModal';
 import './UsersTable.css';
 import {
     ACTIONS_COLUMN_HEADER,
@@ -13,25 +12,18 @@ import {
 } from './UsersTable.constants';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { useUserActions } from '../../hooks/useUserActions';
-import Preloader from '../Preloader';
 import AddUserButton from '../AddUserButton';
-import { RouteNamesEnum } from '../../types';
+import { withLoading } from './../../hoc/withLoading';
 
 const UsersTable: FunctionComponent = () => {
-    const { users, loading, error } = useTypedSelector((state) => state.user);
+    const { users, loaded } = useTypedSelector((state) => state.user);
     const { getAllUsers } = useUserActions();
 
     useEffect(() => {
-        getAllUsers();
-    }, []);
-
-    if (loading) {
-        return <Preloader />;
-    }
-
-    if (error) {
-        return <UserWarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
-    }
+        if (!loaded) {
+            getAllUsers();
+        }
+    }, [getAllUsers, loaded]);
 
     const usersRowsNode: React.ReactNode = (
         <div className="scroll-list">
@@ -71,4 +63,4 @@ const UsersTable: FunctionComponent = () => {
     );
 };
 
-export default UsersTable;
+export default withLoading(UsersTable);

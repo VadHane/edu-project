@@ -3,6 +3,7 @@ import { Role } from '../models/Role';
 export type RoleState = {
     roles: Array<Role>;
     loading: boolean;
+    loaded: boolean;
     error: Nullable<string>;
 };
 

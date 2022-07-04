@@ -3,6 +3,7 @@ import { User } from '../models/User';
 export type UserState = {
     users: Array<User>;
     loading: boolean;
+    loaded: boolean;
     error: Nullable<string>;
     actionWasDone: Nullable<boolean>;
 };

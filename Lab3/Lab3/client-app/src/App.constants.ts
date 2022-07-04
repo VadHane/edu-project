@@ -22,5 +22,3 @@ export const CANCEL_IMAGE = {
     URL: 'https://cdn-icons-png.flaticon.com/512/1828/1828939.png',
     ALT: 'Cancel',
 };
-
-export const USER_WAS_ADDED_MESSAGE = 'User was added!';

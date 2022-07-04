@@ -31,10 +31,6 @@ export function withCreateUpdateModal(
             );
         }
 
-        if (error) {
-            return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
-        }
-
         if (actionWasDone === false) {
             return (
                 <WarningModal message={error || ''} navigateTo={RouteNamesEnum.Users} />
