@@ -7,11 +7,11 @@ import './AddedRolesList.css';
 const AddedRolesList: FunctionComponent<AddedRolesListProps> = (
     props: AddedRolesListProps,
 ) => {
-    const [roles, setRoles] = useState<Array<Role>>(props.roles);
+    const [roles, setRoles] = useState<Array<Role>>(props.addedRoles);
 
     useEffect(() => {
-        setRoles([...props.roles]);
-    }, [props.roles]);
+        setRoles([...props.addedRoles]);
+    }, [props.addedRoles]);
 
     return (
         <div className="role-list">

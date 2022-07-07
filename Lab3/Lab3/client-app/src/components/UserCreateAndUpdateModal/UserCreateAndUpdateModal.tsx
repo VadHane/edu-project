@@ -1,59 +1,74 @@
-/* eslint-disable react-hooks/rules-of-hooks */
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { NavLink, useNavigate, useParams } from 'react-router-dom';
+import { NavLink, useParams } from 'react-router-dom';
 import { Role } from '../../models/Role';
 import AddedRolesList from './AddedRolesList';
 import AvailableRolesList from './AvailableRolesList';
-import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
+import UserCreateAndUpdateModalProps, {
+    ResultActions,
+} from './UserCreateAndUpdateModal.types';
 import { User } from '../../models/User';
 import {
     FILE_NOT_IMAGE_EXCEPTION,
-    INCORECT_USER_ID_EXCEPTION,
     INCORRECT_EMAIL_EXCEPTION,
     LENGTH_OF_NAME_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
-    TRY_AGAIN_LATER_EXCEPTION,
-} from '../../App.constants';
+} from '../../exceptions';
 import './UserCreateAndUpdateModal.css';
-import UserWarningModal from '../UserWarningModal';
 import {
     EMAIL_PLACEHOLDER,
+    emptyUser,
     FIRST_NAME_PLACEHOLDER,
     LAST_NAME_PLACEHOLDER,
 } from './UserCreateAndUpdateModal.constants';
+import { useUserById } from '../../hooks/useUserById';
+import { useRoleActions } from './../../hooks/useRoleActions';
+import { useUserActions } from '../../hooks/useUserActions';
+import { RouteNamesEnum } from '../../types/Route.types';
+import { withCreateUpdateModal } from './../../hoc/withCreateUpdateModal';
+import { useTypedSelector } from '../../hooks/useTypedSelector';
+import Preloader from '../Preloader';
+import WarningModal from '../WarningModal';
 
-const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = (
-    props: UserCreateAndUpdateModalProps,
-) => {
+const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = ({
+    resultActionType,
+    buttonContent,
+}) => {
     const { id } = useParams();
-    const foundUser = props.getUserById(id);
 
-    if (!foundUser) {
-        return <UserWarningModal message={INCORECT_USER_ID_EXCEPTION} />;
-    }
+    const foundUser = useUserById(id) || emptyUser;
 
-    const navigate = useNavigate();
     const [firstName, setFirstName] = useState<string>(foundUser.firstName);
     const [lastName, setLastName] = useState<string>(foundUser.lastName);
     const [email, setEmail] = useState<string>(foundUser.email);
-    const [addedRoles, setAddedRoles] = useState<Array<Role>>(foundUser.roles);
-    const [availableRoles, setAvailableRoles] = useState<Array<Role>>([]);
+
+    const [addedRoles, setAddedRoles] = useState<Array<Role>>([...foundUser.roles]);
+
     const [exceptionMessage, setExceptionMessage] = useState<string>('');
 
     const file = React.createRef<HTMLInputElement>();
 
+    const { AddNewUserAsync, EditUserAsync } = useUserActions();
+    const { loading, error } = useTypedSelector((state) => state.role);
+    const { getAllRoles } = useRoleActions();
+
     useEffect(() => {
-        props
-            .getAllRolesAsync()
-            .then((roles: Array<Role>) => setAvailableRoles([...roles]));
-    }, [props]);
+        getAllRoles();
+    }, []);
 
     useEffect(() => {
         setExceptionMessage('');
     }, [firstName, lastName, email]);
 
+    if (loading) {
+        return <Preloader />;
+    }
+
+    if (error) {
+        return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
+    }
+
     const backgroundNode: React.ReactNode = (
-        <NavLink to={'/'} title="Close modal window">
+        <NavLink to={RouteNamesEnum.Users} title="Close modal window">
             <div className="background"></div>
         </NavLink>
     );
@@ -107,37 +122,23 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                     <br />
 
                     <AddedRolesList
-                        roles={addedRoles}
+                        addedRoles={addedRoles}
                         removeAddedRole={(role: Role) => addAvailableRole(role)}
                     />
 
                     <AvailableRolesList
-                        roles={availableRoles}
                         addedRoles={addedRoles}
                         addRole={(role: Role) => addRole(role)}
-                        createNewRole={(role: Role) => createNewRole(role)}
                     />
 
                     <input type="file" accept="image/*" ref={file} />
                 </div>
             </form>
-            <button onClick={() => onSubmitAction()}>{props.buttonContent}</button>
+            <button onClick={() => onSubmitAction()}>{buttonContent}</button>
         </div>
     );
 
     const addRole = (role: Role): void => {
-        setAvailableRoles((currentValue: Array<Role>) => {
-            const indexOfSelectedRole = currentValue?.findIndex(
-                (_role: Role) => _role.id === role.id,
-            );
-            const prevList = currentValue.slice(0, indexOfSelectedRole);
-            const endList = currentValue.slice(
-                indexOfSelectedRole + 1,
-                currentValue.length,
-            );
-
-            return [...prevList, ...endList];
-        });
         setAddedRoles((currentValue) => [...currentValue, role]);
     };
 
@@ -153,13 +154,6 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             );
 
             return [...prevList, ...endList];
-        });
-        setAvailableRoles((currentValue) => [...currentValue, role]);
-    };
-
-    const createNewRole = (role: Role): void => {
-        props.createNewRole(role).then((role: Role) => {
-            setAvailableRoles((currentValue: Array<Role>) => [...currentValue, role]);
         });
     };
 
@@ -201,13 +195,17 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
         };
 
         const userPhoto = file.current?.files?.item(0);
-        props.resultActionAsync(user, userPhoto).then((done: Boolean) => {
-            if (done) {
-                navigate('/');
-            } else {
-                setExceptionMessage(TRY_AGAIN_LATER_EXCEPTION);
-            }
-        });
+
+        if (!userPhoto) {
+            setExceptionMessage(FILE_NOT_IMAGE_EXCEPTION);
+            return;
+        }
+
+        if (resultActionType === ResultActions.Add) {
+            AddNewUserAsync(user, userPhoto);
+        } else if (resultActionType === ResultActions.Edit) {
+            EditUserAsync(user, userPhoto);
+        }
     };
 
     return (
@@ -218,4 +216,4 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     );
 };
 
-export default UserCreateAndUpdateModal;
+export default withCreateUpdateModal(UserCreateAndUpdateModal);

@@ -6,10 +6,6 @@ import {
     APPROVE_IMAGE,
     CANCEL_IMAGE,
     EDIT_IMAGE,
-    FILE_NOT_IMAGE_EXCEPTION,
-    INCORRECT_EMAIL_EXCEPTION,
-    LENGTH_OF_NAME_EXCEPTION,
-    LENGTH_OF_SURNAME_EXCEPTION,
     REMOVE_IMAGE,
 } from './../../src/App.constants';
 import {
@@ -18,8 +14,14 @@ import {
     LIST_INCLUDES_ROLE_MESSAGE,
 } from './../../src/components/UserCreateAndUpdateModal/AvailableRolesList/AvailableRolesList.constants';
 import { User } from '../../src/models/User';
+import {
+    FILE_NOT_IMAGE_EXCEPTION,
+    INCORRECT_EMAIL_EXCEPTION,
+    LENGTH_OF_NAME_EXCEPTION,
+    LENGTH_OF_SURNAME_EXCEPTION,
+} from './../../src/exceptions';
 
-const host = 'http://localhost:3000';
+const host = 'http://localhost:3000/users';
 
 const testUser: User = {
     id: '',
@@ -213,8 +215,9 @@ describe('End to end test aplication.', () => {
         cy.url().should('eq', `${host}/add`);
 
         cy.contains(ADD_USER_BUTTON_TEXT).click();
+        cy.contains('Ok').click();
 
-        cy.url().should('eq', `${host}/`);
+        cy.url().should('eq', `${host}`);
 
         cy.contains(testUser.firstName);
         cy.contains(testUser.lastName);
@@ -258,7 +261,9 @@ describe('End to end test aplication.', () => {
         cy.get('input[type="file"]').attachFile(testUserPhotoPath);
 
         cy.contains(EDIT_USER_BUTTON_TEXT).click();
-        cy.url().should('eq', `${host}/`);
+        cy.contains('Ok').click();
+
+        cy.url().should('eq', `${host}`);
 
         cy.contains(editedTestUser.firstName);
         cy.contains(editedTestUser.lastName);

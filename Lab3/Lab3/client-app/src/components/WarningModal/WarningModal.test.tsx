@@ -1,6 +1,6 @@
 import React from 'react';
 import { cleanup, render, screen, fireEvent } from '@testing-library/react';
-import UserWarningModal from './UserWarningModal';
+import WarningModal from './WarningModal';
 
 jest.mock('react-router-dom', () => ({
     ...(jest.requireActual('react-router-dom') as any),
@@ -13,7 +13,7 @@ describe('Test warning modal window.', () => {
     test('Component should render without errors.', () => {
         const testMessage = 'test message';
 
-        render(<UserWarningModal message={testMessage} />);
+        render(<WarningModal message={testMessage} />);
 
         expect(screen.getByText(testMessage)).toBeInTheDocument();
         expect(screen.getByText(/ok/i)).toBeInTheDocument();
@@ -23,7 +23,7 @@ describe('Test warning modal window.', () => {
         const testMessage = 'test message';
         const mockedClickHandler = jest.fn();
 
-        render(<UserWarningModal message={testMessage} onClick={mockedClickHandler} />);
+        render(<WarningModal message={testMessage} onClick={mockedClickHandler} />);
 
         fireEvent.click(screen.getByText(/ok/i));
 
@@ -32,7 +32,7 @@ describe('Test warning modal window.', () => {
 
     test('Snapshot.', () => {
         const testMessage = 'test message';
-        const utils = render(<UserWarningModal message={testMessage} />);
+        const utils = render(<WarningModal message={testMessage} />);
 
         expect(utils).toMatchSnapshot();
     });

@@ -1,4 +1,4 @@
-import { Nullable } from '../types';
+import { Nullable } from '../types/App.types';
 import { Role } from './Role';
 
 export interface User {

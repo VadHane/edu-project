@@ -1,4 +1,3 @@
-/* eslint-disable indent */
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
@@ -10,38 +9,43 @@ import {
     LIST_INCLUDES_ROLE_MESSAGE,
     MAX_LENGTH_INPUT_BOX,
 } from './AvailableRolesList.constants';
+import { useRoleActions } from '../../../hooks/useRoleActions';
+import { useTypedSelector } from '../../../hooks/useTypedSelector';
 
 const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,
 ) => {
-    const [roles, setRoles] = useState<Array<Role>>(props.roles);
+    const { roles } = useTypedSelector((state) => state.role);
+
     const [inputNameOfRole, setInputNameOfRole] = useState<string>('');
     const [isRoleNew, setItNewRole] = useState<boolean>(false);
     const [isRoleAdded, setItAddedRole] = useState<boolean>(false);
 
-    useEffect(() => {
-        setRoles([...props.roles]);
-    }, [props.roles]);
+    const { addNewRole } = useRoleActions();
 
     useEffect(() => {
-        const availableInList: boolean =
+        const isAvailable: boolean =
             !roles.find((role: Role) => role.name === inputNameOfRole) &&
             inputNameOfRole.length > 1;
 
-        const added: boolean = props.addedRoles.find(
+        const isAdded: boolean = props.addedRoles.find(
             (role: Role) => role.name === inputNameOfRole,
         )
             ? true
             : false;
 
-        setItNewRole(availableInList);
-        setItAddedRole(added);
+        setItNewRole(isAvailable);
+        setItAddedRole(isAdded);
     }, [inputNameOfRole, props.addedRoles, roles]);
+
+    const getAvailableRoles = () => {
+        return roles.filter((role) => !props.addedRoles.includes(role));
+    };
 
     const inputBoxNode: React.ReactNode = (
         <div>
             <datalist id="available-roles-list">
-                {roles?.map((role: Role) => (
+                {getAvailableRoles()?.map((role: Role) => (
                     <option value={role.name} key={role.id}></option>
                 ))}
             </datalist>
@@ -63,7 +67,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 src={APPROVE_IMAGE.URL}
                 alt={APPROVE_IMAGE.ALT}
                 onClick={() => {
-                    props.createNewRole({ id: '', name: inputNameOfRole });
+                    addNewRole({ id: '', name: inputNameOfRole });
                     setItNewRole(false);
                 }}
             />
