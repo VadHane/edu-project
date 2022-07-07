@@ -1,0 +1,29 @@
+.picture {
+    width: 10vw;
+}
+
+.picture img {
+    height: 30px;
+}
+
+.name {
+    width: 15vw;
+}
+
+.desctiption {
+    width: 15vw;
+}
+
+.tags {
+    width: 25vw;
+}
+
+.last-update {
+    width: 15vw;
+    font-size: 10px;
+}
+
+.actions img {
+    height: 20px;
+    padding: 0 20px 0 20px;
+}
