@@ -1,5 +1,5 @@
 import { User } from '../models/User';
-import { Maybe } from '../types';
+import { Maybe } from '../types/App.types';
 import { useTypedSelector } from './useTypedSelector';
 
 export const useUserById = (id: Maybe<string>): User => {

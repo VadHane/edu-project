@@ -1,4 +1,4 @@
-import { UserState, UserActions, UserActionTypes } from '../../types/UserTypes';
+import { UserState, UserActions, UserActionTypes } from '../../types/User.types';
 
 const initialState: UserState = {
     users: [],
@@ -56,7 +56,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
                 loaded: false,
                 error: action.payload,
                 users: state.users,
-                actionWasDone: null,
+                actionWasDone: false,
             };
         case UserActionTypes.EDIT_USER:
             return {

@@ -1,6 +1,6 @@
 import React, { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { RouteNamesEnum } from '../../types';
+import { RouteNamesEnum } from '../../types/Route.types';
 import { ADD_USER_BUTTON_TEXT } from '../UsersTable/UsersTable.constants';
 import './AddUserButton.css';
 

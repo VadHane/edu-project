@@ -11,7 +11,7 @@ import WarningModal from '../components/WarningModal';
 import { INCORECT_USER_ID_EXCEPTION } from '../exceptions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
 import { useUserById } from '../hooks/useUserById';
-import { RouteNamesEnum } from '../types';
+import { RouteNamesEnum } from '../types/Route.types';
 
 export function withCreateUpdateModal(
     Component: FunctionComponent<UserCreateAndUpdateModalProps>,

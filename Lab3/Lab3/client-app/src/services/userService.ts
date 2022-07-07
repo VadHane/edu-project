@@ -8,6 +8,14 @@ export const getAllUsersAsync = async (): Promise<Array<User>> => {
         .then((data: Array<User>) => data);
 };
 
+export const getUserByIdAsync = async (id: string): Promise<User> => {
+    const requestUrl = `${url}${id}`;
+
+    return fetch(requestUrl)
+        .then((response) => response.json())
+        .then((data: User) => data);
+};
+
 export const addUserAsync = async (user: User, file: File): Promise<User> => {
     const requestBody = new FormData();
 

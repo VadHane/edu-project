@@ -22,12 +22,12 @@ import {
 } from './UserCreateAndUpdateModal.constants';
 import { useUserById } from '../../hooks/useUserById';
 import { useRoleActions } from './../../hooks/useRoleActions';
+import { useUserActions } from '../../hooks/useUserActions';
+import { RouteNamesEnum } from '../../types/Route.types';
+import { withCreateUpdateModal } from './../../hoc/withCreateUpdateModal';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import Preloader from '../Preloader';
-import { useUserActions } from '../../hooks/useUserActions';
-import { RouteNamesEnum } from '../../types';
-import { withCreateUpdateModal } from './../../hoc/withCreateUpdateModal';
-import { withLoading } from '../../hoc/withLoading';
+import WarningModal from '../WarningModal';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = ({
     resultActionType,
@@ -48,8 +48,8 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     const file = React.createRef<HTMLInputElement>();
 
     const { AddNewUserAsync, EditUserAsync } = useUserActions();
+    const { loading, error } = useTypedSelector((state) => state.role);
     const { getAllRoles } = useRoleActions();
-    const { loading } = useTypedSelector((state) => state.role);
 
     useEffect(() => {
         getAllRoles();
@@ -61,6 +61,10 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
 
     if (loading) {
         return <Preloader />;
+    }
+
+    if (error) {
+        return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
     }
 
     const backgroundNode: React.ReactNode = (
@@ -212,6 +216,4 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     );
 };
 
-export default withLoading<UserCreateAndUpdateModalProps>(
-    withCreateUpdateModal(UserCreateAndUpdateModal),
-);
+export default withCreateUpdateModal(UserCreateAndUpdateModal);

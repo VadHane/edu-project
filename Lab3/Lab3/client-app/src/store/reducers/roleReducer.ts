@@ -1,4 +1,4 @@
-import { RoleAction, RolesActionTypes, RoleState } from '../../types/RoleTypes';
+import { RoleAction, RolesActionTypes, RoleState } from '../../types/Role.types';
 
 const initialState: RoleState = {
     roles: [],

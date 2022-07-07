@@ -4,7 +4,15 @@ export const EDITING_USER_EXCEPTION = 'Something went wrong please try again lat
 export const DELETING_USER_EXCEPTION = 'Something went wrong please try again later';
 
 export const LOADING_ROLES_EXCEPTION = 'Something went wrong please try again later';
-export const ADDING_ROLES_EXCEPTION = 'Something went wrong please try again later';
+export const ADDING_ROLE_EXCEPTION = 'Something went wrong please try again later';
+
+export const LOADING_MODELS_EXCEPTION = 'Something went wrong please try again later';
+export const ADDING_MODEL_EXCEPTION = 'Something went wrong please try again later';
+export const EDITING_MODEL_EXCEPTION = 'Something went wrong please try again later';
+export const DELETENG_MODEL_EXCEPTION = 'Something went wrong please try again later';
+
+export const LOADING_TAGS_EXCEPTION = 'Something went wrong please try again later';
+export const ADDING_TAG_EXCEPTION = 'Something went wrong please try again later';
 
 export const LENGTH_OF_NAME_EXCEPTION =
     'Length of first name can not be less than 3 symbols.';

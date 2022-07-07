@@ -12,7 +12,7 @@ import {
     editUserAsync,
     getAllUsersAsync,
 } from '../../services/userService';
-import { UserActionTypes, UserActions } from '../../types/UserTypes';
+import { UserActionTypes, UserActions } from '../../types/User.types';
 
 export const getAllUsers = () => {
     return async (dispatchEvent: Dispatch<UserActions>) => {

@@ -1,8 +1,8 @@
 import { Dispatch } from 'redux';
-import { ADDING_ROLES_EXCEPTION, LOADING_ROLES_EXCEPTION } from '../../exceptions';
+import { ADDING_ROLE_EXCEPTION, LOADING_ROLES_EXCEPTION } from '../../exceptions';
 import { Role } from '../../models/Role';
 import { createNewRole, getAllRolesAsync } from '../../services/roleService';
-import { RoleAction, RolesActionTypes } from '../../types/RoleTypes';
+import { RoleAction, RolesActionTypes } from '../../types/Role.types';
 
 export const getAllRoles = () => {
     return async (dispatchEvent: Dispatch<RoleAction>) => {
@@ -32,7 +32,7 @@ export const addNewRole = (role: Role) => {
         } catch {
             dispatchEvent({
                 type: RolesActionTypes.ADD_ROLE_ERROR,
-                payload: ADDING_ROLES_EXCEPTION,
+                payload: ADDING_ROLE_EXCEPTION,
             });
         }
     };

@@ -1,7 +1,9 @@
 import WarningModal from '../components/WarningModal';
-import { IRoute, RouteNamesEnum } from '../types';
+import { RouteNamesEnum } from '../types/Route.types';
 import { userRoutes } from './userRoutes';
 import { INCORRECT_PATH_EXCEPTION } from '../exceptions';
+import { IRoute } from '../models/IRoute';
+import { modelRoutes } from './modelRoutes';
 
 const defaultRouter: IRoute = {
     path: '*',
@@ -14,4 +16,4 @@ const defaultRouter: IRoute = {
     ),
 };
 
-export const routes: Array<IRoute> = [...userRoutes, defaultRouter];
+export const routes: Array<IRoute> = [...userRoutes, ...modelRoutes, defaultRouter];

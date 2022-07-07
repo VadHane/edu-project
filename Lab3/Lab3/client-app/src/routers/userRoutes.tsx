@@ -4,7 +4,8 @@ import {
     ADD_USER_BUTTON_TEXT,
     EDIT_USER_BUTTON_TEXT,
 } from '../components/UsersTable/UsersTable.constants';
-import { IRoute, RouteNamesEnum } from '../types';
+import { IRoute } from '../models/IRoute';
+import { RouteNamesEnum } from '../types/Route.types';
 import UserCreateAndUpdateModal from './../components/UserCreateAndUpdateModal';
 
 export const userRoutes: Array<IRoute> = [

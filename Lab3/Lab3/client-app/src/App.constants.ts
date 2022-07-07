@@ -3,6 +3,11 @@ export const USER_DEFAULT_PICTURE = {
     ALT: 'UserPhoto',
 };
 
+export const MODEL_DEFAULT_PICTURE = {
+    URL: 'https://cdn-icons-png.flaticon.com/512/2818/2818038.png',
+    ALT: 'ModelPhoto',
+};
+
 export const REMOVE_IMAGE = {
     URL: 'https://cdn-icons-png.flaticon.com/512/3096/3096687.png',
     ALT: 'Remove',
