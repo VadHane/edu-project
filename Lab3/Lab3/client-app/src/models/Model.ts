@@ -5,7 +5,7 @@ export interface Model {
     id: string;
     name: string;
     fileKey: string;
-    previewBlobKey: string;
+    prevBlobKey: string;
     description: string;
     createdAt: Date;
     createdBy: string;

@@ -4,11 +4,12 @@ const url = `${process.env.REACT_APP_HOST_URL}/api/models/`;
 
 const createRequestBody = (model: Model, file: File, preview: File): FormData => {
     const requestBody = new FormData();
+    const tempUserId = '25946338-10d3-48df-8b6e-90a8d14c63a6';
 
     requestBody.append('name', model.name);
     requestBody.append('description', model.description);
-    requestBody.append('createdBy', model.createdBy);
-    requestBody.append('updatedBy', model.updatedBy);
+    requestBody.append('createdBy', tempUserId);
+    requestBody.append('updatedBy', tempUserId);
     requestBody.append('tags', JSON.stringify(model.tags));
     requestBody.append('file', file);
     requestBody.append('preview', preview);
@@ -33,7 +34,13 @@ export const addModelAsync = async (
         method: 'POST',
         body: requestBody,
     })
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.status === 400) {
+                throw new Error();
+            }
+
+            return response.json();
+        })
         .then((data: Model) => data);
 };
 
