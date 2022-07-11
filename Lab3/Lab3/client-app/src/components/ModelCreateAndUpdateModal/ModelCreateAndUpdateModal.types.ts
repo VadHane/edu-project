@@ -1,8 +1,6 @@
 import { ModalResultActions } from '../../types/App.types';
 
-type UserCreateAndUpdateModalProps = {
+export interface ModelCreateAndUpdateModalProps {
     buttonContent: string;
     resultActionType: ModalResultActions;
-};
-
-export default UserCreateAndUpdateModalProps;
+}

@@ -1,3 +1,4 @@
+/* eslint-disable indent */
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Role } from '../../../models/Role';
 import AvailableRolesListProps from './AvailableRolesList.types';
@@ -113,7 +114,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
         </div>
     );
 
-    const getRoleByName = (roleName: String): Role => {
+    const getRoleByName = (roleName: string): Role => {
         const index = roles.findIndex((role: Role) => role.name === roleName);
         return roles[index];
     };

@@ -1,3 +1,4 @@
+import React from 'react';
 import WarningModal from '../components/WarningModal';
 import { RouteNamesEnum } from '../types/Route.types';
 import { userRoutes } from './userRoutes';

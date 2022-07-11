@@ -3,9 +3,7 @@ import { NavLink, useParams } from 'react-router-dom';
 import { Role } from '../../models/Role';
 import AddedRolesList from './AddedRolesList';
 import AvailableRolesList from './AvailableRolesList';
-import UserCreateAndUpdateModalProps, {
-    ResultActions,
-} from './UserCreateAndUpdateModal.types';
+import UserCreateAndUpdateModalProps from './UserCreateAndUpdateModal.types';
 import { User } from '../../models/User';
 import {
     FILE_NOT_IMAGE_EXCEPTION,
@@ -24,10 +22,11 @@ import { useUserById } from '../../hooks/useUserById';
 import { useRoleActions } from './../../hooks/useRoleActions';
 import { useUserActions } from '../../hooks/useUserActions';
 import { RouteNamesEnum } from '../../types/Route.types';
-import { withCreateUpdateModal } from './../../hoc/withCreateUpdateModal';
+import { withUserCreateUpdateModal } from './../../hoc/withUserCreateUpdateModal';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import Preloader from '../Preloader';
 import WarningModal from '../WarningModal';
+import { ModalResultActions } from '../../types/App.types';
 
 const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps> = ({
     resultActionType,
@@ -201,9 +200,9 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             return;
         }
 
-        if (resultActionType === ResultActions.Add) {
+        if (resultActionType === ModalResultActions.Add) {
             AddNewUserAsync(user, userPhoto);
-        } else if (resultActionType === ResultActions.Edit) {
+        } else if (resultActionType === ModalResultActions.Edit) {
             EditUserAsync(user, userPhoto);
         }
     };
@@ -216,4 +215,4 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     );
 };
 
-export default withCreateUpdateModal(UserCreateAndUpdateModal);
+export default withUserCreateUpdateModal(UserCreateAndUpdateModal);

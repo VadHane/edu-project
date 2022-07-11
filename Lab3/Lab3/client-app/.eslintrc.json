@@ -21,8 +21,8 @@
     },
     "plugins": ["react", "@typescript-eslint", "jest-dom"],
     "rules": {
-        "indent": ["error", 4],
-        "linebreak-style": ["error", "unix"],
+        "indent": ["error", 4, { "SwitchCase": 1 }],
+        "linebreak-style": ["error", "windows"],
         "quotes": ["error", "single"],
         "semi": ["error", "always"],
         "eol-last": ["error", "always"]

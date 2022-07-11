@@ -24,7 +24,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     useEffect(() => {
         getUserByIdAsync(model.updatedBy)
             .then((data: User) => {
-                setUpdaterName(data.firstName + data.lastName);
+                setUpdaterName(`${data.firstName} ${data.lastName}`);
             })
             .catch(() => {
                 setUpdaterName(DEFAULT_OWNER_NAME);
@@ -36,10 +36,10 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     }, [props.model]);
 
     useEffect(() => {
-        const photoUrl = `${process.env.REACT_APP_HOST_URL}/${props.model.previewBlobKey}`;
+        const photoUrl = `${process.env.REACT_APP_HOST_URL}/${model.prevBlobKey}`;
 
         setPreviewUrl(photoUrl);
-    }, [props.model.previewBlobKey]);
+    }, [model.prevBlobKey]);
 
     const onFailedLoadPhoto = () => {
         setPreviewUrl(MODEL_DEFAULT_PICTURE.URL);
@@ -53,6 +53,13 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
 
     const onDeleteHandler = () => {
         deleteModel(model);
+    };
+
+    const getDataTimeString = (date: Date) => {
+        const _date = new Date(date);
+        const resString = `${_date.getDay()}/${_date.getMonth()}/${_date.getFullYear()} ${_date.getHours()}:${_date.getMinutes()}`;
+
+        return resString;
     };
 
     return (
@@ -69,7 +76,9 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
             <th className="tags">
                 {model.tags.map((tag: Tag): string => `${tag.name}; `)}
             </th>
-            <th className="last-update">{`${model.updatedAt} by ${updaterName}`}</th>
+            <th className="last-update">
+                {`${getDataTimeString(model.updatedAt)} by ${updaterName}`}
+            </th>
             <th className="actions">
                 <img src={EDIT_IMAGE.URL} alt={EDIT_IMAGE.ALT} onClick={onEditHandler} />
                 <img

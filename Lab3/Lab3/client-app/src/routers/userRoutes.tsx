@@ -1,4 +1,5 @@
-import { ResultActions } from '../components/UserCreateAndUpdateModal/UserCreateAndUpdateModal.types';
+import React from 'react';
+import { ModalResultActions } from './../types/App.types';
 import UsersTable from '../components/UsersTable';
 import {
     ADD_USER_BUTTON_TEXT,
@@ -20,7 +21,7 @@ export const userRoutes: Array<IRoute> = [
         element: (
             <UserCreateAndUpdateModal
                 buttonContent={ADD_USER_BUTTON_TEXT}
-                resultActionType={ResultActions.Add}
+                resultActionType={ModalResultActions.Add}
             />
         ),
     },
@@ -30,7 +31,7 @@ export const userRoutes: Array<IRoute> = [
         element: (
             <UserCreateAndUpdateModal
                 buttonContent={EDIT_USER_BUTTON_TEXT}
-                resultActionType={ResultActions.Edit}
+                resultActionType={ModalResultActions.Edit}
             />
         ),
     },

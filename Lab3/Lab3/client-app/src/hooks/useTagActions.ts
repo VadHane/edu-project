@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import * as tagActions from './../store/actions/tagActions';
+import * as tagActions from '../store/actions/tagActions';
 
 export const useTagActions = () => {
     const dispatch = useDispatch();
