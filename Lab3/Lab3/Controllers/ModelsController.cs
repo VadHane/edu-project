@@ -85,7 +85,7 @@ namespace Lab3.Controllers
 
                 return Created(uriToCreatedModel, createdModel);
             }
-            catch
+            catch (Exception e)
             {
                 return StatusCode(500);
             }
@@ -103,6 +103,8 @@ namespace Lab3.Controllers
                     Description = modelUpdateRequest.Description,
                     UpdatedBy = modelUpdateRequest.UpdatedBy,
                     UpdatedAt = DateTime.Now,
+                    Filekey = modelUpdateRequest.Filekey,
+                    PrevBlobKey = modelUpdateRequest.PrevBlobKey,
                     Tags = tags,
                 };
 
@@ -114,7 +116,7 @@ namespace Lab3.Controllers
             {
                 return NotFound();
             }
-            catch
+            catch(Exception e)
             {
                 return StatusCode(500);
             }

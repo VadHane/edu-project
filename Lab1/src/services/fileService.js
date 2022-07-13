@@ -4,7 +4,6 @@ import path from 'path';
 import {
     ALLOWED_FILE_EXTENSIONS,
     ALLOWED_IMAGE_EXTENSIONS,
-    CORS_RES_HEADERS,
     BAD_FILE_EXTENSION_EXCEPTION,
     INCORRECT_FILE_EXCEPTION,
     INCORRECT_ID_EXCEPTION,
@@ -138,8 +137,7 @@ export default class FileService {
                 //CORS rules
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin:
-                    CORS_RES_HEADERS.AccessControlAllowOrigin,
+                AccessControlAllowOrigin: '*',
             },
         });
     }

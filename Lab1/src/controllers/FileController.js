@@ -80,7 +80,6 @@ export default class FileController {
 
             res.status(201).json(document).end();
         } catch (e) {
-            console.log(e);
             res.status(500).end();
         }
     }
