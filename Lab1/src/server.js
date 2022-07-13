@@ -4,7 +4,6 @@ import file from './routes/fileRoutes.js';
 import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
-import { CORS_RES_HEADERS } from './constants.js';
 
 /** Express app. */
 const app = express();
@@ -17,11 +16,7 @@ app.use(fileUpload());
 app.use(express.json());
 
 /** Middleware for CORS rules. */
-app.use(
-    cors({
-        origin: CORS_RES_HEADERS['Access-Control-Allow-Origin'],
-    })
-);
+app.use(cors());
 
 /** Using router for API. (/api/file/*) */
 app.use('/api/file', file);

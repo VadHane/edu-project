@@ -32,7 +32,7 @@ const ModelsTable: FunctionComponent = () => {
     }
 
     if (error) {
-        return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
+        return <WarningModal message={error} navigateTo={RouteNamesEnum.Models} />;
     }
 
     const onClickButton = () => {

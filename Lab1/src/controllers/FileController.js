@@ -78,8 +78,9 @@ export default class FileController {
         try {
             const document = await this.fileService.create(req.files?.file);
 
-            res.status(200).json(document).end();
+            res.status(201).json(document).end();
         } catch (e) {
+            console.log(e);
             res.status(500).end();
         }
     }

@@ -36,7 +36,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     }, [props.model]);
 
     useEffect(() => {
-        const photoUrl = `${process.env.REACT_APP_HOST_URL}/${model.prevBlobKey}`;
+        const photoUrl = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/${model.prevBlobKey}`;
 
         setPreviewUrl(photoUrl);
     }, [model.prevBlobKey]);

@@ -62,7 +62,7 @@ const ModelCreateAndUpdateModal: FunctionComponent<ModelCreateAndUpdateModalProp
     }
 
     if (error) {
-        return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
+        return <WarningModal message={error} navigateTo={RouteNamesEnum.Models} />;
     }
 
     const backgroundNode: React.ReactNode = (
@@ -180,7 +180,7 @@ const ModelCreateAndUpdateModal: FunctionComponent<ModelCreateAndUpdateModalProp
             updatedAt: new Date(),
             updatedBy: foundModel.updatedBy, //TODO:
             tags: assignedTags,
-            history: foundModel.history,
+            modelHistory: foundModel.modelHistory,
         };
 
         const _file = file.current?.files?.item(0);
