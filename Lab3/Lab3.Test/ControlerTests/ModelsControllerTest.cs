@@ -38,7 +38,7 @@ namespace Lab3.Test.ControlerTests
         }
 
         [Test]
-        public void Create_InputModel_ShouldReturnBadRequest()
+        public void Create_InputModel_ShouldCallCreateMethod()
         {
             var model = new ModelCreateUpdateRequest()
             {
@@ -51,8 +51,7 @@ namespace Lab3.Test.ControlerTests
 
             var response = _modelsController.Post(model);
 
-            _modelService.Verify(m => m.Create(It.IsAny<Model>(), null, null), Times.Never);
-            Assert.Null(response.Value);
+            _modelService.Verify(m => m.Create(It.IsAny<Model>()), Times.Once);
         }
 
         [Test]
@@ -70,7 +69,7 @@ namespace Lab3.Test.ControlerTests
 
             var response = _modelsController.Post(model);
 
-            _modelService.Verify(m => m.Update(randomId, It.IsAny<Model>(), null, null), Times.Never);
+            _modelService.Verify(m => m.Update(randomId, It.IsAny<Model>()), Times.Never);
             Assert.Null(response.Value);
         }
 

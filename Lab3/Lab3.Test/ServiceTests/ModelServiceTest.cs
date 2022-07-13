@@ -33,7 +33,7 @@ namespace Lab3.Test.ServiceTests
             _fileService = new Mock<IFileService>();
 
             _DBContext = new ModelContext(optionts);
-            _modelService = new ModelService(_DBContext, env.Object, _fileService.Object);
+            _modelService = new ModelService(_DBContext, env.Object);
         }
 
         private async Task ClearTestDataBase()
@@ -146,7 +146,7 @@ namespace Lab3.Test.ServiceTests
                 UpdatedBy = Guid.NewGuid(),
             };
 
-            var createdEntity = _modelService.Create(testModel, null, null);
+            var createdEntity = _modelService.Create(testModel);
             var foundEntity = _DBContext.Models.Where(model => model.Id == createdEntity.Id).First();
 
             Assert.NotNull(createdEntity);
@@ -169,7 +169,7 @@ namespace Lab3.Test.ServiceTests
                 UpdatedBy = Guid.NewGuid(),
             };
 
-            var createdEntity = _modelService.Create(testModel, null, null);
+            var createdEntity = _modelService.Create(testModel);
             var foundHistory = _DBContext.ModelHistories.Where(h => h.ModelId == createdEntity.Id).ToList();
 
             Assert.NotNull(foundHistory.First());
@@ -191,7 +191,7 @@ namespace Lab3.Test.ServiceTests
                 UpdatedBy = Guid.NewGuid(),
             };
 
-            Assert.Catch<EntityNotFoundException>(() => _modelService.Update(randomId, updateModel, null, null));
+            Assert.Catch<EntityNotFoundException>(() => _modelService.Update(randomId, updateModel));
         }
 
         [Test]
