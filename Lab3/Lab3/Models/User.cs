@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
 
 namespace Lab3.Models
 {
@@ -11,6 +12,10 @@ namespace Lab3.Models
         [Required]
         [MaxLength(30)]
         public string Email { get; set; }
+
+        [Required]
+        [JsonIgnore]
+        public string Password { get; set; }
 
         [Required]
         [MaxLength(15)]

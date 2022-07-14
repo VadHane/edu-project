@@ -88,6 +88,7 @@ namespace Lab3.Controllers
                    FirstName = userCreateRequest.FirstName,
                    LastName = userCreateRequest.LastName,
                    Email = userCreateRequest.Email,
+                   Password = userCreateRequest.Password,
                    Roles = roles
                 };
 
@@ -122,6 +123,7 @@ namespace Lab3.Controllers
                     FirstName = userCreateRequest.FirstName,
                     LastName = userCreateRequest.LastName,
                     Email = userCreateRequest.Email,
+                    Password = userCreateRequest.Password,
                     Roles = roles
                 };
 

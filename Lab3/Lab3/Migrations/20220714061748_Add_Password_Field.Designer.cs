@@ -4,14 +4,16 @@ using Lab3.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Lab3.Migrations
 {
     [DbContext(typeof(UserContext))]
-    partial class UserContextModelSnapshot : ModelSnapshot
+    [Migration("20220714061748_Add_Password_Field")]
+    partial class Add_Password_Field
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -30,9 +32,6 @@ namespace Lab3.Migrations
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<bool>("isAdmin")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.ToTable("Roles");
@@ -40,15 +39,13 @@ namespace Lab3.Migrations
                     b.HasData(
                         new
                         {
-                            Id = new Guid("51b9016c-ab6a-4407-bf39-971678c196ef"),
-                            Name = "Super Admin",
-                            isAdmin = false
+                            Id = new Guid("4e0a80a4-3e63-4f0d-b514-88e8c74a21e9"),
+                            Name = "Super Admin"
                         },
                         new
                         {
-                            Id = new Guid("41ecd6d5-bdc0-4a5d-a7b0-1e413752bd36"),
-                            Name = "Admin",
-                            isAdmin = false
+                            Id = new Guid("8f01ea2c-957f-4b35-9f53-244446f0b814"),
+                            Name = "Admin"
                         });
                 });
 
