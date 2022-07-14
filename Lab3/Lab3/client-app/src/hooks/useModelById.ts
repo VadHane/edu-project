@@ -16,7 +16,7 @@ export const useModelById = (id: Maybe<string>): Model => {
         updatedAt: new Date(),
         updatedBy: '',
         tags: [],
-        history: [],
+        modelHistory: [],
     };
 
     if (!id) {

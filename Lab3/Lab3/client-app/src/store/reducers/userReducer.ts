@@ -98,7 +98,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
                 loading: false,
                 loaded: false,
                 error: null,
-                actionWasDone: false,
+                actionWasDone: null,
                 users: state.users.filter((user) => user.id !== action.payload.id),
             };
         case UserActionTypes.DELETE_USER_ERROR:
@@ -107,7 +107,7 @@ export const userReduser = (state = initialState, action: UserActions): UserStat
                 loaded: false,
                 error: action.payload,
                 users: state.users,
-                actionWasDone: false,
+                actionWasDone: null,
             };
         default:
             return state;

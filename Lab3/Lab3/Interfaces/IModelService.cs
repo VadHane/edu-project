@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using Microsoft.AspNetCore.Http;
 using Lab3.Models;
 
 namespace Lab3.Interfaces
@@ -24,20 +23,16 @@ namespace Lab3.Interfaces
         /// Create a new model entity in the database.
         /// </summary>
         /// <param name="model">The instance of the model.</param>
-        /// <param name="file">The instance of the file from the request body.</param>
-        /// <param name="preview">The instance of file's preview image.</param>
         /// <returns>The entity of created model from the database.</returns>
-        Model Create(Model model, IFormFile file, IFormFile preview);
+        Model Create(Model model);
 
         /// <summary>
         /// Update the model entity in the database.
         /// </summary>
         /// <param name="id">The unique id of the model in the database.</param>
         /// <param name="model">The instance of the model.</param>
-        /// <param name="file">The instance of the file from the request body.</param>
-        /// <param name="preview">The instance of file's preview image.</param>
         /// <returns>The entity of updated model from the database.</returns>
-        Model Update(Guid id, Model model, IFormFile file, IFormFile preview);
+        Model Update(Guid id, Model model);
 
         /// <summary>
         /// Delete the model entity in the database.

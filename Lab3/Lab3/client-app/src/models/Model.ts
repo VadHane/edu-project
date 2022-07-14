@@ -12,5 +12,5 @@ export interface Model {
     updatedAt: Date;
     updatedBy: string;
     tags: Array<Tag>;
-    history: Array<ModelHistory>;
+    modelHistory: Array<ModelHistory>;
 }

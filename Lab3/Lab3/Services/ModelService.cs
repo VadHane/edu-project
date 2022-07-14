@@ -14,13 +14,11 @@ namespace Lab3.Services
     public class ModelService : IModelService
     {
         private readonly ModelContext _context;
-        private readonly IFileService _fileService;
         private readonly IWebHostEnvironment env;
 
-        public ModelService(ModelContext context, IWebHostEnvironment _env, IFileService fileService)
+        public ModelService(ModelContext context, IWebHostEnvironment _env)
         {
             _context = context;
-            _fileService = fileService;
             env = _env;
         }
 
@@ -28,22 +26,28 @@ namespace Lab3.Services
         {
             foreach(var tag in tags)
             {
-                var foundTag = _context.Tags.FirstOrDefault(_tag => _tag.Id == tag.Id);
+                var foundTag = _context.Tags.AsNoTracking().FirstOrDefault(_tag => _tag.Id == tag.Id);
 
-                if (foundTag != null)
+                if (foundTag != null && model.Tags.FirstOrDefault(_tag => _tag.Id == foundTag.Id) == null)
                 {
-                    model.Tags.Add(foundTag);
+                    _context.Entry(tag).State = EntityState.Unchanged;
+                    model.Tags.Add(tag);
+                }
+            }
+
+            var copyTags = new List<Tag>(model.Tags);
+
+            foreach (var tag in copyTags)
+            {
+                if (tags.FirstOrDefault(_tag => _tag.Id == tag.Id) == null)
+                {
+                    model.Tags.Remove(tag);
                 }
             }
         }
 
-        private static void AssignHistoryToModel(ICollection<ModelHistory> history, Model model)
+        private void AssignHistoryToModel(ICollection<ModelHistory> history, Model model)
         {
-            foreach (var historyRow in history)
-            {
-                model.ModelHistory.Add(historyRow);
-            }
-
             var newHistory = new ModelHistory()
             {
                 Id = Guid.NewGuid(),
@@ -52,29 +56,19 @@ namespace Lab3.Services
                 FileKey = model.Filekey,
             };
 
+            _context.Entry(newHistory).State = EntityState.Added;
+
             model.ModelHistory.Add(newHistory);
         }
 
         /// <inheritdoc cref="IModelService.Create(Model, IFormFile, IFormFile)"/>
-        public Model Create(Model model, IFormFile file, IFormFile preview)
+        public Model Create(Model model)
         {
-            string filePath = null, previewPath = null;
-
-            if (file != null)
-            {
-                filePath = _fileService.SaveFile(file, FileTypeEnum.File);
-            }
-
-            if (preview != null)
-            {
-                previewPath = _fileService.SaveFile(preview, FileTypeEnum.Preview);
-            }
-
             var newModel = new Model()
             {
                 Id = Guid.NewGuid(),
-                Filekey = filePath,
-                PrevBlobKey = previewPath,
+                Filekey = model.Filekey,
+                PrevBlobKey = model.PrevBlobKey,
                 Name = model.Name,
                 Description = model.Description,
                 CreatedAt = model.CreatedAt,
@@ -86,9 +80,11 @@ namespace Lab3.Services
             AssignTagsToModel(model.Tags, newModel);
             AssignHistoryToModel(model.ModelHistory, newModel);
 
-            var createdEntity = (Model)_context.AddAndSave(newModel);
+            var createdEntity = _context.Add(newModel);
 
-            return createdEntity;
+            _context.SaveChanges();
+
+            return createdEntity.Entity;
         }
 
         /// <inheritdoc cref="IModelService.Delete(Guid)"/>
@@ -104,17 +100,7 @@ namespace Lab3.Services
             var absoluteFilePath = Path.Combine(env.WebRootPath, foundModel.Filekey);
             var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
 
-            _fileService.DeleteFile(absoluteFilePath);
-            _fileService.DeleteFile(absolutePreviewPath);
-
             var deletedEntity = (Model)_context.DeleteAndSave(foundModel);
-
-            foreach (var history in foundModel.ModelHistory)
-            {
-                absoluteFilePath = Path.Combine(env.WebRootPath, history.FileKey);
-
-                _fileService.DeleteFile(absoluteFilePath);
-            }
 
             return deletedEntity;
         }
@@ -139,57 +125,26 @@ namespace Lab3.Services
         }
 
         /// <inheritdoc cref="IModelService.Update(Guid, Model, IFormFile, IFormFile)"/>
-        public Model Update(Guid id, Model model, IFormFile file, IFormFile preview)
+        public Model Update(Guid id, Model model)
         {
-            var foundModel = _context.Models.AsNoTracking().Include(model => model.ModelHistory).Include(model => model.Tags).FirstOrDefault(model => model.Id == id);
+            var foundModel = _context.Models.Include(model => model.Tags).Include(model => model.ModelHistory).FirstOrDefault(model => model.Id == id);
 
             if (foundModel == null)
             {
                 throw new EntityNotFoundException();
             }
 
-            if (foundModel.PrevBlobKey != null)
-            {
-                var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
-
-                _fileService.DeleteFile(absolutePreviewPath);
-            }
-
-            string filePath = null, previewPath = null;
-
-            if (file != null)
-            {
-                filePath = _fileService.SaveFile(file, FileTypeEnum.File);
-            }
-
-            if (preview != null)
-            {
-                previewPath = _fileService.SaveFile(preview, FileTypeEnum.Preview);
-            }
-
-            foundModel.Filekey = filePath;
-            foundModel.PrevBlobKey = previewPath;
+            foundModel.Filekey = model.Filekey;
+            foundModel.PrevBlobKey = model.PrevBlobKey;
             foundModel.Name = model.Name ?? foundModel.Name;
             foundModel.Description = model.Description ?? foundModel.Description;
-            foundModel.UpdatedBy = model.UpdatedBy;
             foundModel.UpdatedAt = model.UpdatedAt;
-            foundModel.Tags = new List<Tag>();
+            foundModel.UpdatedBy = model.UpdatedBy;
 
+            AssignHistoryToModel(foundModel.ModelHistory, foundModel);
             AssignTagsToModel(model.Tags, foundModel);
 
-            var newHistory = new ModelHistory()
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = foundModel.UpdatedAt,
-                CreatedBy = foundModel.UpdatedBy,
-                FileKey = foundModel.Filekey,
-            };
-
-            _context.Entry(newHistory).State = EntityState.Added;
-
-            foundModel.ModelHistory.Add(newHistory);
-
-            var updatedEntity = _context.Models.Update(foundModel);
+            var updatedEntity = _context.Update(foundModel);
 
             _context.SaveChanges();
 

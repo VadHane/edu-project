@@ -8,6 +8,10 @@ namespace Lab3.Models
 
         public string Description { get; set; }
 
+        public string Filekey { get; set; }
+
+        public string PrevBlobKey { get; set; }
+
         public Guid CreatedBy { get; set; }
 
         public Guid UpdatedBy { get; set; }

@@ -2,9 +2,9 @@ import fs from 'fs';
 import DataBase from '../models/File.js';
 import path from 'path';
 import {
+    ALLOWED_FILE_EXTENSIONS,
     ALLOWED_IMAGE_EXTENSIONS,
-    CORS_RES_HEADERS,
-    FILE_NOT_IMAGE_EXCEPTION,
+    BAD_FILE_EXTENSION_EXCEPTION,
     INCORRECT_FILE_EXCEPTION,
     INCORRECT_ID_EXCEPTION,
     NEEDED_FIELDS_ARE_MISSING_EXCEPTION,
@@ -87,9 +87,10 @@ export default class FileService {
 
         const fileExtension = path.extname(file.name);
         const isPhoto = ALLOWED_IMAGE_EXTENSIONS.includes(fileExtension);
+        const isCADFile = ALLOWED_FILE_EXTENSIONS.includes(fileExtension);
 
-        if (!isPhoto) {
-            throw Error(FILE_NOT_IMAGE_EXCEPTION);
+        if (!isPhoto && !isCADFile) {
+            throw Error(BAD_FILE_EXTENSION_EXCEPTION);
         }
     }
 
@@ -136,8 +137,7 @@ export default class FileService {
                 //CORS rules
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin:
-                    CORS_RES_HEADERS.AccessControlAllowOrigin,
+                AccessControlAllowOrigin: '*',
             },
         });
     }

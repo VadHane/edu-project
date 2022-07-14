@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Lab3.Exceptions;
@@ -16,39 +14,10 @@ namespace Lab3.Controllers
     public class ModelsController : Controller
     {
         private readonly IModelService _modelService;
-        private readonly string[] CADFileExtentions = { ".cad" };
-        private readonly string[] previewFileExtentions = { ".png", ".jpeg", ".jpg" };
 
         public ModelsController(IModelService modelService)
         {
             _modelService = modelService;
-        }
-
-        private (IFormFile file, IFormFile preview) ValidateFiles(IFormFileCollection files)
-        {
-            if (files == null || files.Count < 2)
-            {
-                return (null, null);
-            }
-
-            IFormFile file = null, preview = null;
-
-            foreach (var formFile in files)
-            {
-                var formFileExtention = Path.GetExtension(formFile.FileName);
-
-                if (CADFileExtentions.Contains(formFileExtention) && file == null)
-                {
-                    file = formFile;
-                }
-
-                if (previewFileExtentions.Contains(formFileExtention) && preview == null)
-                {
-                    preview = formFile;
-                }
-            }
-
-            return (file, preview);
         }
 
         [HttpGet]
@@ -95,13 +64,6 @@ namespace Lab3.Controllers
         {
             try
             {
-                var (file, preview) = ValidateFiles(Request?.Form?.Files); 
-
-                if (file == null || preview == null)
-                {
-                    return BadRequest();
-                }
-
                 var tags = JsonConvert.DeserializeObject<List<Tag>>(modelCreateRequest.Tags);
                 var model = new Model()
                 {
@@ -111,17 +73,19 @@ namespace Lab3.Controllers
                     CreatedBy = modelCreateRequest.CreatedBy,
                     UpdatedBy = modelCreateRequest.UpdatedBy,
                     UpdatedAt = DateTime.Now,
+                    Filekey = modelCreateRequest.Filekey,
+                    PrevBlobKey = modelCreateRequest.PrevBlobKey,
                     Tags = tags,
                 };
 
-                var createdModel = _modelService.Create(model, file, preview);
+                var createdModel = _modelService.Create(model);
                 var protocol = Request.IsHttps ? "https://" : "http://";
                 var path = Request.Path + createdModel.Id;
                 var uriToCreatedModel = new UriBuilder(protocol, Request.Host.Host, (int)Request.Host.Port, path).Uri;
 
                 return Created(uriToCreatedModel, createdModel);
             }
-            catch
+            catch (Exception e)
             {
                 return StatusCode(500);
             }
@@ -132,13 +96,6 @@ namespace Lab3.Controllers
         {
             try
             {
-                var (file, preview) = ValidateFiles(Request?.Form?.Files);
-
-                if (file == null || preview == null)
-                {
-                    return BadRequest();
-                }
-
                 var tags = JsonConvert.DeserializeObject<List<Tag>>(modelUpdateRequest.Tags);
                 var model = new Model()
                 {
@@ -146,10 +103,12 @@ namespace Lab3.Controllers
                     Description = modelUpdateRequest.Description,
                     UpdatedBy = modelUpdateRequest.UpdatedBy,
                     UpdatedAt = DateTime.Now,
+                    Filekey = modelUpdateRequest.Filekey,
+                    PrevBlobKey = modelUpdateRequest.PrevBlobKey,
                     Tags = tags,
                 };
 
-                var updatedModel = _modelService.Update(id, model, file, preview);
+                var updatedModel = _modelService.Update(id, model);
 
                 return Ok(updatedModel);
             }
@@ -157,7 +116,7 @@ namespace Lab3.Controllers
             {
                 return NotFound();
             }
-            catch
+            catch(Exception e)
             {
                 return StatusCode(500);
             }

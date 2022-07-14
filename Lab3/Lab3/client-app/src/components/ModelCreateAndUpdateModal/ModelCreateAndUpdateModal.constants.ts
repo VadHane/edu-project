@@ -14,7 +14,7 @@ export const emptyModel: Model = {
     updatedAt: new Date(),
     updatedBy: '',
     tags: [],
-    history: [],
+    modelHistory: [],
 };
 
 export const NAME_PLACEHOLDER = 'Name';

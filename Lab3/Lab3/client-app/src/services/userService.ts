@@ -4,7 +4,13 @@ const url = `${process.env.REACT_APP_HOST_URL}/api/users/`;
 
 export const getAllUsersAsync = async (): Promise<Array<User>> => {
     return fetch(url)
-        .then((response) => response.json())
+        .then((response) => {
+            if (response.status === 204) {
+                return [];
+            }
+
+            return response.json();
+        })
         .then((data: Array<User>) => data);
 };
 
