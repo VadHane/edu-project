@@ -1,5 +1,6 @@
 import Router from 'express';
 import FileController from '../controllers/FileController.js';
+import { signature } from './../signature.js';
 
 /**
  * Express router for API. (Path: /api/file/*)
@@ -11,14 +12,14 @@ const router = Router();
  */
 const controller = new FileController();
 
-router.get('/', controller.getAllFiles);
+router.get('/', signature.verifier(), controller.getAllFiles);
 
-router.get('/:id', controller.getFile);
+router.get('/:id', signature.verifier(), controller.getFile);
 
-router.post('/', controller.createFile);
+router.post('/', signature.verifier(), controller.createFile);
 
-router.put('/:id', controller.updateFile);
+router.put('/:id', signature.verifier(), controller.updateFile);
 
-router.delete('/:id', controller.deleteFile);
+router.delete('/:id', signature.verifier(), controller.deleteFile);
 
 export default router;

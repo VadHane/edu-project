@@ -1,11 +1,25 @@
 const url = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
 
+const signUrl = async (url: string): Promise<string> => {
+    const serverUrl = `${process.env.REACT_APP_HOST_URL}/api/auth/sign-file-storage-url`;
+
+    const formData = new FormData();
+
+    formData.append('url', url);
+
+    const res = await fetch(serverUrl, { method: 'POST', body: formData });
+    const signedUrl = (await res.json()) as string;
+
+    return signedUrl;
+};
+
 export const uploadFile = async (file: File): Promise<string> => {
+    const signedUrl = await signUrl(url);
     const formData = new FormData();
 
     formData.append('file', file);
 
-    return fetch(url, {
+    return fetch(signedUrl, {
         method: 'POST',
         body: formData,
     })
@@ -23,13 +37,13 @@ export const updateUploadedFile = async (
     fileBlobKey: string,
     newFile: File,
 ): Promise<string> => {
+    const requestUrl = `${url}${fileBlobKey}`;
+    const signedUrl = await signUrl(requestUrl);
     const formData = new FormData();
 
     formData.append('file', newFile);
 
-    const requestUrl = `${url}${fileBlobKey}`;
-
-    return fetch(requestUrl, {
+    return fetch(signedUrl, {
         method: 'PUT',
         body: formData,
     })
@@ -45,8 +59,9 @@ export const updateUploadedFile = async (
 
 export const deleteUploadedFile = async (fileBlobKey: string): Promise<boolean> => {
     const requestUrl = `${url}${fileBlobKey}`;
+    const signedUrl = await signUrl(requestUrl);
 
-    return fetch(requestUrl, { method: 'DELETE' }).then((res) => {
+    return fetch(signedUrl, { method: 'DELETE' }).then((res) => {
         if (res.status !== 200) {
             return false;
         }

@@ -5,6 +5,7 @@
 */wwwroot/Images/*
 */wwwroot/Files/*
 */wwwroot/Previews/*
+Certificates/
 # User-specific files
 *.rsuser
 *.suo
