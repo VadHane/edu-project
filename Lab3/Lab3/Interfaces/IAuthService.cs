@@ -9,6 +9,6 @@ namespace Lab3.Interfaces
 
         string RefreshJWTToken(string refreshToken);
 
-        Task<string> SingUrl(string url);
+        Task<string> SignUrl(string url);
     }
 }

@@ -65,13 +65,12 @@ namespace Lab3.Services
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
             var expiresAccessToken = DateTime.Now.AddMinutes(Convert.ToInt32(_config["Jwt:ExpiresAccessToken"]));
-
             var accessToken = new JwtSecurityToken(issuer, audience, token.Claims, expires: expiresAccessToken, signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(accessToken);
         }
 
-        public async Task<string> SingUrl(string url)
+        public async Task<string> SignUrl(string url)
         {
             var pathToCert = Path.Combine(_env.ContentRootPath, _config["CertificatesFolder"], _config["FileStorageCertificateName"]);
             var certificates = new X509Certificate2Collection();
@@ -96,7 +95,6 @@ namespace Lab3.Services
             };
 
             var response = await client.PostAsync(fileStorageUrl, formData);
-
             var responseBody = await response.Content.ReadAsStringAsync();
 
             return responseBody;
@@ -132,15 +130,7 @@ namespace Lab3.Services
 
         private static bool IsAdmin(User user)
         {
-            foreach (var role in user.Roles)
-            {
-                if (role.isAdmin)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return user.Roles.Any(role => role.IsAdmin);
         }
     }
 }
