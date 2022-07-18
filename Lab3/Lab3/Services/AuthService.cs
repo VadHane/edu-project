@@ -94,15 +94,7 @@ namespace Lab3.Services
 
         private static bool IsAdmin(User user)
         {
-            foreach (var role in user.Roles)
-            {
-                if (role.isAdmin)
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return user.Roles.Any(role => role.IsAdmin);
         }
     }
 }
