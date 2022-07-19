@@ -56,21 +56,5 @@ namespace Lab3.Controllers
                 return StatusCode(500);
             }
         }
-
-        [AllowAnonymous]
-        [HttpPost("sign-file-storage-url")]
-        public IActionResult SignUrl([FromForm] string url)
-        {
-            try
-            {
-                var signedUrl = _authService.SignUrl(url).Result;
-
-                return Ok(signedUrl);
-            }
-            catch (System.Exception)
-            {
-                return StatusCode(500);
-            }
-        }
     }
 }

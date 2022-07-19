@@ -8,7 +8,9 @@
 
       public string Email { get; set; }
 
-      // JSON
+      public string Password { get; set; }
+
+        // JSON
       public string Roles { get; set; }
    }
 }
