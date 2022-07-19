@@ -49,7 +49,23 @@ namespace Lab3.Controllers
             }
             catch (IncorrectTokenException)
             {
-                return StatusCode(401);
+                return StatusCode(403);
+            }
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [AllowAnonymous]
+        [HttpPost("sign-file-storage-url")]
+        public IActionResult SignUrl([FromForm] string url)
+        {
+            try
+            {
+                var signedUrl = _authService.SignUrl(url).Result;
+
+                return Ok(signedUrl);
             }
             catch
             {

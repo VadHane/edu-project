@@ -3,6 +3,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text;
+using System.IO;
+using System.Net.Http;
+using System.Threading.Tasks;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using Lab3.Interfaces;
@@ -15,11 +20,13 @@ namespace Lab3.Services
     {
         private readonly IConfiguration _config;
         private readonly UserContext _context;
+        private readonly IWebHostEnvironment _env;
 
-        public AuthService(IConfiguration config, UserContext context)
+        public AuthService(IConfiguration config, UserContext context, IWebHostEnvironment env)
         {
             _config = config;
             _context = context;
+            _env = env;
         }
 
         public LoginResponse Login(UserLogin userLogin)
@@ -58,10 +65,39 @@ namespace Lab3.Services
             var issuer = _config["Jwt:Issuer"];
             var audience = _config["Jwt:Audience"];
             var expiresAccessToken = DateTime.Now.AddMinutes(Convert.ToInt32(_config["Jwt:ExpiresAccessToken"]));
-
             var accessToken = new JwtSecurityToken(issuer, audience, token.Claims, expires: expiresAccessToken, signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(accessToken);
+        }
+
+        public async Task<string> SignUrl(string url)
+        {
+            var pathToCert = Path.Combine(_env.ContentRootPath, _config["CertificatesFolder"], _config["FileStorageCertificateName"]);
+            var certificates = new X509Certificate2Collection();
+            var fileStorageUrl = $"{_config["FileStorageUrl"]}/get-signed-url";
+            var postData = $"url={url}";
+            var postBytes = Encoding.UTF8.GetBytes(postData);
+            var certPassword = _config["CertificatePassword"];
+
+            certificates.Import(pathToCert, certPassword, X509KeyStorageFlags.MachineKeySet | X509KeyStorageFlags.PersistKeySet);
+
+            var clientHandler = new HttpClientHandler
+            {
+                ServerCertificateCustomValidationCallback = (a, b, c, d) => true
+            };
+
+            clientHandler.ClientCertificates.AddRange(certificates);
+
+            var client = new HttpClient(clientHandler);
+            var formData = new MultipartFormDataContent
+            {
+                { new StringContent(url), "url" }
+            };
+
+            var response = await client.PostAsync(fileStorageUrl, formData);
+            var responseBody = await response.Content.ReadAsStringAsync();
+
+            return responseBody;
         }
 
         private string GenerateJWTToken(User user, DateTime expires)

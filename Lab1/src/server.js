@@ -1,9 +1,12 @@
 import express from 'express';
-import config from './config.js';
+import config, { checkCertificate, serverOptions } from './config.js';
 import file from './routes/fileRoutes.js';
 import mongoose from 'mongoose';
 import fileUpload from 'express-fileupload';
 import cors from 'cors';
+import signedRouter from './routes/signedRoutes.js';
+import https from 'https';
+import clientCertificateAuth from 'client-certificate-auth';
 
 /** Express app. */
 const app = express();
@@ -18,13 +21,18 @@ app.use(express.json());
 /** Middleware for CORS rules. */
 app.use(cors());
 
+app.use(
+    '/get-signed-url',
+    clientCertificateAuth(checkCertificate),
+    signedRouter
+);
+
 /** Using router for API. (/api/file/*) */
 app.use('/api/file', file);
-
-/** Listen all requests from the port. */
-app.listen(config.PORT, () => {});
 
 /** The default answer for all requests, that dont fit any endpoints. */
 app.all('/*', (req, res) => {
     res.status(400).json('Bad request!');
 });
+
+https.createServer(serverOptions, app).listen(4433);
