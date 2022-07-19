@@ -1,6 +1,6 @@
 import Router from 'express';
 import FileController from '../controllers/FileController.js';
-import { signature } from './../signature.js';
+import { signature } from './../config.js';
 
 /**
  * Express router for API. (Path: /api/file/*)

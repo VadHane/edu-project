@@ -1,6 +1,7 @@
 /* eslint-disable no-undef */
 import fs from 'fs';
 import path from 'path';
+import signed from 'signed';
 
 export const Config = {
     /** Port for listening by express */
@@ -35,5 +36,7 @@ export const serverOptions = {
 export const checkCertificate = (cert) => {
     return cert.subject.CN === 'vhanevych';
 };
+
+export const signature = signed({ secret: 'rewnviJHrbveIEbnwp29Nr1' });
 
 export default Config;
