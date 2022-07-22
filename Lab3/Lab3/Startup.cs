@@ -39,7 +39,7 @@ namespace Lab3
                     options.TokenValidationParameters = new TokenValidationParameters
                     {
                         ValidateIssuer = true,
-                        ValidateAudience = true,
+                        ValidateAudience = false,
                         ValidateLifetime = true,
                         ValidateIssuerSigningKey = true,
                         ValidIssuer = Configuration["Jwt:Issuer"],
@@ -85,6 +85,8 @@ namespace Lab3
             app.UseAuthentication();
 
             app.UseRouting();
+
+            app.UseAuthorization();
 
             app.UseEndpoints(
                 endpoints =>

@@ -191,6 +191,8 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             email: email,
             imageBlobKey: foundUser.imageBlobKey,
             roles: addedRoles,
+            password: '',
+            isAdmin: false,
         };
 
         const userPhoto = file.current?.files?.item(0);

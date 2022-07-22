@@ -36,7 +36,7 @@ const ModelsTable: FunctionComponent = () => {
     }
 
     const onClickButton = () => {
-        navigate(RouteNamesEnum.AddModel);
+        navigate(RouteNamesEnum.Add);
     };
 
     const addModelButton: React.ReactNode = (

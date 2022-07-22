@@ -6,3 +6,8 @@ export enum ModalResultActions {
     Add = 1,
     Edit = 2,
 }
+
+export enum SessionStorageFields {
+    ACCESS_TOKEN = 'ACCESS_TOKEN',
+    REFRESH_TOKEN = 'REFRESH_TOKEN',
+}

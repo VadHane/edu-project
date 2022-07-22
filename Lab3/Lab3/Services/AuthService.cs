@@ -10,9 +10,11 @@ using System.Security.Cryptography.X509Certificates;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.EntityFrameworkCore;
 using Lab3.Interfaces;
 using Lab3.Models;
 using Lab3.Exceptions;
+
 
 namespace Lab3.Services
 {
@@ -49,6 +51,23 @@ namespace Lab3.Services
             };
 
             return loginResponse;
+        }
+
+        public User LoginByAccessToken(string accessToken)
+        {
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            if (token.ValidTo < DateTime.Now && token.SigningCredentials == credentials)
+            {
+                throw new IncorrectTokenException();
+            }
+
+            var userStringId = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            var user = _context.Users.Include(user => user.Roles).FirstOrDefault(user => user.Id.ToString() == userStringId);
+
+            return user;
         }
 
         public string RefreshJWTToken(string refreshToken)

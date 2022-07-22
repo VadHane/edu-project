@@ -1,8 +1,10 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using System;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Lab3.Interfaces;
 using Lab3.Models;
 using Lab3.Exceptions;
+
 
 namespace Lab3.Controllers
 {
@@ -29,8 +31,28 @@ namespace Lab3.Controllers
             }
             catch (EntityNotFoundException)
             {
-                return NotFound();
+                return StatusCode(401);
             } 
+            catch
+            {
+                return StatusCode(500);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("auth-by-token")]
+        public IActionResult Login([FromForm] string accessToken)
+        {
+            try
+            {
+                var user = _authService.LoginByAccessToken(accessToken);
+
+                return Ok(user);
+            }
+            catch (Exception ex) when (ex is IncorrectTokenException || ex is ArgumentException)
+            {
+                return StatusCode(401);
+            }
             catch
             {
                 return StatusCode(500);
@@ -47,9 +69,9 @@ namespace Lab3.Controllers
 
                 return Ok(accessToken);
             }
-            catch (IncorrectTokenException)
+            catch (Exception ex) when (ex is IncorrectTokenException || ex is ArgumentException)
             {
-                return StatusCode(403);
+                return StatusCode(401);
             }
             catch
             {

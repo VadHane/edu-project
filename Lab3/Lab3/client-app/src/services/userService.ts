@@ -23,13 +23,14 @@ export const getUserByIdAsync = async (id: string): Promise<User> => {
 };
 
 export const addUserAsync = async (user: User, file: File): Promise<User> => {
-    const requestBody = new FormData();
+    const requestBody = new FormData(); // TODO: Add password
 
     requestBody.append('firstName', user.firstName);
     requestBody.append('lastName', user.lastName);
     requestBody.append('email', user.email);
     requestBody.append('files', file);
     requestBody.append('roles', JSON.stringify(user.roles));
+    requestBody.append('password', user.password);
 
     return fetch(url, {
         method: 'POST',
@@ -46,6 +47,7 @@ export const editUserAsync = async (user: User, file: File): Promise<User> => {
     requestBody.append('lastName', user.lastName);
     requestBody.append('email', user.email);
     requestBody.append('roles', JSON.stringify(user.roles));
+    requestBody.append('password', user.password);
 
     if (file) {
         requestBody.append('files', file);

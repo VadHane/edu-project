@@ -1,6 +1,6 @@
 import React from 'react';
 import { ModalResultActions } from './../types/App.types';
-import UsersTable from '../components/UsersTable';
+
 import {
     ADD_USER_BUTTON_TEXT,
     EDIT_USER_BUTTON_TEXT,
@@ -11,12 +11,7 @@ import UserCreateAndUpdateModal from './../components/UserCreateAndUpdateModal';
 
 export const userRoutes: Array<IRoute> = [
     {
-        path: RouteNamesEnum.Users,
-        exact: true,
-        element: <UsersTable />,
-    },
-    {
-        path: RouteNamesEnum.AddUser,
+        path: RouteNamesEnum.Add,
         exact: true,
         element: (
             <UserCreateAndUpdateModal
@@ -26,7 +21,7 @@ export const userRoutes: Array<IRoute> = [
         ),
     },
     {
-        path: RouteNamesEnum.EditUserById,
+        path: RouteNamesEnum.EditById,
         exact: true,
         element: (
             <UserCreateAndUpdateModal
