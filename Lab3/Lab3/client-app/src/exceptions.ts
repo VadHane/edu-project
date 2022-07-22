@@ -34,4 +34,4 @@ export const INCORECT_USER_ID_EXCEPTION = 'Incorrect user id.';
 export const INCORECT_MODEL_ID_EXCEPTION = 'Incorrect model id.';
 
 export const FORBIDDEN_EXCEPTION = '403 Forbidden';
-export const UNAUTHORIZED_EXCEPTION = '403 Unauthorized';
+export const UNAUTHORIZED_EXCEPTION = '401 Unauthorized';

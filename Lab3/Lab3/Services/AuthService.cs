@@ -15,7 +15,6 @@ using Lab3.Interfaces;
 using Lab3.Models;
 using Lab3.Exceptions;
 
-
 namespace Lab3.Services
 {
     public class AuthService : IAuthService
@@ -142,7 +141,9 @@ namespace Lab3.Services
 
         private User Authenticate(UserLogin userLogin)
         {
-            var foundUser = _context.Users.FirstOrDefault(user => user.Email.ToLower() == userLogin.Email.ToLower() && user.Password == userLogin.Password);
+            var password = EncryptionService.GetHash(userLogin.Password);
+
+            var foundUser = _context.Users.FirstOrDefault(user => user.Email.ToLower() == userLogin.Email.ToLower() && user.Password == password);
 
             return foundUser;
         }

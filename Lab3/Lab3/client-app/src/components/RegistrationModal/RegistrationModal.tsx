@@ -69,6 +69,7 @@ const RegistrationModal: FunctionComponent = () => {
 
     useEffect(() => {
         const availableRolesList = roles.filter((role) => !role.isAdmin);
+
         setAvailableRoles(availableRolesList);
     }, [roles]);
 
@@ -160,7 +161,6 @@ const RegistrationModal: FunctionComponent = () => {
 
     const onAssignRole = (event: SelectChangeEvent<string[]>) => {
         const value = event.target.value;
-        console.log(value);
 
         setAssignedRoles(typeof value === 'string' ? value.split(',') : value);
     };
@@ -224,7 +224,6 @@ const RegistrationModal: FunctionComponent = () => {
                                 error={firstNameError !== ''}
                                 helperText={firstNameError}
                             />
-
                             <TextField
                                 id="standard-basic"
                                 className="text_field"
@@ -235,7 +234,6 @@ const RegistrationModal: FunctionComponent = () => {
                                 error={lastNameError !== ''}
                                 helperText={lastNameError}
                             />
-
                             <TextField
                                 id="standard-basic"
                                 className="text_field"
@@ -287,17 +285,17 @@ const RegistrationModal: FunctionComponent = () => {
                 key={'top' + 'center'}
             >
                 <Alert severity="error" sx={{ width: '100%' }}>
-                    {error ?? roleError}
+                    {error ?? roleError ?? errorMessage}
                 </Alert>
             </Snackbar>
         </>
     );
 
     return (
-        <div>
+        <>
             {loginModalNode}
             {statusNode}
-        </div>
+        </>
     );
 };
 

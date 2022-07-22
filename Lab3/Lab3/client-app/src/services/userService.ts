@@ -23,7 +23,7 @@ export const getUserByIdAsync = async (id: string): Promise<User> => {
 };
 
 export const addUserAsync = async (user: User, file: File): Promise<User> => {
-    const requestBody = new FormData(); // TODO: Add password
+    const requestBody = new FormData();
 
     requestBody.append('firstName', user.firstName);
     requestBody.append('lastName', user.lastName);
