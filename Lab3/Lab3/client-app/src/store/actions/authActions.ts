@@ -55,8 +55,8 @@ export const logout = () => {
         try {
             dispatchEvent({ type: AuthActionTypes.LOGOUT_START });
 
-            sessionStorage.removeItem(SessionStorageFields.ACCESS_TOKEN);
-            sessionStorage.removeItem(SessionStorageFields.REFRESH_TOKEN);
+            localStorage.removeItem(SessionStorageFields.ACCESS_TOKEN);
+            localStorage.removeItem(SessionStorageFields.REFRESH_TOKEN);
 
             dispatchEvent({ type: AuthActionTypes.LOGOUT_SUCCESS });
         } catch {

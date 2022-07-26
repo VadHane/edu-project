@@ -1,5 +1,4 @@
 import React from 'react';
-import { IRoute } from '../models/IRoute';
 import { RouteNamesEnum } from '../types/Route.types';
 import ModelCreateAndUpdateModal from './../components/ModelCreateAndUpdateModal';
 import {
@@ -7,11 +6,12 @@ import {
     EDIT_MODEL_BUTTON_TEXT,
 } from '../components/ModelsTable/ModelsTable.constants';
 import { ModalResultActions } from '../types/App.types';
+import { RouteObject } from 'react-router-dom';
 
-export const modelRoutes: Array<IRoute> = [
+export const modelRoutes: Array<RouteObject> = [
     {
-        path: RouteNamesEnum.Add,
-        exact: true,
+        path: RouteNamesEnum.AddModel,
+        index: true,
         element: (
             <ModelCreateAndUpdateModal
                 buttonContent={ADD_MODEL_BUTTON_TEXT}
@@ -20,8 +20,8 @@ export const modelRoutes: Array<IRoute> = [
         ),
     },
     {
-        path: RouteNamesEnum.EditById,
-        exact: true,
+        path: RouteNamesEnum.EditModelById,
+        index: true,
         element: (
             <ModelCreateAndUpdateModal
                 buttonContent={EDIT_MODEL_BUTTON_TEXT}

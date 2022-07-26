@@ -1,9 +1,13 @@
 export enum RouteNamesEnum {
     Users = '/users',
+    AddUser = '/users/add',
+    EditUserById = '/users/edit/:id',
+
     Models = '/models',
-    Add = '/add',
-    EditById = '/edit/:id',
+    AddModel = '/models/add',
+    EditModelById = '/models/edit/:id',
 
     Login = '/login',
     Registration = '/registration',
+    StartPage = '/',
 }

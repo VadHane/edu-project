@@ -1,8 +1,13 @@
 import { Dispatch } from 'redux';
-import { ADDING_TAG_EXCEPTION, LOADING_TAGS_EXCEPTION } from '../../exceptions';
+import {
+    ADDING_TAG_EXCEPTION,
+    LOADING_TAGS_EXCEPTION,
+    UNAUTHORIZED_EXCEPTION,
+} from '../../exceptions';
 import { Tag } from '../../models/Tag';
 import { createNewTagAsync, getAllTagsAsync } from '../../services/tagService';
 import { TagActionTypes } from '../../types/Tag.types';
+import { logout } from './authActions';
 
 export const getAllTags = () => {
     return async (dispatchEvent: Dispatch) => {
@@ -15,7 +20,12 @@ export const getAllTags = () => {
                 type: TagActionTypes.GET_ALL_TAGS_SUCCESS,
                 payload: response,
             });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: TagActionTypes.GET_ALL_TAGS_ERROR,
                 payload: LOADING_TAGS_EXCEPTION,
@@ -32,7 +42,12 @@ export const addNewTag = (tag: Tag) => {
             const response = await createNewTagAsync(tag);
 
             dispatchEvent({ type: TagActionTypes.ADD_TAG_SUCCESS, payload: response });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: TagActionTypes.ADD_TAG_ERROR,
                 payload: ADDING_TAG_EXCEPTION,

@@ -5,14 +5,14 @@ import {
     ADD_USER_BUTTON_TEXT,
     EDIT_USER_BUTTON_TEXT,
 } from '../components/UsersTable/UsersTable.constants';
-import { IRoute } from '../models/IRoute';
 import { RouteNamesEnum } from '../types/Route.types';
 import UserCreateAndUpdateModal from './../components/UserCreateAndUpdateModal';
+import { RouteObject } from 'react-router-dom';
 
-export const userRoutes: Array<IRoute> = [
+export const userRoutes: Array<RouteObject> = [
     {
-        path: RouteNamesEnum.Add,
-        exact: true,
+        path: RouteNamesEnum.AddUser,
+        index: true,
         element: (
             <UserCreateAndUpdateModal
                 buttonContent={ADD_USER_BUTTON_TEXT}
@@ -21,8 +21,8 @@ export const userRoutes: Array<IRoute> = [
         ),
     },
     {
-        path: RouteNamesEnum.EditById,
-        exact: true,
+        path: RouteNamesEnum.EditUserById,
+        index: true,
         element: (
             <UserCreateAndUpdateModal
                 buttonContent={EDIT_USER_BUTTON_TEXT}

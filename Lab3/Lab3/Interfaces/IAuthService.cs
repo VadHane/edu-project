@@ -7,7 +7,7 @@ namespace Lab3.Interfaces
     {
         LoginResponse Login(UserLogin userLogin);
 
-        string RefreshJWTToken(string refreshToken);
+        LoginResponse RefreshJWTToken(string refreshToken);
 
         Task<string> SignUrl(string url);
 

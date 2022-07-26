@@ -4,6 +4,7 @@ import {
     DELETENG_MODEL_EXCEPTION,
     EDITING_MODEL_EXCEPTION,
     LOADING_MODELS_EXCEPTION,
+    UNAUTHORIZED_EXCEPTION,
 } from '../../exceptions';
 import { Model } from '../../models/Model';
 import {
@@ -13,6 +14,7 @@ import {
     deleteModelAsync,
 } from '../../services/modelService';
 import { ModelActionTypes } from '../../types/Model.types';
+import { logout } from './authActions';
 
 export const getAllModels = () => {
     return async (dispatchEvent: Dispatch) => {
@@ -25,7 +27,12 @@ export const getAllModels = () => {
                 type: ModelActionTypes.GET_ALL_MODELS_SUCCESS,
                 payload: response,
             });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: ModelActionTypes.GET_ALL_MODELS_ERROR,
                 payload: LOADING_MODELS_EXCEPTION,
@@ -45,7 +52,12 @@ export const addNewModel = (model: Model, file: File, preview: File) => {
                 type: ModelActionTypes.ADD_MODEL_SUCCESS,
                 payload: response,
             });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: ModelActionTypes.ADD_MODEL_ERROR,
                 payload: ADDING_MODEL_EXCEPTION,
@@ -65,7 +77,12 @@ export const editModel = (model: Model, file: File, preview: File) => {
                 type: ModelActionTypes.EDIT_MODEL_SUCCESS,
                 payload: response,
             });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: ModelActionTypes.EDIT_MODEL_ERROR,
                 payload: EDITING_MODEL_EXCEPTION,
@@ -85,7 +102,12 @@ export const deleteModel = (model: Model) => {
                 type: ModelActionTypes.DELETE_MODEL_SUCCESS,
                 payload: response,
             });
-        } catch {
+        } catch (e) {
+            if (e === UNAUTHORIZED_EXCEPTION) {
+                logout()(dispatchEvent);
+                return;
+            }
+
             dispatchEvent({
                 type: ModelActionTypes.DELETE_MODEL_ERROR,
                 payload: DELETENG_MODEL_EXCEPTION,

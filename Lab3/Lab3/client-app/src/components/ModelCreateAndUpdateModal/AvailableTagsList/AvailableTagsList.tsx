@@ -8,6 +8,7 @@ import {
     GET_CREATE_TAG_MESSAGE,
     LIST_INCLUDES_TAG_MESSAGE,
     MAX_LENGTH_INPUT_BOX,
+    THIS_TAG_IS_NOT_AVAILABLE,
 } from './AvailableTagsList.constants';
 import { APPROVE_IMAGE, CANCEL_IMAGE } from '../../../App.constants';
 import './AvailableTagsList.css';
@@ -22,6 +23,7 @@ const AvailableTagsList: FunctionComponent<AvailableTagsListProps> = (
     const [isTagAdded, setItAddedTag] = useState<boolean>(false);
 
     const { tags } = useTypedSelector((state) => state.tags);
+    const { user } = useTypedSelector((state) => state.auth);
     const { addNewTag } = useTagActions();
 
     useEffect(() => {
@@ -71,22 +73,35 @@ const AvailableTagsList: FunctionComponent<AvailableTagsListProps> = (
     );
 
     const approveCreateNewTagNode: React.ReactNode = (
-        <div className="aprove-add-tag">
-            <span>{GET_CREATE_TAG_MESSAGE}</span> <br />
-            <img
-                src={APPROVE_IMAGE.URL}
-                alt={APPROVE_IMAGE.ALT}
-                onClick={() => {
-                    addNewTag({ id: '', name: inputNameOfTag });
-                    setItNewTag(false);
-                }}
-            />
-            <img
-                src={CANCEL_IMAGE.URL}
-                alt={CANCEL_IMAGE.ALT}
-                onClick={() => setInputNameOfTag('')}
-            />
-        </div>
+        <>
+            {user?.isAdmin ? (
+                <div className="aprove-add-tag">
+                    <span>{GET_CREATE_TAG_MESSAGE}</span> <br />
+                    <img
+                        src={APPROVE_IMAGE.URL}
+                        alt={APPROVE_IMAGE.ALT}
+                        onClick={() => {
+                            addNewTag({ id: '', name: inputNameOfTag });
+                            setItNewTag(false);
+                        }}
+                    />
+                    <img
+                        src={CANCEL_IMAGE.URL}
+                        alt={CANCEL_IMAGE.ALT}
+                        onClick={() => setInputNameOfTag('')}
+                    />
+                </div>
+            ) : (
+                <div>
+                    <span>{THIS_TAG_IS_NOT_AVAILABLE}</span> <br />
+                    <img
+                        src={APPROVE_IMAGE.URL}
+                        alt={APPROVE_IMAGE.ALT}
+                        onClick={() => setInputNameOfTag('')}
+                    />
+                </div>
+            )}
+        </>
     );
 
     const approveAssigningAvailableTagNode: React.ReactNode = (

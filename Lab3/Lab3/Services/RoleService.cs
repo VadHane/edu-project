@@ -25,7 +25,7 @@ namespace Lab3.Services
                 throw new DatabaseIsEmptyException();
             }
 
-            return _context.Roles.AsNoTracking().Include(role => role.Users).ToArray();
+            return _context.Roles.AsNoTracking().ToArray();
         }
 
         /// <inheritdoc cref="IRoleService.ReadOne"/>

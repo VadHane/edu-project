@@ -1,4 +1,6 @@
 import { Model } from '../models/Model';
+import { FetchMethodsEnum } from '../types/Auth.types';
+import { authFetch } from './authService';
 import { deleteUploadedFile, uploadFile } from './fileService';
 
 const url = `${process.env.REACT_APP_HOST_URL}/api/models/`;
@@ -25,7 +27,7 @@ const createRequestBody = async (
 };
 
 export const getAllModelsAsync = async (): Promise<Array<Model>> => {
-    return fetch(url)
+    return authFetch(url)
         .then((response) => {
             if (response.status === 204) {
                 return [];
@@ -43,8 +45,8 @@ export const addModelAsync = async (
 ): Promise<Model> => {
     const requestBody = await createRequestBody(model, file, preview);
 
-    return fetch(url, {
-        method: 'POST',
+    return authFetch(url, {
+        method: FetchMethodsEnum.POST,
         body: requestBody,
     })
         .then((response) => {
@@ -67,8 +69,8 @@ export const editModelAsync = async (
 
     deleteUploadedFile(model.prevBlobKey);
 
-    return fetch(requestUrl, {
-        method: 'PUT',
+    return authFetch(requestUrl, {
+        method: FetchMethodsEnum.PUT,
         body: requestBody,
     })
         .then((response) => response.json())
@@ -84,8 +86,8 @@ export const deleteModelAsync = async (model: Model): Promise<Model> => {
 
     deleteUploadedFile(model.prevBlobKey);
 
-    return fetch(requestUrl, {
-        method: 'DELETE',
+    return authFetch(requestUrl, {
+        method: FetchMethodsEnum.DELETE,
     })
         .then((response) => response.json())
         .then((data: Model) => data);

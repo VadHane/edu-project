@@ -1,9 +1,11 @@
 import { Role } from '../models/Role';
+import { FetchMethodsEnum } from '../types/Auth.types';
+import { authFetch } from './authService';
 
 const url = `${process.env.REACT_APP_HOST_URL}/api/users/roles/`;
 
 export const getAllRolesAsync = async (): Promise<Array<Role>> => {
-    return fetch(url)
+    return authFetch(url)
         .then((response) => {
             return response.json();
         })
@@ -17,8 +19,8 @@ export const createNewRole = async (role: Role): Promise<Role> => {
 
     requestBody.append('name', `${role.name}`);
 
-    return fetch(url, {
-        method: 'POST',
+    return authFetch(url, {
+        method: FetchMethodsEnum.POST,
         body: requestBody,
     })
         .then((response: Response) => response.json())

@@ -2,6 +2,11 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -14,12 +19,14 @@ namespace Lab3.Services
     public class ModelService : IModelService
     {
         private readonly ModelContext _context;
-        private readonly IWebHostEnvironment env;
+        private readonly IWebHostEnvironment _env;
+        private readonly IConfiguration _config;
 
-        public ModelService(ModelContext context, IWebHostEnvironment _env)
+        public ModelService(ModelContext context, IWebHostEnvironment env, IConfiguration config)
         {
             _context = context;
-            env = _env;
+            _env = env;
+            _config = config;
         }
 
         private void AssignTagsToModel(ICollection<Tag> tags, Model model)
@@ -62,8 +69,9 @@ namespace Lab3.Services
         }
 
         /// <inheritdoc cref="IModelService.Create(Model, IFormFile, IFormFile)"/>
-        public Model Create(Model model)
+        public Model Create(Model model, string accessToken)
         {
+            var creatorId = GetUserIdByAccessToken(accessToken);
             var newModel = new Model()
             {
                 Id = Guid.NewGuid(),
@@ -72,8 +80,8 @@ namespace Lab3.Services
                 Name = model.Name,
                 Description = model.Description,
                 CreatedAt = model.CreatedAt,
-                CreatedBy = model.CreatedBy,
-                UpdatedBy = model.UpdatedBy,
+                CreatedBy = creatorId,
+                UpdatedBy = creatorId,
                 UpdatedAt = model.UpdatedAt
             };
 
@@ -97,8 +105,8 @@ namespace Lab3.Services
                 throw new EntityNotFoundException();
             }
 
-            var absoluteFilePath = Path.Combine(env.WebRootPath, foundModel.Filekey);
-            var absolutePreviewPath = Path.Combine(env.WebRootPath, foundModel.PrevBlobKey);
+            var absoluteFilePath = Path.Combine(_env.WebRootPath, foundModel.Filekey);
+            var absolutePreviewPath = Path.Combine(_env.WebRootPath, foundModel.PrevBlobKey);
 
             var deletedEntity = (Model)_context.DeleteAndSave(foundModel);
 
@@ -125,7 +133,7 @@ namespace Lab3.Services
         }
 
         /// <inheritdoc cref="IModelService.Update(Guid, Model, IFormFile, IFormFile)"/>
-        public Model Update(Guid id, Model model)
+        public Model Update(Guid id, Model model, string accessToken)
         {
             var foundModel = _context.Models.Include(model => model.Tags).Include(model => model.ModelHistory).FirstOrDefault(model => model.Id == id);
 
@@ -139,7 +147,7 @@ namespace Lab3.Services
             foundModel.Name = model.Name ?? foundModel.Name;
             foundModel.Description = model.Description ?? foundModel.Description;
             foundModel.UpdatedAt = model.UpdatedAt;
-            foundModel.UpdatedBy = model.UpdatedBy;
+            foundModel.UpdatedBy = GetUserIdByAccessToken(accessToken);
 
             AssignHistoryToModel(foundModel.ModelHistory, foundModel);
             AssignTagsToModel(model.Tags, foundModel);
@@ -149,6 +157,22 @@ namespace Lab3.Services
             _context.SaveChanges();
 
             return updatedEntity.Entity;
+        }
+
+        private Guid GetUserIdByAccessToken(string accessToken)
+        {
+            var token = new JwtSecurityTokenHandler().ReadJwtToken(accessToken);
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            if (token.ValidTo < DateTime.Now && token.SigningCredentials == credentials)
+            {
+                throw new IncorrectTokenException();
+            }
+
+            var userId = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+
+            return Guid.Parse(userId);
         }
     }
 }

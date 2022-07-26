@@ -8,6 +8,7 @@ import { getUserByIdAsync } from '../../../services/userService';
 import { User } from '../../../models/User';
 import { DEFAULT_OWNER_NAME } from './TableContentRow.constants';
 import { Tag } from '../../../models/Tag';
+import { signUrl } from './../../../services/fileService';
 import './TableContentRow.css';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
@@ -38,7 +39,9 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
     useEffect(() => {
         const photoUrl = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/${model.prevBlobKey}`;
 
-        setPreviewUrl(photoUrl);
+        signUrl(photoUrl).then((signedUrl) => {
+            setPreviewUrl(signedUrl);
+        });
     }, [model.prevBlobKey]);
 
     const onFailedLoadPhoto = () => {

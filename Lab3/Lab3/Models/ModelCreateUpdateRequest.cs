@@ -12,10 +12,6 @@ namespace Lab3.Models
 
         public string PrevBlobKey { get; set; }
 
-        public Guid CreatedBy { get; set; }
-
-        public Guid UpdatedBy { get; set; }
-
         // JSON
         public string Tags { get; set; }
     }

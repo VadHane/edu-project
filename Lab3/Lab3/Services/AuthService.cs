@@ -63,13 +63,13 @@ namespace Lab3.Services
                 throw new IncorrectTokenException();
             }
 
-            var userStringId = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
-            var user = _context.Users.Include(user => user.Roles).FirstOrDefault(user => user.Id.ToString() == userStringId);
+            var userId = token.Claims.FirstOrDefault(claim => claim.Type == ClaimTypes.NameIdentifier).Value;
+            var user = _context.Users.Include(user => user.Roles).FirstOrDefault(user => user.Id.ToString() == userId);
 
             return user;
         }
 
-        public string RefreshJWTToken(string refreshToken)
+        public LoginResponse RefreshJWTToken(string refreshToken)
         {
             var token = new JwtSecurityTokenHandler().ReadJwtToken(refreshToken);
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
@@ -85,7 +85,13 @@ namespace Lab3.Services
             var expiresAccessToken = DateTime.Now.AddMinutes(Convert.ToInt32(_config["Jwt:ExpiresAccessToken"]));
             var accessToken = new JwtSecurityToken(issuer, audience, token.Claims, expires: expiresAccessToken, signingCredentials: credentials);
 
-            return new JwtSecurityTokenHandler().WriteToken(accessToken);
+            var response = new LoginResponse()
+            {
+                AccessToken = new JwtSecurityTokenHandler().WriteToken(accessToken),
+                RefreshToken = refreshToken
+            };
+
+            return response;
         }
 
         public async Task<string> SignUrl(string url)
@@ -143,7 +149,7 @@ namespace Lab3.Services
         {
             var password = EncryptionService.GetHash(userLogin.Password);
 
-            var foundUser = _context.Users.FirstOrDefault(user => user.Email.ToLower() == userLogin.Email.ToLower() && user.Password == password);
+            var foundUser = _context.Users.Include(user => user.Roles).FirstOrDefault(user => user.Email.ToLower() == userLogin.Email.ToLower() && user.Password == password);
 
             return foundUser;
         }

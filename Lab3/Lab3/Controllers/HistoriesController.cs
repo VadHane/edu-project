@@ -2,11 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Lab3.Interfaces;
 using Lab3.Models;
 
 namespace Lab3.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/models/{id}")]
     public class HistoriesController : Controller

@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Lab3.Exceptions;
 using Lab3.Interfaces;
 using Lab3.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Lab3.Controllers
 {
@@ -19,6 +20,7 @@ namespace Lab3.Controllers
             _tagService = service;
         }
 
+        [Authorize]
         [HttpGet]
         public ActionResult<IEnumerable<Tag>> Get()
         {
@@ -39,6 +41,7 @@ namespace Lab3.Controllers
             }
         }
 
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<Tag> Get(Guid id)
         {
@@ -58,6 +61,7 @@ namespace Lab3.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<Tag> Post([FromForm]Tag tag)
         {

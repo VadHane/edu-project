@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { User } from '../../models/User';
 import TableContentRow from './TableContentRow';
 import './UsersTable.css';
@@ -11,27 +11,10 @@ import {
     ROLES_COLUMN_HEADER,
 } from './UsersTable.constants';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
-import { useUserActions } from '../../hooks/useUserActions';
 import AddUserButton from '../AddUserButton';
-import { RouteNamesEnum } from '../../types/Route.types';
-import Preloader from '../Preloader';
-import WarningModal from '../WarningModal';
 
 const UsersTable: FunctionComponent = () => {
-    const { users, loading, error } = useTypedSelector((state) => state.user);
-    const { getAllUsers } = useUserActions();
-
-    useEffect(() => {
-        getAllUsers();
-    }, []);
-
-    if (loading) {
-        return <Preloader />;
-    }
-
-    if (error) {
-        return <WarningModal message={error} navigateTo={RouteNamesEnum.Users} />;
-    }
+    const { users } = useTypedSelector((state) => state.user);
 
     const usersRowsNode: React.ReactNode = (
         <div className="scroll-list">

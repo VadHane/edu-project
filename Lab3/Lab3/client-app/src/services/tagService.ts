@@ -1,9 +1,11 @@
+import { FetchMethodsEnum } from '../types/Auth.types';
 import { Tag } from './../models/Tag';
+import { authFetch } from './authService';
 
 const url = `${process.env.REACT_APP_HOST_URL}/api/models/tags/`;
 
 export const getAllTagsAsync = async (): Promise<Array<Tag>> => {
-    return fetch(url)
+    return authFetch(url)
         .then((response: Response) => response.json())
         .then((data: Array<Tag>) => data);
 };
@@ -13,8 +15,8 @@ export const createNewTagAsync = async (tag: Tag) => {
 
     requestBody.append('name', `${tag.name}`);
 
-    return fetch(url, {
-        method: 'POST',
+    return authFetch(url, {
+        method: FetchMethodsEnum.POST,
         body: requestBody,
     })
         .then((response: Response) => response.json())

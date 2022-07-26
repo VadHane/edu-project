@@ -71,3 +71,15 @@ type LogoutErrorAction = {
 type LogoutActions = LogoutStartAction | LogoutSuccessAction | LogoutErrorAction;
 
 export type AuthorizationActions = AuthActions | RegActions | LogoutActions;
+
+export enum FetchMethodsEnum {
+    GET = 'GET',
+    POST = 'POST',
+    PUT = 'PUT',
+    DELETE = 'DELETE',
+}
+
+export type FetchOptions = {
+    method?: FetchMethodsEnum;
+    body?: FormData;
+};
