@@ -10,5 +10,7 @@ namespace Lab3.Interfaces
         string RefreshJWTToken(string refreshToken);
 
         Task<string> SignUrl(string url);
+
+        User LoginByAccessToken(string accessToken);
     }
 }

@@ -30,6 +30,7 @@ export const addUserAsync = async (user: User, file: File): Promise<User> => {
     requestBody.append('email', user.email);
     requestBody.append('files', file);
     requestBody.append('roles', JSON.stringify(user.roles));
+    requestBody.append('password', user.password);
 
     return fetch(url, {
         method: 'POST',
@@ -46,6 +47,7 @@ export const editUserAsync = async (user: User, file: File): Promise<User> => {
     requestBody.append('lastName', user.lastName);
     requestBody.append('email', user.email);
     requestBody.append('roles', JSON.stringify(user.roles));
+    requestBody.append('password', user.password);
 
     if (file) {
         requestBody.append('files', file);

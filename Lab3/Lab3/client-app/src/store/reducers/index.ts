@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { authReducer } from './authReducer';
 import { modelReducer } from './modelReducer';
 import { roleReducer } from './roleReducer';
 import { tagReduser } from './tagReducer';
@@ -9,6 +10,7 @@ export const rootReducer = combineReducers({
     role: roleReducer,
     model: modelReducer,
     tags: tagReduser,
+    auth: authReducer,
 });
 
 export type RootState = ReturnType<typeof rootReducer>;

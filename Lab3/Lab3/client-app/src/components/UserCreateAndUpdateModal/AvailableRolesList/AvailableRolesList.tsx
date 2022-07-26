@@ -68,7 +68,11 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 src={APPROVE_IMAGE.URL}
                 alt={APPROVE_IMAGE.ALT}
                 onClick={() => {
-                    addNewRole({ id: '', name: inputNameOfRole });
+                    addNewRole({
+                        id: '',
+                        name: inputNameOfRole,
+                        isAdmin: false,
+                    });
                     setItNewRole(false);
                 }}
             />

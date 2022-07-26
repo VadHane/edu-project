@@ -11,4 +11,6 @@ export const emptyUser: User = {
     email: '',
     imageBlobKey: null,
     roles: [],
+    password: '',
+    isAdmin: false,
 };

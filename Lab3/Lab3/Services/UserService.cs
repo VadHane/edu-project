@@ -83,7 +83,7 @@ namespace Lab3.Services
                 LastName = user.LastName,
                 Email = user.Email,
                 ImageBlobKey = filePath,
-                Password = user.Password,
+                Password = EncryptionService.GetHash(user.Password),
             };
 
             AssignRolesToUser(user.Roles, newUser);

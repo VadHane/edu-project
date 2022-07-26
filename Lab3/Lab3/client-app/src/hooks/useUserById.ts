@@ -12,6 +12,8 @@ export const useUserById = (id: Maybe<string>): User => {
         email: '',
         imageBlobKey: null,
         roles: [],
+        password: '',
+        isAdmin: false,
     };
 
     if (!id) {

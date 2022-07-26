@@ -1,0 +1,10 @@
+.text {
+    margin: 0 auto;
+    padding-top: 40vh;
+    text-align: center;
+}
+
+.text h1 {
+    margin-bottom: 130px;
+    font-size: 60px;
+}
