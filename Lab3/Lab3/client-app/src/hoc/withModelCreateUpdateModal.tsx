@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { FunctionComponent } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ModelCreateAndUpdateModalProps } from './../components/ModelCreateAndUpdateModal/ModelCreateAndUpdateModal.types';
 import { useTypedSelector } from './../hooks/useTypedSelector';
 import { useModelById } from './../hooks/useModelById';
@@ -12,13 +12,16 @@ import {
     MODEL_WAS_ADDED_MESSAGE,
     MODEL_WAS_EDITED_MESSAGE,
 } from './../components/ModelCreateAndUpdateModal/ModelCreateAndUpdateModal.constants';
+import { useModelActions } from '../hooks/useModelActions';
 
 export const withModalCreateUpdateModal = (
     Component: FunctionComponent<ModelCreateAndUpdateModalProps>,
 ) => {
     return (props: ModelCreateAndUpdateModalProps) => {
         const { actionWasDone, error } = useTypedSelector((state) => state.model);
+        const { resetState } = useModelActions();
         const { id } = useParams();
+        const navigate = useNavigate();
 
         try {
             useModelById(id);
@@ -33,14 +36,30 @@ export const withModalCreateUpdateModal = (
 
         if (actionWasDone === false) {
             return (
-                <WarningModal message={error || ''} navigateTo={RouteNamesEnum.Models} />
+                <WarningModal
+                    message={error || ''}
+                    navigateTo={RouteNamesEnum.Models}
+                    onClick={() => {
+                        resetState();
+                        navigate(RouteNamesEnum.Models);
+                    }}
+                />
             );
         } else if (actionWasDone) {
             const message =
                 props.resultActionType === ModalResultActions.Add
                     ? MODEL_WAS_ADDED_MESSAGE
                     : MODEL_WAS_EDITED_MESSAGE;
-            return <WarningModal message={message} navigateTo={RouteNamesEnum.Models} />;
+            return (
+                <WarningModal
+                    message={message}
+                    navigateTo={RouteNamesEnum.Models}
+                    onClick={() => {
+                        resetState();
+                        navigate(RouteNamesEnum.Models);
+                    }}
+                />
+            );
         }
 
         return <Component {...props} />;

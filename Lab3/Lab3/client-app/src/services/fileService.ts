@@ -1,20 +1,18 @@
-import { FetchMethodsEnum } from '../types/Auth.types';
-import { authFetch } from './authService';
+import https from './../https';
 
 const url = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
 
 export const signUrl = async (url: string): Promise<string> => {
-    const serverUrl = `${process.env.REACT_APP_HOST_URL}/api/auth/sign-file-storage-url`;
+    const path = '/api/auth/sign-file-storage-url';
 
     const formData = new FormData();
 
     formData.append('url', url);
 
-    const res = await authFetch(serverUrl, {
-        method: FetchMethodsEnum.POST,
-        body: formData,
+    const res = await https.post<string>(path, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
     });
-    const signedUrl = (await res.json()) as string;
+    const signedUrl = res.data;
 
     return signedUrl;
 };

@@ -9,7 +9,7 @@ import {
     GET_CREATE_ROLE_MESSAGE,
     LIST_INCLUDES_ROLE_MESSAGE,
     MAX_LENGTH_INPUT_BOX,
-    THIS_ROLE_IS_NOT_AVAILABLE,
+    ROLE_IS_NOT_AVAILABLE_MESSAGE,
 } from './AvailableRolesList.constants';
 import { useRoleActions } from '../../../hooks/useRoleActions';
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
@@ -88,7 +88,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
                 </div>
             ) : (
                 <div>
-                    <span>{THIS_ROLE_IS_NOT_AVAILABLE}</span> <br />
+                    <span>{ROLE_IS_NOT_AVAILABLE_MESSAGE}</span> <br />
                     <img
                         src={APPROVE_IMAGE.URL}
                         alt={APPROVE_IMAGE.ALT}

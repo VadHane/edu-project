@@ -8,7 +8,7 @@ import {
     GET_CREATE_TAG_MESSAGE,
     LIST_INCLUDES_TAG_MESSAGE,
     MAX_LENGTH_INPUT_BOX,
-    THIS_TAG_IS_NOT_AVAILABLE,
+    TAG_IS_NOT_AVAILABLE_MESSAGE,
 } from './AvailableTagsList.constants';
 import { APPROVE_IMAGE, CANCEL_IMAGE } from '../../../App.constants';
 import './AvailableTagsList.css';
@@ -93,7 +93,7 @@ const AvailableTagsList: FunctionComponent<AvailableTagsListProps> = (
                 </div>
             ) : (
                 <div>
-                    <span>{THIS_TAG_IS_NOT_AVAILABLE}</span> <br />
+                    <span>{TAG_IS_NOT_AVAILABLE_MESSAGE}</span> <br />
                     <img
                         src={APPROVE_IMAGE.URL}
                         alt={APPROVE_IMAGE.ALT}

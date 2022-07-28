@@ -10,7 +10,7 @@ const MainPage: FunctionComponent = () => {
 
     const { isAuth } = useTypedSelector((state) => state.auth);
 
-    const [userIsAuth, setUserIsAuth] = useState<boolean>(isAuth);
+    const [userIsAuth, setUserIsAuth] = useState<boolean>(false);
 
     useEffect(() => {
         setUserIsAuth(isAuth);

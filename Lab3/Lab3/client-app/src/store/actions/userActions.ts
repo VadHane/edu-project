@@ -118,3 +118,9 @@ export const DeleteUserAsync = (user: User) => {
         }
     };
 };
+
+export const resetState = () => {
+    return (dispatchEvent: Dispatch) => {
+        dispatchEvent({ type: UserActionTypes.RESET_USER });
+    };
+};

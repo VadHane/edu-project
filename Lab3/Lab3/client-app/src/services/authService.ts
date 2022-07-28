@@ -1,6 +1,6 @@
-import { FORBIDDEN_EXCEPTION, UNAUTHORIZED_EXCEPTION } from '../exceptions';
+import { UNAUTHORIZED_EXCEPTION } from '../exceptions';
 import { User } from '../models/User';
-import { SessionStorageFields } from '../types/App.types';
+import { LocalStorageFields } from '../types/App.types';
 import { FetchMethodsEnum, FetchOptions } from '../types/Auth.types';
 import { addUserAsync, getUserByIdAsync } from './userService';
 
@@ -26,8 +26,8 @@ export const authorizationUserAsync = async (
         throw Error();
     }
 
-    localStorage.setItem(SessionStorageFields.ACCESS_TOKEN, accessToken);
-    localStorage.setItem(SessionStorageFields.REFRESH_TOKEN, refreshToken);
+    localStorage.setItem(LocalStorageFields.ACCESS_TOKEN, accessToken);
+    localStorage.setItem(LocalStorageFields.REFRESH_TOKEN, refreshToken);
 
     const user = await getUserByIdAsync(userId);
 
@@ -37,7 +37,7 @@ export const authorizationUserAsync = async (
 };
 
 export const authByAccessToken = async () => {
-    const accessToken = localStorage.getItem(SessionStorageFields.ACCESS_TOKEN);
+    const accessToken = localStorage.getItem(LocalStorageFields.ACCESS_TOKEN);
     const requestUrl = `${url}auth-by-token/`;
     const formData = new FormData();
 
@@ -70,35 +70,37 @@ export const registrationUserAsync = async (user: User, file: File) => {
         throw Error();
     }
 
-    localStorage.setItem(SessionStorageFields.ACCESS_TOKEN, accessToken);
-    localStorage.setItem(SessionStorageFields.REFRESH_TOKEN, refreshToken);
+    localStorage.setItem(LocalStorageFields.ACCESS_TOKEN, accessToken);
+    localStorage.setItem(LocalStorageFields.REFRESH_TOKEN, refreshToken);
 
     return createdUser;
 };
 
-export const refreshTokenAsync = async (): Promise<string> => {
+export const refreshTokenAsync = async (): Promise<Nullable<string>> => {
     const requestUrl = `${url}refresh-token/`;
     const formData = new FormData();
 
-    formData.append(
-        'refreshToken',
-        localStorage.getItem(SessionStorageFields.REFRESH_TOKEN) ?? '',
-    );
+    const refreshToken = localStorage.getItem(LocalStorageFields.REFRESH_TOKEN);
+
+    if (!refreshToken) {
+        return null;
+    }
+
+    formData.append('refreshToken', refreshToken);
 
     const res = await fetch(requestUrl, { method: 'POST', body: formData });
 
     if (res.status === 401) {
-        throw new Error(UNAUTHORIZED_EXCEPTION);
+        return null;
     }
 
     const { accessToken } = await res.json();
 
     if (!accessToken) {
-        throw Error();
+        return null;
     }
 
-    localStorage.removeItem(SessionStorageFields.ACCESS_TOKEN);
-    localStorage.setItem(SessionStorageFields.ACCESS_TOKEN, accessToken);
+    localStorage.setItem(LocalStorageFields.ACCESS_TOKEN, accessToken);
 
     return accessToken;
 };
@@ -107,7 +109,7 @@ export const authFetch = async (
     url: string,
     options?: FetchOptions,
 ): Promise<Response> => {
-    const accessToken = localStorage.getItem(SessionStorageFields.ACCESS_TOKEN);
+    const accessToken = localStorage.getItem(LocalStorageFields.ACCESS_TOKEN);
     const authString = `Bearer ${accessToken}`;
 
     const response = await fetch(url, {
@@ -125,7 +127,7 @@ export const authFetch = async (
             if (res.status === 401) {
                 return await refreshTokenAsync().then(async () => {
                     const authString = `Bearer ${localStorage.getItem(
-                        SessionStorageFields.ACCESS_TOKEN,
+                        LocalStorageFields.ACCESS_TOKEN,
                     )}`;
 
                     return await fetch(url, {

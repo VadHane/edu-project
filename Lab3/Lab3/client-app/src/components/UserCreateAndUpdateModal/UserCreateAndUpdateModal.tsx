@@ -9,6 +9,7 @@ import {
     FILE_NOT_IMAGE_EXCEPTION,
     INCORRECT_EMAIL_EXCEPTION,
     LENGTH_OF_NAME_EXCEPTION,
+    LENGTH_OF_PASSWORD_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
 } from '../../exceptions';
 import './UserCreateAndUpdateModal.css';
@@ -17,6 +18,7 @@ import {
     emptyUser,
     FIRST_NAME_PLACEHOLDER,
     LAST_NAME_PLACEHOLDER,
+    PASSWORD_PLACEHOLDER,
 } from './UserCreateAndUpdateModal.constants';
 import { useUserById } from '../../hooks/useUserById';
 import { useRoleActions } from './../../hooks/useRoleActions';
@@ -39,6 +41,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
     const [firstName, setFirstName] = useState<string>(foundUser.firstName);
     const [lastName, setLastName] = useState<string>(foundUser.lastName);
     const [email, setEmail] = useState<string>(foundUser.email);
+    const [password, setPassword] = useState<string>(foundUser.password);
 
     const [addedRoles, setAddedRoles] = useState<Array<Role>>([...foundUser.roles]);
 
@@ -120,6 +123,18 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
                     />
                     <br />
 
+                    <input
+                        type="text"
+                        name="password"
+                        id="password"
+                        placeholder={PASSWORD_PLACEHOLDER}
+                        value={password}
+                        onChange={(event) => {
+                            setPassword(event.target.value);
+                        }}
+                    />
+                    <br />
+
                     <AddedRolesList
                         addedRoles={addedRoles}
                         removeAddedRole={(role: Role) => addAvailableRole(role)}
@@ -173,6 +188,11 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             return false;
         }
 
+        if (password.trim().length < 3) {
+            setExceptionMessage(LENGTH_OF_PASSWORD_EXCEPTION);
+            return false;
+        }
+
         if (file.current?.files?.item(0)?.type.split('/')[0] !== 'image') {
             setExceptionMessage(FILE_NOT_IMAGE_EXCEPTION);
             return false;
@@ -191,7 +211,7 @@ const UserCreateAndUpdateModal: FunctionComponent<UserCreateAndUpdateModalProps>
             email: email,
             imageBlobKey: foundUser.imageBlobKey,
             roles: addedRoles,
-            password: '',
+            password: password,
             isAdmin: false,
         };
 

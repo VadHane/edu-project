@@ -115,3 +115,9 @@ export const deleteModel = (model: Model) => {
         }
     };
 };
+
+export const resetState = () => {
+    return (dispatchEvent: Dispatch) => {
+        dispatchEvent({ type: ModelActionTypes.RESET });
+    };
+};

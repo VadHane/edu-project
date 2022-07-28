@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { ModalResultActions } from '../../types/App.types';
+import { ModalResultActions, ModelsFileExtensions } from '../../types/App.types';
 import { ModelCreateAndUpdateModalProps } from './ModelCreateAndUpdateModal.types';
 import { withModalCreateUpdateModal } from './../../hoc/withModelCreateUpdateModal';
 import { NavLink, useParams } from 'react-router-dom';
@@ -150,7 +150,8 @@ const ModelCreateAndUpdateModal: FunctionComponent<ModelCreateAndUpdateModalProp
             return false;
         }
 
-        if (file.current?.files?.item(0)?.name.split('.')[1] !== 'cad') {
+        const fileExtension = file.current?.files?.item(0)?.name.split('.')[1];
+        if (!fileExtension || ModelsFileExtensions.includes(fileExtension)) {
             setExceptionMessage(FILE_NOT_CAD_EXCEPTION);
             return false;
         }

@@ -124,7 +124,8 @@ namespace Lab3.Services
                 FirstName = user.FirstName ?? foundUser.FirstName,
                 LastName = user.LastName ?? foundUser.LastName,
                 Email = user.Email ?? foundUser.Email,
-                ImageBlobKey = user.ImageBlobKey ?? foundUser.ImageBlobKey
+                ImageBlobKey = user.ImageBlobKey ?? foundUser.ImageBlobKey,
+                Password = EncryptionService.GetHash(user.Password) ?? foundUser.Password,
             };
 
             AssignRolesToUser(user.Roles, updatedUser);
