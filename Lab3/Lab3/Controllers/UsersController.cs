@@ -79,7 +79,7 @@ namespace Lab3.Controllers
         /// </summary>
         /// <param name="userCreateRequest">The user instance witch was generated from the request body.</param>
         /// <returns>Return the created user instance from the database as a JSON string and send status code 201.</returns>
-        [Authorize(Roles = "Admin")]
+        [AllowAnonymous]
         [HttpPost]
         public ActionResult<User> Post([FromForm]UserCreateUpdateRequest userCreateRequest)
         {

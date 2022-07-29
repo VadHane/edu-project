@@ -32,6 +32,18 @@ export const getAllModelsAsync = async (): Promise<Array<Model>> => {
     });
 };
 
+export const getModelByIdAsync = async (id: string): Promise<Model> => {
+    const requestUrl = `${path}${id}`;
+
+    return https.get<Model>(requestUrl).then((response) => {
+        if (response.status != 200) {
+            throw new Error();
+        }
+
+        return response.data;
+    });
+};
+
 export const addModelAsync = async (
     model: Model,
     file: File,

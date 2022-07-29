@@ -1,11 +1,11 @@
 import { Dispatch } from 'redux';
 import {
-    ADDING_MODEL_EXCEPTION,
     DELETENG_MODEL_EXCEPTION,
     EDITING_MODEL_EXCEPTION,
     LOADING_MODELS_EXCEPTION,
     UNAUTHORIZED_EXCEPTION,
 } from '../../exceptions';
+import { IStoreActionCallback } from '../../models/IStoreActionCallback';
 import { Model } from '../../models/Model';
 import {
     addModelAsync,
@@ -13,111 +13,127 @@ import {
     editModelAsync,
     deleteModelAsync,
 } from '../../services/modelService';
+import { Maybe } from '../../types/App.types';
 import { ModelActionTypes } from '../../types/Model.types';
 import { logout } from './authActions';
 
-export const getAllModels = () => {
+export const getAllModels = (callback?: IStoreActionCallback) => {
+    let isDone = false;
+    let error: Maybe<string> = undefined;
+
     return async (dispatchEvent: Dispatch) => {
         try {
-            dispatchEvent({ type: ModelActionTypes.GET_ALL_MODELS });
-
             const response = await getAllModelsAsync();
 
             dispatchEvent({
                 type: ModelActionTypes.GET_ALL_MODELS_SUCCESS,
                 payload: response,
             });
+
+            isDone = true;
         } catch (e) {
             if (e === UNAUTHORIZED_EXCEPTION) {
                 logout()(dispatchEvent);
-                return;
+
+                error = e;
             }
 
-            dispatchEvent({
-                type: ModelActionTypes.GET_ALL_MODELS_ERROR,
-                payload: LOADING_MODELS_EXCEPTION,
-            });
+            isDone = false;
+            error = error || LOADING_MODELS_EXCEPTION;
+        } finally {
+            callback && callback(isDone, error);
         }
     };
 };
 
-export const addNewModel = (model: Model, file: File, preview: File) => {
+export const addNewModel = (
+    model: Model,
+    file: File,
+    preview: File,
+    callback?: IStoreActionCallback,
+) => {
+    let isDone = false;
+    let error: Maybe<string> = undefined;
     return async (dispatchEvent: Dispatch) => {
         try {
-            dispatchEvent({ type: ModelActionTypes.ADD_MODEL });
-
             const response = await addModelAsync(model, file, preview);
 
             dispatchEvent({
                 type: ModelActionTypes.ADD_MODEL_SUCCESS,
                 payload: response,
             });
+
+            isDone = true;
         } catch (e) {
             if (e === UNAUTHORIZED_EXCEPTION) {
                 logout()(dispatchEvent);
-                return;
+
+                error = e;
             }
 
-            dispatchEvent({
-                type: ModelActionTypes.ADD_MODEL_ERROR,
-                payload: ADDING_MODEL_EXCEPTION,
-            });
+            error = error || LOADING_MODELS_EXCEPTION;
+        } finally {
+            callback && callback(isDone, error);
         }
     };
 };
 
-export const editModel = (model: Model, file: File, preview: File) => {
+export const editModel = (
+    model: Model,
+    file: File,
+    preview: File,
+    callback?: IStoreActionCallback,
+) => {
+    let isDone = false;
+    let error: Maybe<string> = undefined;
+
     return async (dispatchEvent: Dispatch) => {
         try {
-            dispatchEvent({ type: ModelActionTypes.EDIT_MODEL });
-
             const response = await editModelAsync(model, file, preview);
 
             dispatchEvent({
                 type: ModelActionTypes.EDIT_MODEL_SUCCESS,
                 payload: response,
             });
+
+            isDone = true;
         } catch (e) {
             if (e === UNAUTHORIZED_EXCEPTION) {
                 logout()(dispatchEvent);
-                return;
+
+                error = e;
             }
 
-            dispatchEvent({
-                type: ModelActionTypes.EDIT_MODEL_ERROR,
-                payload: EDITING_MODEL_EXCEPTION,
-            });
+            error = error || EDITING_MODEL_EXCEPTION;
+        } finally {
+            callback && callback(isDone, error);
         }
     };
 };
 
-export const deleteModel = (model: Model) => {
+export const deleteModel = (model: Model, callback?: IStoreActionCallback) => {
+    let isDone = false;
+    let error: Maybe<string> = undefined;
+
     return async (dispatchEvent: Dispatch) => {
         try {
-            dispatchEvent({ type: ModelActionTypes.DELETE_MODEL });
-
             const response = await deleteModelAsync(model);
 
             dispatchEvent({
                 type: ModelActionTypes.DELETE_MODEL_SUCCESS,
                 payload: response,
             });
+
+            isDone = true;
         } catch (e) {
             if (e === UNAUTHORIZED_EXCEPTION) {
                 logout()(dispatchEvent);
-                return;
+                error = e;
             }
 
-            dispatchEvent({
-                type: ModelActionTypes.DELETE_MODEL_ERROR,
-                payload: DELETENG_MODEL_EXCEPTION,
-            });
+            error = error || DELETENG_MODEL_EXCEPTION;
+        } finally {
+            callback && callback(isDone, error);
         }
-    };
-};
-
-export const resetState = () => {
-    return (dispatchEvent: Dispatch) => {
-        dispatchEvent({ type: ModelActionTypes.RESET });
     };
 };

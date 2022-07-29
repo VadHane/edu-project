@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Model } from '../../../models/Model';
 import { TableContentRowProps } from './TableContentRow.types';
 import { useModelActions } from './../../../hooks/useModelActions';
@@ -14,8 +13,6 @@ import './TableContentRow.css';
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
 ) => {
-    const navigate = useNavigate();
-
     const [model, setModel] = useState<Model>(props.model);
     const [previewUrl, setPreviewUrl] = useState<string>('');
     const [updaterName, setUpdaterName] = useState<string>('');
@@ -48,12 +45,6 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
         setPreviewUrl(MODEL_DEFAULT_PICTURE.URL);
     };
 
-    const onEditHandler = () => {
-        const navigateTo = `/models/edit/${model.id}`;
-
-        navigate(navigateTo);
-    };
-
     const onDeleteHandler = () => {
         deleteModel(model);
     };
@@ -83,7 +74,11 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
                 {`${getDataTimeString(model.updatedAt)} by ${updaterName}`}
             </th>
             <th className="actions">
-                <img src={EDIT_IMAGE.URL} alt={EDIT_IMAGE.ALT} onClick={onEditHandler} />
+                <img
+                    src={EDIT_IMAGE.URL}
+                    alt={EDIT_IMAGE.ALT}
+                    onClick={props.onEditModelHandler(model)}
+                />
                 <img
                     src={REMOVE_IMAGE.URL}
                     alt={REMOVE_IMAGE.ALT}

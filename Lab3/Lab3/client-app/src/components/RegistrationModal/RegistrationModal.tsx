@@ -23,6 +23,7 @@ import {
     LENGTH_OF_NAME_EXCEPTION,
     LENGTH_OF_PASSWORD_EXCEPTION,
     LENGTH_OF_SURNAME_EXCEPTION,
+    UNKNOWN_EXCEPTION,
 } from '../../exceptions';
 import { useRoleActions } from '../../hooks/useRoleActions';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
@@ -38,12 +39,10 @@ const RegistrationModal: FunctionComponent = () => {
     const { getAllRoles } = useRoleActions();
 
     const { isAuth, error, isLoading } = useTypedSelector((state) => state.auth);
-    const {
-        roles,
-        loading,
-        loaded,
-        error: roleError,
-    } = useTypedSelector((state) => state.role);
+    const { roles } = useTypedSelector((state) => state.role);
+
+    const [roleError, setRoleError] = useState<string>();
+    const [roleIsLoading, setRoleIsLoading] = useState<boolean>(false);
 
     const [availableRoles, setAvailableRoles] = useState<Array<Role>>([]);
     const [assignedRoles, setAssignedRoles] = useState<Array<string>>([]);
@@ -62,10 +61,16 @@ const RegistrationModal: FunctionComponent = () => {
     const file = React.createRef<HTMLInputElement>();
 
     useEffect(() => {
-        if (!loaded) {
-            getAllRoles();
-        }
-    }, [loaded]);
+        setRoleIsLoading(true);
+
+        getAllRoles((isDone, error) => {
+            setRoleIsLoading(false);
+
+            if (!isDone) {
+                setRoleError(error || UNKNOWN_EXCEPTION);
+            }
+        });
+    }, []);
 
     useEffect(() => {
         const availableRolesList = roles.filter((role) => !role.isAdmin);
@@ -90,7 +95,7 @@ const RegistrationModal: FunctionComponent = () => {
             setErrorMessage(error);
         }
 
-        if (roleError !== null) {
+        if (roleError) {
             setErrorMessage(roleError);
         }
     }, [error, roleError]);
@@ -200,7 +205,7 @@ const RegistrationModal: FunctionComponent = () => {
                 aria-describedby="modal-modal-description"
             >
                 <Box className="modal-reg-window">
-                    {isLoading || loading ? (
+                    {isLoading || roleIsLoading ? (
                         <Box className="loading-circle">
                             <CircularProgress />
                         </Box>
