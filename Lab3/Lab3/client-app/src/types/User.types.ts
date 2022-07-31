@@ -24,6 +24,8 @@ export enum UserActionTypes {
     DELETE_USER = 'DELETE_USER',
     DELETE_USER_SUCCESS = 'DELETE_USER_SUCCES',
     DELETE_USER_ERROR = 'DELETE_USER_ERROR',
+
+    RESET_USER = 'RESET_USER',
 }
 
 type GetUserStartAction = {
@@ -70,4 +72,8 @@ type ModifyUserActions =
     | ModifyUserSuccessAction
     | ModifyUserErrorAction;
 
-export type UserActions = GetUserActions | ModifyUserActions;
+type ResetUser = {
+    type: UserActionTypes.RESET_USER;
+};
+
+export type UserActions = GetUserActions | ModifyUserActions | ResetUser;

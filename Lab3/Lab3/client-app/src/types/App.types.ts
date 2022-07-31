@@ -7,7 +7,9 @@ export enum ModalResultActions {
     Edit = 2,
 }
 
-export enum SessionStorageFields {
+export enum LocalStorageFields {
     ACCESS_TOKEN = 'ACCESS_TOKEN',
     REFRESH_TOKEN = 'REFRESH_TOKEN',
 }
+
+export const ModelsFileExtensions = ['cad'];

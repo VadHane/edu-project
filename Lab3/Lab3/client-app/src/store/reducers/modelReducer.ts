@@ -10,6 +10,8 @@ const initialState: ModelState = {
 
 export const modelReducer = (state = initialState, action: ModelActions): ModelState => {
     switch (action.type) {
+        case ModelActionTypes.RESET:
+            return { ...state, actionWasDone: null };
         case ModelActionTypes.GET_ALL_MODELS:
             return {
                 models: [],

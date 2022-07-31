@@ -1,18 +1,18 @@
 import React from 'react';
+import { RouteObject } from 'react-router-dom';
 import RegistrationModal from '../components/RegistrationModal';
-import { IRoute } from '../models/IRoute';
 import { RouteNamesEnum } from '../types/Route.types';
 import LoginModal from './../components/LoginModal';
 
-export const authRoutes: Array<IRoute> = [
+export const authRoutes: Array<RouteObject> = [
     {
         path: RouteNamesEnum.Login,
-        exact: true,
+        index: true,
         element: <LoginModal />,
     },
     {
         path: RouteNamesEnum.Registration,
-        exact: true,
+        index: true,
         element: <RegistrationModal />,
     },
 ];

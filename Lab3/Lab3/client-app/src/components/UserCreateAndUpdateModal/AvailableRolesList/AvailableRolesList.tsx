@@ -9,6 +9,7 @@ import {
     GET_CREATE_ROLE_MESSAGE,
     LIST_INCLUDES_ROLE_MESSAGE,
     MAX_LENGTH_INPUT_BOX,
+    ROLE_IS_NOT_AVAILABLE_MESSAGE,
 } from './AvailableRolesList.constants';
 import { useRoleActions } from '../../../hooks/useRoleActions';
 import { useTypedSelector } from '../../../hooks/useTypedSelector';
@@ -17,6 +18,7 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     props: AvailableRolesListProps,
 ) => {
     const { roles } = useTypedSelector((state) => state.role);
+    const { user } = useTypedSelector((state) => state.auth);
 
     const [inputNameOfRole, setInputNameOfRole] = useState<string>('');
     const [isRoleNew, setItNewRole] = useState<boolean>(false);
@@ -62,26 +64,39 @@ const AvailableRolesList: FunctionComponent<AvailableRolesListProps> = (
     );
 
     const approveAddingNewRoleNode: React.ReactNode = (
-        <div className="aprove-add-role">
-            <span>{GET_CREATE_ROLE_MESSAGE}</span> <br />
-            <img
-                src={APPROVE_IMAGE.URL}
-                alt={APPROVE_IMAGE.ALT}
-                onClick={() => {
-                    addNewRole({
-                        id: '',
-                        name: inputNameOfRole,
-                        isAdmin: false,
-                    });
-                    setItNewRole(false);
-                }}
-            />
-            <img
-                src={CANCEL_IMAGE.URL}
-                alt={CANCEL_IMAGE.ALT}
-                onClick={() => setInputNameOfRole('')}
-            />
-        </div>
+        <>
+            {user?.isAdmin ? (
+                <div className="aprove-add-role">
+                    <span>{GET_CREATE_ROLE_MESSAGE}</span> <br />
+                    <img
+                        src={APPROVE_IMAGE.URL}
+                        alt={APPROVE_IMAGE.ALT}
+                        onClick={() => {
+                            addNewRole({
+                                id: '',
+                                name: inputNameOfRole,
+                                isAdmin: false,
+                            });
+                            setItNewRole(false);
+                        }}
+                    />
+                    <img
+                        src={CANCEL_IMAGE.URL}
+                        alt={CANCEL_IMAGE.ALT}
+                        onClick={() => setInputNameOfRole('')}
+                    />
+                </div>
+            ) : (
+                <div>
+                    <span>{ROLE_IS_NOT_AVAILABLE_MESSAGE}</span> <br />
+                    <img
+                        src={APPROVE_IMAGE.URL}
+                        alt={APPROVE_IMAGE.ALT}
+                        onClick={() => setInputNameOfRole('')}
+                    />
+                </div>
+            )}
+        </>
     );
 
     const approveAddingAvailableRoleNode: React.ReactNode = (

@@ -10,6 +10,8 @@ const initialState: UserState = {
 
 export const userReduser = (state = initialState, action: UserActions): UserState => {
     switch (action.type) {
+        case UserActionTypes.RESET_USER:
+            return { ...state, actionWasDone: null };
         case UserActionTypes.GET_ALL:
             return {
                 loading: true,

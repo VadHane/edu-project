@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Lab3.Models;
 using Lab3.Exceptions;
@@ -24,6 +25,7 @@ namespace Lab3.Controllers
         /// The endpoint for get all users.
         /// </summary>
         /// <returns>Return all user instances from the database as JSON strings and send status code 200.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpGet]
         public ActionResult<User[]> Get()
         {
@@ -48,6 +50,7 @@ namespace Lab3.Controllers
         /// </summary>
         /// <param name="id">The unique user id.</param>
         /// <returns>Return one user's instance from the database by id as JSON string and send status code 200.</returns>
+        [Authorize]
         [HttpGet("{id}")]
         public ActionResult<User> Get(Guid id)
         {
@@ -76,6 +79,7 @@ namespace Lab3.Controllers
         /// </summary>
         /// <param name="userCreateRequest">The user instance witch was generated from the request body.</param>
         /// <returns>Return the created user instance from the database as a JSON string and send status code 201.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<User> Post([FromForm]UserCreateUpdateRequest userCreateRequest)
         {
@@ -111,6 +115,7 @@ namespace Lab3.Controllers
         /// <param name="id">The unique user id.</param>
         /// <param name="userCreateRequest">The user instance witch was generated from the request body.</param>
         /// <returns>Return the updated user instance from the database as a JSON string and send status code 200.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPut("{id}")]
         public ActionResult<User> Put(Guid id, [FromForm]UserCreateUpdateRequest userCreateRequest)
         {
@@ -146,6 +151,7 @@ namespace Lab3.Controllers
         /// </summary>
         /// <param name="id">The unique user id.</param>
         /// <returns>Return the deleted user instance from the database as a JSON string and send status code 200.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpDelete("{id}")]
         public ActionResult<User> Delete(Guid id)
         {

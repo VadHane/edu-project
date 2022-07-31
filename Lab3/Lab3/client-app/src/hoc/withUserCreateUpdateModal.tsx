@@ -1,6 +1,6 @@
 /* eslint-disable react/display-name */
 import React, { FunctionComponent } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import UserCreateAndUpdateModalProps from '../components/UserCreateAndUpdateModal/UserCreateAndUpdateModal.types';
 import {
     USER_WAS_ADDED_MESSAGE,
@@ -9,6 +9,7 @@ import {
 import WarningModal from '../components/WarningModal';
 import { INCORECT_USER_ID_EXCEPTION } from '../exceptions';
 import { useTypedSelector } from '../hooks/useTypedSelector';
+import { useUserActions } from '../hooks/useUserActions';
 import { useUserById } from '../hooks/useUserById';
 import { ModalResultActions } from '../types/App.types';
 import { RouteNamesEnum } from '../types/Route.types';
@@ -18,7 +19,9 @@ export function withUserCreateUpdateModal(
 ) {
     return (props: UserCreateAndUpdateModalProps) => {
         const { actionWasDone, error } = useTypedSelector((state) => state.user);
+        const { resetState } = useUserActions();
         const { id } = useParams();
+        const navigate = useNavigate();
 
         try {
             useUserById(id);
@@ -33,7 +36,14 @@ export function withUserCreateUpdateModal(
 
         if (actionWasDone === false) {
             return (
-                <WarningModal message={error || ''} navigateTo={RouteNamesEnum.Users} />
+                <WarningModal
+                    message={error || ''}
+                    navigateTo={RouteNamesEnum.Users}
+                    onClick={() => {
+                        resetState();
+                        navigate(RouteNamesEnum.Users);
+                    }}
+                />
             );
         } else if (actionWasDone) {
             const message =
@@ -41,7 +51,16 @@ export function withUserCreateUpdateModal(
                     ? USER_WAS_ADDED_MESSAGE
                     : USER_WAS_EDITED_MESSAGE;
 
-            return <WarningModal message={message} navigateTo={RouteNamesEnum.Users} />;
+            return (
+                <WarningModal
+                    message={message}
+                    navigateTo={RouteNamesEnum.Users}
+                    onClick={() => {
+                        resetState();
+                        navigate(RouteNamesEnum.Users);
+                    }}
+                />
+            );
         }
 
         return <Component {...props} />;

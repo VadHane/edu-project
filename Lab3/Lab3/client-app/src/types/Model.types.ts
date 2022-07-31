@@ -24,6 +24,8 @@ export enum ModelActionTypes {
     DELETE_MODEL = 'DELETE_MODEL',
     DELETE_MODEL_SUCCESS = 'DELETE_MODEL_SUCCESS',
     DELETE_MODEL_ERROR = 'DELETE_MODEL_ERROR',
+
+    RESET = 'RESET',
 }
 
 type GetModelsStartAction = {
@@ -73,4 +75,8 @@ type ModifyModelActions =
     | ModifyModelSuccessAction
     | ModifyModelErrorAction;
 
-export type ModelActions = GetModelActions | ModifyModelActions;
+type ResetModelAction = {
+    type: ModelActionTypes.RESET;
+};
+
+export type ModelActions = GetModelActions | ModifyModelActions | ResetModelAction;

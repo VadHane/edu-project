@@ -1,14 +1,18 @@
+import https from './../https';
+
 const url = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
 
-const signUrl = async (url: string): Promise<string> => {
-    const serverUrl = `${process.env.REACT_APP_HOST_URL}/api/auth/sign-file-storage-url`;
+export const signUrl = async (url: string): Promise<string> => {
+    const path = '/api/auth/sign-file-storage-url';
 
     const formData = new FormData();
 
     formData.append('url', url);
 
-    const res = await fetch(serverUrl, { method: 'POST', body: formData });
-    const signedUrl = (await res.json()) as string;
+    const res = await https.post<string>(path, formData, {
+        headers: { 'Content-Type': 'multipart/form-data' },
+    });
+    const signedUrl = res.data;
 
     return signedUrl;
 };

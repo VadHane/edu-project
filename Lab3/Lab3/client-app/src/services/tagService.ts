@@ -1,11 +1,10 @@
 import { Tag } from './../models/Tag';
+import https from './../https';
 
-const url = `${process.env.REACT_APP_HOST_URL}/api/models/tags/`;
+const path = '/api/models/tags/';
 
 export const getAllTagsAsync = async (): Promise<Array<Tag>> => {
-    return fetch(url)
-        .then((response: Response) => response.json())
-        .then((data: Array<Tag>) => data);
+    return https.get<Array<Tag>>(path).then((response) => response.data);
 };
 
 export const createNewTagAsync = async (tag: Tag) => {
@@ -13,10 +12,5 @@ export const createNewTagAsync = async (tag: Tag) => {
 
     requestBody.append('name', `${tag.name}`);
 
-    return fetch(url, {
-        method: 'POST',
-        body: requestBody,
-    })
-        .then((response: Response) => response.json())
-        .then((data: Tag) => data);
+    return https.post<Tag>(path, requestBody).then((response) => response.data);
 };

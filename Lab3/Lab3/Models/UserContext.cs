@@ -14,8 +14,8 @@ namespace Lab3.Models
         {
             base.OnModelCreating(builder);
             builder.Entity<Role>().HasData(
-                new Role() { Id = Guid.NewGuid(), Name = "Super Admin" },
-                new Role() { Id = Guid.NewGuid(), Name = "Admin" }
+                new Role() { Id = Guid.NewGuid(), Name = "Super Admin", IsAdmin = true },
+                new Role() { Id = Guid.NewGuid(), Name = "Admin", IsAdmin = true }
             );
         }
 

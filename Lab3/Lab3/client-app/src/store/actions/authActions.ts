@@ -10,7 +10,7 @@ import {
     authorizationUserAsync,
     registrationUserAsync,
 } from '../../services/authService';
-import { SessionStorageFields } from '../../types/App.types';
+import { LocalStorageFields } from '../../types/App.types';
 import { AuthActionTypes } from '../../types/Auth.types';
 
 export const authorization = (email: string, password: string) => {
@@ -55,8 +55,8 @@ export const logout = () => {
         try {
             dispatchEvent({ type: AuthActionTypes.LOGOUT_START });
 
-            sessionStorage.removeItem(SessionStorageFields.ACCESS_TOKEN);
-            sessionStorage.removeItem(SessionStorageFields.REFRESH_TOKEN);
+            localStorage.removeItem(LocalStorageFields.ACCESS_TOKEN);
+            localStorage.removeItem(LocalStorageFields.REFRESH_TOKEN);
 
             dispatchEvent({ type: AuthActionTypes.LOGOUT_SUCCESS });
         } catch {

@@ -1,11 +1,8 @@
-import React, { FunctionComponent, useEffect } from 'react';
+import React, { FunctionComponent } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Model } from '../../models/Model';
 import { RouteNamesEnum } from '../../types/Route.types';
-import Preloader from '../Preloader';
-import WarningModal from '../WarningModal';
-import { useModelActions } from './../../hooks/useModelActions';
 import {
     ACTIONS_COLUMN_HEADER,
     ADD_MODEL_BUTTON_TEXT,
@@ -20,23 +17,10 @@ import TableContentRow from './TableContentRow';
 const ModelsTable: FunctionComponent = () => {
     const navigate = useNavigate();
 
-    const { models, loading, error } = useTypedSelector((state) => state.model);
-    const { getAllModels } = useModelActions();
-
-    useEffect(() => {
-        getAllModels();
-    }, []);
-
-    if (loading) {
-        return <Preloader />;
-    }
-
-    if (error) {
-        return <WarningModal message={error} navigateTo={RouteNamesEnum.Models} />;
-    }
+    const { models } = useTypedSelector((state) => state.model);
 
     const onClickButton = () => {
-        navigate(RouteNamesEnum.Add);
+        navigate(RouteNamesEnum.AddModel);
     };
 
     const addModelButton: React.ReactNode = (

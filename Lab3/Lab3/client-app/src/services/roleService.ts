@@ -1,15 +1,10 @@
 import { Role } from '../models/Role';
+import https from './../https';
 
-const url = `${process.env.REACT_APP_HOST_URL}/api/users/roles/`;
+const path = '/api/users/roles/';
 
 export const getAllRolesAsync = async (): Promise<Array<Role>> => {
-    return fetch(url)
-        .then((response) => {
-            return response.json();
-        })
-        .then((data: Array<Role>) => {
-            return data;
-        });
+    return https.get<Array<Role>>(path).then((response) => response.data);
 };
 
 export const createNewRole = async (role: Role): Promise<Role> => {
@@ -17,10 +12,5 @@ export const createNewRole = async (role: Role): Promise<Role> => {
 
     requestBody.append('name', `${role.name}`);
 
-    return fetch(url, {
-        method: 'POST',
-        body: requestBody,
-    })
-        .then((response: Response) => response.json())
-        .then((data: Role) => data);
+    return https.post<Role>(path, requestBody).then((response) => response.data);
 };

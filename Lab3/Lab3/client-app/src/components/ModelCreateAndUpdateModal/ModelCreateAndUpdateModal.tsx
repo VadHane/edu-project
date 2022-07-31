@@ -1,5 +1,5 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { ModalResultActions } from '../../types/App.types';
+import { ModalResultActions, ModelsFileExtensions } from '../../types/App.types';
 import { ModelCreateAndUpdateModalProps } from './ModelCreateAndUpdateModal.types';
 import { withModalCreateUpdateModal } from './../../hoc/withModelCreateUpdateModal';
 import { NavLink, useParams } from 'react-router-dom';
@@ -150,8 +150,8 @@ const ModelCreateAndUpdateModal: FunctionComponent<ModelCreateAndUpdateModalProp
             return false;
         }
 
-        // TODO:
-        if (file.current?.files?.item(0)?.type.split('/')[0] !== '') {
+        const fileExtension = file.current?.files?.item(0)?.name.split('.')[1];
+        if (!fileExtension || ModelsFileExtensions.includes(fileExtension)) {
             setExceptionMessage(FILE_NOT_CAD_EXCEPTION);
             return false;
         }
@@ -178,7 +178,7 @@ const ModelCreateAndUpdateModal: FunctionComponent<ModelCreateAndUpdateModalProp
             createdAt: foundModel.createdAt,
             createdBy: foundModel.createdBy,
             updatedAt: new Date(),
-            updatedBy: foundModel.updatedBy, //TODO:
+            updatedBy: foundModel.updatedBy,
             tags: assignedTags,
             modelHistory: foundModel.modelHistory,
         };

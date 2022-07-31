@@ -8,7 +8,7 @@ const AddUserButton: FunctionComponent = () => {
     const navigate = useNavigate();
 
     const onClickHandler = () => {
-        navigate(RouteNamesEnum.Add);
+        navigate(RouteNamesEnum.AddUser);
     };
 
     return <button onClick={onClickHandler}>{ADD_USER_BUTTON_TEXT}</button>;

@@ -1,24 +1,39 @@
 import React from 'react';
-import { IRoute } from '../models/IRoute';
 import { RouteNamesEnum } from '../types/Route.types';
-import UsersTable from '../components/UsersTable';
-import NotFoundPage from '../pages/NotFoundPage/NotFoundPage';
-import ModelsTable from './../components/ModelsTable';
+import UserPage from '../pages/UsersPage';
+import NotFoundPage from '../pages/NotFoundPage';
+import { userRoutes } from './userRoutes';
+import { modelRoutes } from './modelRoutes';
+import { Navigate, RouteObject } from 'react-router-dom';
+import ModelsPage from '../pages/ModelsPage';
 
-export const defaultRouter: IRoute = {
+export const defaultRouter: RouteObject = {
     path: '*',
-    exact: false,
+    index: false,
     element: <NotFoundPage />,
 };
 
-export const userRouter: IRoute = {
+export const userRouter: RouteObject = {
     path: RouteNamesEnum.Users,
-    exact: true,
-    element: <UsersTable />,
+    element: <UserPage />,
+    children: [...userRoutes],
 };
 
-export const modelRouter: IRoute = {
+export const modelRouter: RouteObject = {
     path: RouteNamesEnum.Models,
-    exact: true,
-    element: <ModelsTable />,
+    element: <ModelsPage />,
+    children: [...modelRoutes],
 };
+
+export const authRoutesRedirect: Array<RouteObject> = [
+    {
+        path: RouteNamesEnum.Login,
+        index: true,
+        element: <Navigate to={RouteNamesEnum.StartPage} replace />,
+    },
+    {
+        path: RouteNamesEnum.Registration,
+        index: true,
+        element: <Navigate to={RouteNamesEnum.StartPage} replace />,
+    },
+];

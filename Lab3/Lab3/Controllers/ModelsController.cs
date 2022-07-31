@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Lab3.Exceptions;
 using Lab3.Interfaces;
@@ -9,6 +10,7 @@ using Lab3.Models;
 
 namespace Lab3.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("api/models")]
     public class ModelsController : Controller
@@ -65,20 +67,19 @@ namespace Lab3.Controllers
             try
             {
                 var tags = JsonConvert.DeserializeObject<List<Tag>>(modelCreateRequest.Tags);
+                var accessToken = Request.Headers.FirstOrDefault(header => header.Key == "Authorization").Value.ToString().Split(" ").Last();
                 var model = new Model()
                 {
                     Name = modelCreateRequest.Name,
                     Description = modelCreateRequest.Description,
                     CreatedAt = DateTime.Now,
-                    CreatedBy = modelCreateRequest.CreatedBy,
-                    UpdatedBy = modelCreateRequest.UpdatedBy,
                     UpdatedAt = DateTime.Now,
                     Filekey = modelCreateRequest.Filekey,
                     PrevBlobKey = modelCreateRequest.PrevBlobKey,
                     Tags = tags,
                 };
 
-                var createdModel = _modelService.Create(model);
+                var createdModel = _modelService.Create(model, accessToken);
                 var protocol = Request.IsHttps ? "https://" : "http://";
                 var path = Request.Path + createdModel.Id;
                 var uriToCreatedModel = new UriBuilder(protocol, Request.Host.Host, (int)Request.Host.Port, path).Uri;
@@ -96,19 +97,19 @@ namespace Lab3.Controllers
         {
             try
             {
+                var accessToken = Request.Headers.FirstOrDefault(header => header.Key == "Authorization").Value.ToString().Split(" ").Last();
                 var tags = JsonConvert.DeserializeObject<List<Tag>>(modelUpdateRequest.Tags);
                 var model = new Model()
                 {
                     Name = modelUpdateRequest.Name,
                     Description = modelUpdateRequest.Description,
-                    UpdatedBy = modelUpdateRequest.UpdatedBy,
                     UpdatedAt = DateTime.Now,
                     Filekey = modelUpdateRequest.Filekey,
                     PrevBlobKey = modelUpdateRequest.PrevBlobKey,
                     Tags = tags,
                 };
 
-                var updatedModel = _modelService.Update(id, model);
+                var updatedModel = _modelService.Update(id, model, accessToken);
 
                 return Ok(updatedModel);
             }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Lab3.Models;
 using Lab3.Exceptions;
 using Lab3.Interfaces;
@@ -73,6 +74,7 @@ namespace Lab3.Controllers
         /// </summary>
         /// <param name="role">The role instance which is generated from the request body.</param>
         /// <returns>Return the created role entity from the database as a JSON string and send status code 201.</returns>
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult<Role> Post([FromForm]Role role)
         {

@@ -24,7 +24,7 @@ namespace Lab3.Interfaces
         /// </summary>
         /// <param name="model">The instance of the model.</param>
         /// <returns>The entity of created model from the database.</returns>
-        Model Create(Model model);
+        Model Create(Model model, string accessToken);
 
         /// <summary>
         /// Update the model entity in the database.
@@ -32,7 +32,7 @@ namespace Lab3.Interfaces
         /// <param name="id">The unique id of the model in the database.</param>
         /// <param name="model">The instance of the model.</param>
         /// <returns>The entity of updated model from the database.</returns>
-        Model Update(Guid id, Model model);
+        Model Update(Guid id, Model model, string accessToken);
 
         /// <summary>
         /// Delete the model entity in the database.
