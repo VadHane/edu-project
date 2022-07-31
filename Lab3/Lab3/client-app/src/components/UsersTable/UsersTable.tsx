@@ -4,6 +4,7 @@ import TableContentRow from './TableContentRow';
 import './UsersTable.css';
 import {
     ACTIONS_COLUMN_HEADER,
+    ADD_USER_BUTTON_TEXT,
     EMAIL_COLUMN_HEADER,
     FIRST_NAME_COLUMN_HEADER,
     LAST_NAME_COLUMN_HEADER,
@@ -11,10 +12,17 @@ import {
     ROLES_COLUMN_HEADER,
 } from './UsersTable.constants';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
-import AddUserButton from '../AddUserButton';
+import { UsersTableProps } from './UsersTable.types';
 
-const UsersTable: FunctionComponent = () => {
+const UsersTable: FunctionComponent<UsersTableProps> = ({
+    onAddUserHandler,
+    onEditUserHandler,
+}) => {
     const { users } = useTypedSelector((state) => state.user);
+
+    const addUserButton: React.ReactNode = (
+        <button onClick={onAddUserHandler}>{ADD_USER_BUTTON_TEXT}</button>
+    );
 
     const usersRowsNode: React.ReactNode = (
         <div className="scroll-list">
@@ -22,7 +30,11 @@ const UsersTable: FunctionComponent = () => {
                 <tbody>
                     {users.map(
                         (user: User): JSX.Element => (
-                            <TableContentRow key={user.id} user={user} />
+                            <TableContentRow
+                                key={user.id}
+                                user={user}
+                                onEditHandler={onEditUserHandler}
+                            />
                         ),
                     )}
                 </tbody>
@@ -47,7 +59,7 @@ const UsersTable: FunctionComponent = () => {
 
     return (
         <div className="list">
-            <AddUserButton />
+            {addUserButton}
             {tableHeaderNode}
             {usersRowsNode}
         </div>

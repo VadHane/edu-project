@@ -1,8 +1,0 @@
-import { ModalResultActions } from '../../types/App.types';
-
-type UserCreateAndUpdateModalProps = {
-    buttonContent: string;
-    resultActionType: ModalResultActions;
-};
-
-export default UserCreateAndUpdateModalProps;

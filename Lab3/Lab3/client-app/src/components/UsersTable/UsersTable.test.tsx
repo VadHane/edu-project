@@ -10,44 +10,43 @@ import {
     PICTURE_COLUMN_HEADER,
     ROLES_COLUMN_HEADER,
 } from './UsersTable.constants';
+import '@testing-library/jest-dom';
 
 jest.mock('react-router-dom', () => ({
-    ...(jest.requireActual('react-router-dom') as any),
+    ...jest.requireActual('react-router-dom'),
     Routes: jest.fn(),
 }));
 
+jest.mock('../../hooks/useTypedSelector', () => ({
+    ...jest.requireActual('../../hooks/useTypedSelector'),
+    useTypedSelector: () => ({ users: [] }),
+}));
+
+jest.mock('../../hooks/useUserActions', () => ({
+    useUserActions: () => ({ getAllUsers: mockedGetAllUsersAsync }),
+}));
+
 jest.mock('./TableContentRow');
-jest.mock('../UserCreateAndUpdateModal');
 jest.mock('../AddUserButton');
-jest.mock('../UserWarningModal');
+jest.mock('../WarningModal');
 
 const mockedGetAllUsersAsync = jest.fn();
-const mockedGetAllRolesAsync = jest.fn();
+
 const mockedCreateNewRole = jest.fn();
 const mockedCreateUserAsync = jest.fn();
 const mockedEditUserAsync = jest.fn();
 const mockedDeleteUserAsync = jest.fn();
 
-const UsersTableNode: React.ReactNode = (
-    <UsersTable
-        getAllUsersAsync={mockedGetAllUsersAsync}
-        getAllRolesAsync={mockedGetAllRolesAsync}
-        createNewRole={mockedCreateNewRole}
-        createUserAsync={mockedCreateUserAsync}
-        editUserAsync={mockedEditUserAsync}
-        deleteUserAsync={mockedDeleteUserAsync}
-    />
-);
-
 describe('Test users table.', () => {
     beforeEach(() => {
         mockedGetAllUsersAsync.mockReturnValue(new Promise<Array<User>>(() => []));
+        // mocked.mockReturnValue((Component) => (props) => <Component {...props} />);
     });
 
     afterEach(cleanup);
 
     test('Component shuld render without errors.', () => {
-        render(<>{UsersTableNode}</>);
+        render(<UsersTable />);
 
         expect(
             screen.getByRole('columnheader', { name: PICTURE_COLUMN_HEADER }),
@@ -70,7 +69,7 @@ describe('Test users table.', () => {
     });
 
     test('Snapshot.', () => {
-        const utils = render(<>{UsersTableNode}</>);
+        const utils = render(<UsersTable />);
 
         expect(utils).toMatchSnapshot();
     });

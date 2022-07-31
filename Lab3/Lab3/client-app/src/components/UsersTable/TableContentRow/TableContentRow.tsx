@@ -1,5 +1,4 @@
 import React, { useState, useEffect, FunctionComponent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { Role } from '../../../models/Role';
 import { User } from '../../../models/User';
 import { TableContentRowProps } from './TableContentRow.types';
@@ -12,7 +11,7 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
 ) => {
     const [user, setUser] = useState<User>(props.user);
     const [userPhotoUrl, setUserPhotoUrl] = useState<string>('');
-    const navigate = useNavigate();
+
     const { DeleteUserAsync } = useUserActions();
 
     useEffect(() => {
@@ -27,12 +26,6 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
 
     const onFailedLoadPhoto = () => {
         setUserPhotoUrl(USER_DEFAULT_PICTURE.URL);
-    };
-
-    const onEditHandler = () => {
-        const navigateTo = `/users/edit/${user.id}`;
-
-        navigate(navigateTo);
     };
 
     const onDeleteHandler = () => {
@@ -55,7 +48,11 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
                 {user.roles.map((role: Role): string => `${role.name}; `)}
             </th>
             <th className="actions">
-                <img src={EDIT_IMAGE.URL} alt={EDIT_IMAGE.ALT} onClick={onEditHandler} />
+                <img
+                    src={EDIT_IMAGE.URL}
+                    alt={EDIT_IMAGE.ALT}
+                    onClick={props.onEditHandler(user)}
+                />
                 <img
                     src={REMOVE_IMAGE.URL}
                     alt={REMOVE_IMAGE.ALT}

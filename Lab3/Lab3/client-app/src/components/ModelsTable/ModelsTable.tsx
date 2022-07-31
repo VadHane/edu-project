@@ -1,8 +1,6 @@
 import React, { FunctionComponent } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useTypedSelector } from '../../hooks/useTypedSelector';
 import { Model } from '../../models/Model';
-import { RouteNamesEnum } from '../../types/Route.types';
 import {
     ACTIONS_COLUMN_HEADER,
     ADD_MODEL_BUTTON_TEXT,
@@ -12,19 +10,17 @@ import {
     PREVIEW_COLUMN_HEADER,
     TAGS_COLUNM_HEADER,
 } from './ModelsTable.constants';
+import { ModelTableProps } from './ModelTable.types';
 import TableContentRow from './TableContentRow';
 
-const ModelsTable: FunctionComponent = () => {
-    const navigate = useNavigate();
-
+const ModelsTable: FunctionComponent<ModelTableProps> = ({
+    onAddModelHandler,
+    onEditModelHandler,
+}) => {
     const { models } = useTypedSelector((state) => state.model);
 
-    const onClickButton = () => {
-        navigate(RouteNamesEnum.AddModel);
-    };
-
     const addModelButton: React.ReactNode = (
-        <button onClick={onClickButton}>{ADD_MODEL_BUTTON_TEXT}</button>
+        <button onClick={onAddModelHandler}>{ADD_MODEL_BUTTON_TEXT}</button>
     );
 
     const tableHeadersNode: React.ReactNode = (
@@ -48,7 +44,11 @@ const ModelsTable: FunctionComponent = () => {
                 <tbody>
                     {models.map(
                         (model: Model): JSX.Element => (
-                            <TableContentRow key={model.id} model={model} />
+                            <TableContentRow
+                                key={model.id}
+                                model={model}
+                                onEditModelHandler={onEditModelHandler}
+                            />
                         ),
                     )}
                 </tbody>
