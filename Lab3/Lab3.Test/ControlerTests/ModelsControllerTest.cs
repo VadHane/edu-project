@@ -4,6 +4,7 @@ using NUnit.Framework;
 using Lab3.Models;
 using Lab3.Controllers;
 using Lab3.Interfaces;
+using Lab3.Services;
 
 namespace Lab3.Test.ControlerTests
 {
@@ -38,20 +39,18 @@ namespace Lab3.Test.ControlerTests
         }
 
         [Test]
-        public void Create_InputModel_ShouldCallCreateMethod()
+        public void Create_InputModel_ShouldDontCallCreateMethod()
         {
             var model = new ModelCreateUpdateRequest()
             {
                 Name = "test",
                 Description = "test",
-                CreatedBy = Guid.NewGuid(),
-                UpdatedBy = Guid.NewGuid(),
                 Tags = "[]",
             };
 
             var response = _modelsController.Post(model);
 
-            _modelService.Verify(m => m.Create(It.IsAny<Model>()), Times.Once);
+            _modelService.Verify(m => m.Create(It.IsAny<Model>(), It.IsAny<string>()), Times.Never);
         }
 
         [Test]
@@ -62,14 +61,12 @@ namespace Lab3.Test.ControlerTests
             {
                 Name = "test",
                 Description = "test",
-                CreatedBy = Guid.NewGuid(),
-                UpdatedBy = Guid.NewGuid(),
                 Tags = "[]",
             };
 
             var response = _modelsController.Post(model);
 
-            _modelService.Verify(m => m.Update(randomId, It.IsAny<Model>()), Times.Never);
+            _modelService.Verify(m => m.Update(randomId, It.IsAny<Model>(), It.IsAny<string>()), Times.Never);
             Assert.Null(response.Value);
         }
 
