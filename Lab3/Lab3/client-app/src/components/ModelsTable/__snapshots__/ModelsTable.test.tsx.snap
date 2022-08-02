@@ -1,68 +1,12 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test users table. Snapshot. 1`] = `
+exports[`Test models table. Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
-      <div
-        class="list"
-      >
-        <button>
-          Add new user
-        </button>
-        <table>
-          <thead>
-            <tr>
-              <th
-                class="picture"
-              >
-                Picture
-              </th>
-              <th
-                class="name"
-              >
-                First name
-              </th>
-              <th
-                class="surname"
-              >
-                Last name
-              </th>
-              <th
-                class="email"
-              >
-                Email
-              </th>
-              <th
-                class="roles"
-              >
-                Roles
-              </th>
-              <th
-                class="actions"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="scroll-list"
-        >
-          <table>
-            <tbody />
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="list"
-    >
       <button>
-        Add new user
+        Add new model
       </button>
       <table>
         <thead>
@@ -75,22 +19,22 @@ Object {
             <th
               class="name"
             >
-              First name
+              Name
             </th>
             <th
-              class="surname"
+              class="desctiption"
             >
-              Last name
+              Description
             </th>
             <th
-              class="email"
+              class="tags"
             >
-              Email
+              Tags
             </th>
             <th
-              class="roles"
+              class="last-update"
             >
-              Roles
+              Last Update
             </th>
             <th
               class="actions"
@@ -107,6 +51,54 @@ Object {
           <tbody />
         </table>
       </div>
+    </div>
+  </body>,
+  "container": <div>
+    <button>
+      Add new model
+    </button>
+    <table>
+      <thead>
+        <tr>
+          <th
+            class="picture"
+          >
+            Picture
+          </th>
+          <th
+            class="name"
+          >
+            Name
+          </th>
+          <th
+            class="desctiption"
+          >
+            Description
+          </th>
+          <th
+            class="tags"
+          >
+            Tags
+          </th>
+          <th
+            class="last-update"
+          >
+            Last Update
+          </th>
+          <th
+            class="actions"
+          >
+            Actions
+          </th>
+        </tr>
+      </thead>
+    </table>
+    <div
+      class="scroll-list"
+    >
+      <table>
+        <tbody />
+      </table>
     </div>
   </div>,
   "debug": [Function],

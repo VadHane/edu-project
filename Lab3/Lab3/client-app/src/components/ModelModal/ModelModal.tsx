@@ -118,16 +118,19 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
     }, [inputTagName]);
 
     const onChangeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-        setModel((currentValue) => ({ ...currentValue, name: e.currentTarget.value }));
+        setModel((currentValue) => ({
+            ...currentValue,
+            name: e.target?.value,
+        }));
 
     const onChangeDescriptionHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
         setModel((currentValue) => ({
             ...currentValue,
-            description: e.currentTarget.value,
+            description: e.target?.value,
         }));
 
     const onChangeTagNameHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-        setInputTagName(e.currentTarget.value);
+        setInputTagName(e.target?.value);
 
     const onAddNewTagHandler = () => {
         setIsNewTag(false);

@@ -104,7 +104,7 @@ const LoginModal: FunctionComponent = () => {
                                 className="text_field"
                                 label="Email"
                                 variant="standard"
-                                onChange={(e) => setEmail(e.currentTarget.value)}
+                                onChange={(e) => setEmail(e.target?.value)}
                                 value={email}
                                 error={emailError !== ''}
                                 helperText={emailError}
@@ -115,7 +115,7 @@ const LoginModal: FunctionComponent = () => {
                                 label="Password"
                                 type="password"
                                 autoComplete="current-password"
-                                onChange={(e) => setPassword(e.currentTarget.value)}
+                                onChange={(e) => setPassword(e.target?.value)}
                                 value={password}
                                 error={passwordError !== ''}
                                 helperText={passwordError}

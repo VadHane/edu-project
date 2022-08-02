@@ -1,48 +1,62 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test warning modal window. Snapshot. 1`] = `
+exports[`Test header. Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
       <div
-        class="warning-modal-wrapper"
+        class="MuiBox-root css-i9gxme"
       >
-        <div
-          class="warning-modal-window"
+        <header
+          class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionStatic css-hip9hq-MuiPaper-root-MuiAppBar-root"
         >
-          <span
-            class="warning-modal-message"
+          <div
+            class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-hyum1k-MuiToolbar-root"
           >
-            test message
-          </span>
-          <span
-            class="warning-modal-button"
-          >
-            Ok
-          </span>
-        </div>
+            <div
+              class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root"
+            />
+            <button
+              class="MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-1y942vo-MuiButtonBase-root-MuiButton-root"
+              tabindex="0"
+              type="button"
+            >
+              Login
+              <span
+                class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+              />
+            </button>
+          </div>
+        </header>
       </div>
     </div>
   </body>,
   "container": <div>
     <div
-      class="warning-modal-wrapper"
+      class="MuiBox-root css-i9gxme"
     >
-      <div
-        class="warning-modal-window"
+      <header
+        class="MuiPaper-root MuiPaper-elevation MuiPaper-elevation4 MuiAppBar-root MuiAppBar-colorPrimary MuiAppBar-positionStatic css-hip9hq-MuiPaper-root-MuiAppBar-root"
       >
-        <span
-          class="warning-modal-message"
+        <div
+          class="MuiToolbar-root MuiToolbar-gutters MuiToolbar-regular css-hyum1k-MuiToolbar-root"
         >
-          test message
-        </span>
-        <span
-          class="warning-modal-button"
-        >
-          Ok
-        </span>
-      </div>
+          <div
+            class="MuiTypography-root MuiTypography-h6 css-1juivf6-MuiTypography-root"
+          />
+          <button
+            class="MuiButton-root MuiButton-text MuiButton-textInherit MuiButton-sizeMedium MuiButton-textSizeMedium MuiButton-colorInherit MuiButtonBase-root  css-1y942vo-MuiButtonBase-root-MuiButton-root"
+            tabindex="0"
+            type="button"
+          >
+            Login
+            <span
+              class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+            />
+          </button>
+        </div>
+      </header>
     </div>
   </div>,
   "debug": [Function],

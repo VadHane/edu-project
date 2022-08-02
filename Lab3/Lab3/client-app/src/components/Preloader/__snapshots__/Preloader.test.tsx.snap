@@ -1,112 +1,26 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test users table. Snapshot. 1`] = `
+exports[`Test modal window for login. Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
       <div
-        class="list"
+        class="preloader-background"
       >
-        <button>
-          Add new user
-        </button>
-        <table>
-          <thead>
-            <tr>
-              <th
-                class="picture"
-              >
-                Picture
-              </th>
-              <th
-                class="name"
-              >
-                First name
-              </th>
-              <th
-                class="surname"
-              >
-                Last name
-              </th>
-              <th
-                class="email"
-              >
-                Email
-              </th>
-              <th
-                class="roles"
-              >
-                Roles
-              </th>
-              <th
-                class="actions"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-        </table>
         <div
-          class="scroll-list"
-        >
-          <table>
-            <tbody />
-          </table>
-        </div>
+          class="lds-dual-ring"
+        />
       </div>
     </div>
   </body>,
   "container": <div>
     <div
-      class="list"
+      class="preloader-background"
     >
-      <button>
-        Add new user
-      </button>
-      <table>
-        <thead>
-          <tr>
-            <th
-              class="picture"
-            >
-              Picture
-            </th>
-            <th
-              class="name"
-            >
-              First name
-            </th>
-            <th
-              class="surname"
-            >
-              Last name
-            </th>
-            <th
-              class="email"
-            >
-              Email
-            </th>
-            <th
-              class="roles"
-            >
-              Roles
-            </th>
-            <th
-              class="actions"
-            >
-              Actions
-            </th>
-          </tr>
-        </thead>
-      </table>
       <div
-        class="scroll-list"
-      >
-        <table>
-          <tbody />
-        </table>
-      </div>
+        class="lds-dual-ring"
+      />
     </div>
   </div>,
   "debug": [Function],

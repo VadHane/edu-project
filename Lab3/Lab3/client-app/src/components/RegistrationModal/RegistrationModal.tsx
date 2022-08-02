@@ -73,7 +73,8 @@ const RegistrationModal: FunctionComponent = () => {
     }, []);
 
     useEffect(() => {
-        const availableRolesList = roles.filter((role) => !role.isAdmin);
+        const copyRoles: Role[] = JSON.parse(JSON.stringify(roles));
+        const availableRolesList = copyRoles.filter((role) => !role.isAdmin);
 
         setAvailableRoles(availableRolesList);
     }, [roles]);
@@ -224,7 +225,7 @@ const RegistrationModal: FunctionComponent = () => {
                                 className="text_field"
                                 label="First name"
                                 variant="standard"
-                                onChange={(e) => setFirstName(e.currentTarget.value)}
+                                onChange={(e) => setFirstName(e.target?.value)}
                                 value={firstName}
                                 error={firstNameError !== ''}
                                 helperText={firstNameError}
@@ -234,7 +235,7 @@ const RegistrationModal: FunctionComponent = () => {
                                 className="text_field"
                                 label="Last name"
                                 variant="standard"
-                                onChange={(e) => setLastName(e.currentTarget.value)}
+                                onChange={(e) => setLastName(e.target?.value)}
                                 value={lastName}
                                 error={lastNameError !== ''}
                                 helperText={lastNameError}
@@ -244,7 +245,7 @@ const RegistrationModal: FunctionComponent = () => {
                                 className="text_field"
                                 label="Email"
                                 variant="standard"
-                                onChange={(e) => setEmail(e.currentTarget.value)}
+                                onChange={(e) => setEmail(e.target?.value)}
                                 value={email}
                                 error={emailError !== ''}
                                 helperText={emailError}
@@ -255,7 +256,7 @@ const RegistrationModal: FunctionComponent = () => {
                                 label="Password"
                                 type="password"
                                 autoComplete="current-password"
-                                onChange={(e) => setPassword(e.currentTarget.value)}
+                                onChange={(e) => setPassword(e.target?.value)}
                                 value={password}
                                 error={passwordError !== ''}
                                 helperText={passwordError}

@@ -119,29 +119,29 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
     const onChangeNameHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
         setUser((currentValue) => ({
             ...currentValue,
-            firstName: e.currentTarget.value,
+            firstName: e.target?.value,
         }));
 
     const onChangeSurnameHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
         setUser((currentValue) => ({
             ...currentValue,
-            lastName: e.currentTarget.value,
+            lastName: e.target?.value,
         }));
 
     const onChangeEmailHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
         setUser((currentValue) => ({
             ...currentValue,
-            email: e.currentTarget.value,
+            email: e.target?.value,
         }));
 
     const onChangePasswordHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
         setUser((currentValue) => ({
             ...currentValue,
-            password: e.currentTarget.value,
+            password: e.target?.value,
         }));
 
     const onChangeRoleNameHandler = (e: React.ChangeEvent<HTMLInputElement>) =>
-        setInputRoleName(e.currentTarget.value);
+        setInputRoleName(e.target?.value);
 
     const onAddNewRoleHandler = () => {
         setRoleIsLoading(true);
