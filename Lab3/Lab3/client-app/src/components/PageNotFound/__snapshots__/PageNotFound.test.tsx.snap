@@ -1,112 +1,46 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test users table. Snapshot. 1`] = `
+exports[`Test page not found component. Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
       <div
-        class="list"
+        class="text"
       >
-        <button>
-          Add new user
-        </button>
-        <table>
-          <thead>
-            <tr>
-              <th
-                class="picture"
-              >
-                Picture
-              </th>
-              <th
-                class="name"
-              >
-                First name
-              </th>
-              <th
-                class="surname"
-              >
-                Last name
-              </th>
-              <th
-                class="email"
-              >
-                Email
-              </th>
-              <th
-                class="roles"
-              >
-                Roles
-              </th>
-              <th
-                class="actions"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="scroll-list"
+        <h1>
+          Page not found.
+        </h1>
+        <button
+          class="MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-sxix9q-MuiButtonBase-root-MuiButton-root"
+          tabindex="0"
+          type="button"
         >
-          <table>
-            <tbody />
-          </table>
-        </div>
+          Go to main page
+          <span
+            class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+          />
+        </button>
       </div>
     </div>
   </body>,
   "container": <div>
     <div
-      class="list"
+      class="text"
     >
-      <button>
-        Add new user
-      </button>
-      <table>
-        <thead>
-          <tr>
-            <th
-              class="picture"
-            >
-              Picture
-            </th>
-            <th
-              class="name"
-            >
-              First name
-            </th>
-            <th
-              class="surname"
-            >
-              Last name
-            </th>
-            <th
-              class="email"
-            >
-              Email
-            </th>
-            <th
-              class="roles"
-            >
-              Roles
-            </th>
-            <th
-              class="actions"
-            >
-              Actions
-            </th>
-          </tr>
-        </thead>
-      </table>
-      <div
-        class="scroll-list"
+      <h1>
+        Page not found.
+      </h1>
+      <button
+        class="MuiButton-root MuiButton-outlined MuiButton-outlinedSuccess MuiButton-sizeMedium MuiButton-outlinedSizeMedium MuiButtonBase-root  css-sxix9q-MuiButtonBase-root-MuiButton-root"
+        tabindex="0"
+        type="button"
       >
-        <table>
-          <tbody />
-        </table>
-      </div>
+        Go to main page
+        <span
+          class="MuiTouchRipple-root css-8je8zh-MuiTouchRipple-root"
+        />
+      </button>
     </div>
   </div>,
   "debug": [Function],

@@ -51,7 +51,9 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
 
     const getDataTimeString = (date: Date) => {
         const _date = new Date(date);
-        const resString = `${_date.getDay()}/${_date.getMonth()}/${_date.getFullYear()} ${_date.getHours()}:${_date.getMinutes()}`;
+        const resString = `${_date.getDay()}/${
+            _date.getMonth() + 1
+        }/${_date.getFullYear()} ${_date.getHours()}:${_date.getMinutes()}`;
 
         return resString;
     };

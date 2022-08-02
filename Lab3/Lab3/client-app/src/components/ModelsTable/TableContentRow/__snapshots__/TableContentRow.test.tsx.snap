@@ -1,113 +1,93 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`Test users table. Snapshot. 1`] = `
+exports[`Test tables content row. Snapshot 1`] = `
 Object {
   "asFragment": [Function],
   "baseElement": <body>
     <div>
-      <div
-        class="list"
-      >
-        <button>
-          Add new user
-        </button>
-        <table>
-          <thead>
-            <tr>
-              <th
-                class="picture"
-              >
-                Picture
-              </th>
-              <th
-                class="name"
-              >
-                First name
-              </th>
-              <th
-                class="surname"
-              >
-                Last name
-              </th>
-              <th
-                class="email"
-              >
-                Email
-              </th>
-              <th
-                class="roles"
-              >
-                Roles
-              </th>
-              <th
-                class="actions"
-              >
-                Actions
-              </th>
-            </tr>
-          </thead>
-        </table>
-        <div
-          class="scroll-list"
-        >
-          <table>
-            <tbody />
-          </table>
-        </div>
-      </div>
-    </div>
-  </body>,
-  "container": <div>
-    <div
-      class="list"
-    >
-      <button>
-        Add new user
-      </button>
       <table>
-        <thead>
+        <tbody>
           <tr>
             <th
               class="picture"
             >
-              Picture
+              <img
+                alt="ModelPhoto"
+                src=""
+              />
             </th>
             <th
               class="name"
-            >
-              First name
-            </th>
+            />
             <th
-              class="surname"
-            >
-              Last name
-            </th>
+              class="desctiption"
+            />
             <th
-              class="email"
-            >
-              Email
-            </th>
+              class="tags"
+            />
             <th
-              class="roles"
+              class="last-update"
             >
-              Roles
+              0/11/1995 3:24 by 
             </th>
             <th
               class="actions"
             >
-              Actions
+              <img
+                alt="Edit"
+                src="https://cdn-icons-png.flaticon.com/512/61/61456.png"
+              />
+              <img
+                alt="Remove"
+                src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
+              />
             </th>
           </tr>
-        </thead>
+        </tbody>
       </table>
-      <div
-        class="scroll-list"
-      >
-        <table>
-          <tbody />
-        </table>
-      </div>
     </div>
+  </body>,
+  "container": <div>
+    <table>
+      <tbody>
+        <tr>
+          <th
+            class="picture"
+          >
+            <img
+              alt="ModelPhoto"
+              src=""
+            />
+          </th>
+          <th
+            class="name"
+          />
+          <th
+            class="desctiption"
+          />
+          <th
+            class="tags"
+          />
+          <th
+            class="last-update"
+          >
+            0/11/1995 3:24 by 
+          </th>
+          <th
+            class="actions"
+          >
+            <img
+              alt="Edit"
+              src="https://cdn-icons-png.flaticon.com/512/61/61456.png"
+            />
+            <img
+              alt="Remove"
+              src="https://cdn-icons-png.flaticon.com/512/3096/3096687.png"
+            />
+          </th>
+        </tr>
+      </tbody>
+    </table>
   </div>,
   "debug": [Function],
   "findAllByAltText": [Function],
