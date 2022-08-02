@@ -1,10 +1,9 @@
 import request from 'supertest';
 import express from 'express';
 import cors from 'cors';
-import { CORS_RES_HEADERS } from './../../constants.js';
-import file from './../../routes/fileRoutes.js';
 import path from 'path';
 import { FILE_WAS_NOT_FOUND_TEXT } from './../../constants.js';
+import FileController from '../FileController';
 
 const mockedGetAll = jest.fn();
 const mockedGet = jest.fn();
@@ -28,12 +27,18 @@ const url = '/api/file/';
 
 const app = express();
 
-app.use(
-    cors({
-        origin: CORS_RES_HEADERS['Access-Control-Allow-Origin'],
-    })
-);
-app.use('/api/file', file);
+app.use(cors());
+const controller = new FileController();
+
+app.get('/api/file/', controller.getAllFiles);
+
+app.get('/api/file/:id', controller.getFile);
+
+app.post('/api/file/', controller.createFile);
+
+app.put('/api/file/:id', controller.updateFile);
+
+app.delete('/api/file/:id', controller.deleteFile);
 
 describe('API tests for file controller.', () => {
     test('Get endpoint (~/api/file/) should return all files entity and 200 status code.', async () => {
@@ -52,7 +57,6 @@ describe('API tests for file controller.', () => {
 
         expect(response.status).toEqual(200);
         expect(response.headers['content-type']).toMatch(/json/);
-        expect(response.headers['access-control-allow-origin']).toMatch('*');
         expect(response.body._id).toEqual(expectValue._id);
     });
 
@@ -119,7 +123,7 @@ describe('API tests for file controller.', () => {
 
         const response = await request(app).post(url);
 
-        expect(response.status).toEqual(200);
+        expect(response.status).toEqual(201);
         expect(response.headers['content-type']).toMatch(/json/);
         expect(response.headers['access-control-allow-origin']).toMatch('*');
         expect(response.body._id).toEqual(expectValue._id);
