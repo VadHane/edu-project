@@ -145,6 +145,7 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
 
     const onAddNewRoleHandler = () => {
         setRoleIsLoading(true);
+        setIsNewRole(false);
 
         addNewRole({ id: '', name: inputRoleName, isAdmin: false }, (isDone, error) => {
             setRoleIsLoading(false);
@@ -152,6 +153,8 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
             if (!isDone) {
                 setError(error || UNKNOWN_EXCEPTION);
             }
+
+            setInputRolesList((currentValue) => [...currentValue, inputRoleName]);
         });
     };
 

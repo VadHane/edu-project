@@ -136,6 +136,7 @@ namespace Lab3.Test.ServiceTests
                 LastName = "TestSurname",
                 Email = "testEmail@test.ts",
                 ImageBlobKey = "test",
+                Password = "password",
             };
 
             var createdUserEntity = _userService.Create(testUser, testFile);
@@ -156,6 +157,7 @@ namespace Lab3.Test.ServiceTests
                 LastName = "TestSurname",
                 Email = "testUpdateEmail@test.ts",
                 ImageBlobKey = "test",
+                Password = "password",
             };
 
             var updatedUser = _userService.Update(createdUser.Id, update, testFile);

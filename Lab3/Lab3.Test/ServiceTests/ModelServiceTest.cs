@@ -3,20 +3,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
 using NUnit.Framework;
 using Moq;
 using Lab3.Exceptions;
 using Lab3.Models;
 using Lab3.Services;
-using Lab3.Interfaces;
+
 
 namespace Lab3.Test.ServiceTests
 {
     class ModelServiceTest
     {
         private ModelService _modelService;
-        private Mock<IFileService> _fileService;
         private ModelContext _DBContext;
+        private Mock<IConfiguration> _config;
 
         [SetUp]
         public void Setup()
@@ -30,10 +31,10 @@ namespace Lab3.Test.ServiceTests
 
             env.Setup(m => m.WebRootPath).Returns(envWebRootPath);
 
-            _fileService = new Mock<IFileService>();
+            _config = new Mock<IConfiguration>();
 
             _DBContext = new ModelContext(optionts);
-            _modelService = new ModelService(_DBContext, env.Object);
+            _modelService = new ModelService(_DBContext, env.Object, _config.Object);
         }
 
         private async Task ClearTestDataBase()
@@ -132,50 +133,6 @@ namespace Lab3.Test.ServiceTests
         }
 
         [Test]
-        public void Create_InputModelWithoutFiles_ShouldCreateNewModelEntity()
-        {
-            var testModel = new Model()
-            {
-                Name = "TestName",
-                Description = "TestDescription",
-                Filekey = null,
-                PrevBlobKey = null,
-                CreatedAt = DateTime.Now,
-                CreatedBy = Guid.NewGuid(),
-                UpdatedAt = DateTime.Now,
-                UpdatedBy = Guid.NewGuid(),
-            };
-
-            var createdEntity = _modelService.Create(testModel);
-            var foundEntity = _DBContext.Models.Where(model => model.Id == createdEntity.Id).First();
-
-            Assert.NotNull(createdEntity);
-            Assert.NotNull(foundEntity);
-            Assert.Null(foundEntity.Filekey);
-        }
-
-        [Test]
-        public void Create_InputModelWithoutFiles_ShouldCreateNewModelHistoryRow()
-        {
-            var testModel = new Model()
-            {
-                Name = "TestName",
-                Description = "TestDescription",
-                Filekey = null,
-                PrevBlobKey = null,
-                CreatedAt = DateTime.Now,
-                CreatedBy = Guid.NewGuid(),
-                UpdatedAt = DateTime.Now,
-                UpdatedBy = Guid.NewGuid(),
-            };
-
-            var createdEntity = _modelService.Create(testModel);
-            var foundHistory = _DBContext.ModelHistories.Where(h => h.ModelId == createdEntity.Id).ToList();
-
-            Assert.NotNull(foundHistory.First());
-        }
-
-        [Test]
         public void Update_InputIncorrectId_ShouldThrowException()
         {
             var randomId = Guid.NewGuid();
@@ -191,7 +148,7 @@ namespace Lab3.Test.ServiceTests
                 UpdatedBy = Guid.NewGuid(),
             };
 
-            Assert.Catch<EntityNotFoundException>(() => _modelService.Update(randomId, updateModel));
+            Assert.Catch<EntityNotFoundException>(() => _modelService.Update(randomId, updateModel, " "));
         }
 
         [Test]

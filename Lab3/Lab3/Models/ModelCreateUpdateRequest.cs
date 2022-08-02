@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace Lab3.Models
+﻿namespace Lab3.Models
 {
     public class ModelCreateUpdateRequest
     {
