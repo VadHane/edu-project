@@ -4,7 +4,6 @@ import db from '../../models/File.js';
 import fs from 'fs';
 import path from 'path';
 import {
-    CORS_RES_HEADERS,
     FILE_NOT_IMAGE_EXCEPTION,
     INCORRECT_FILE_EXCEPTION,
     INCORRECT_ID_EXCEPTION,
@@ -173,8 +172,7 @@ describe('Testing async method "create(new file)"', () => {
                 contentEncoding: '7bit',
                 AccessControlAllowMethods: '*',
                 AccessControlAllowHeaders: '*',
-                AccessControlAllowOrigin:
-                    CORS_RES_HEADERS.AccessControlAllowOrigin,
+                AccessControlAllowOrigin: '*',
             },
         });
     });
