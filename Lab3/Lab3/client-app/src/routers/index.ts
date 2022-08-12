@@ -1,13 +1,19 @@
-import { userRouter, modelRouter, defaultRouter, authRoutesRedirect } from './appRoutes';
+import {
+    userRouter,
+    modelRouter,
+    defaultRouter,
+    authRoutesRedirect,
+    modelsBrowser,
+} from './appRoutes';
 import { authRoutes } from './authRoutes';
 import { RouteObject } from 'react-router-dom';
 
 export const publicRoutes: Array<RouteObject> = [...authRoutes, defaultRouter];
 
 export const userRoutes: Array<RouteObject> = [
-    modelRouter,
+    modelsBrowser,
     defaultRouter,
     ...authRoutesRedirect,
 ];
 
-export const adminRoutes: Array<RouteObject> = [userRouter, ...userRoutes];
+export const adminRoutes: Array<RouteObject> = [userRouter, modelRouter, ...userRoutes];

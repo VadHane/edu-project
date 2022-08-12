@@ -7,6 +7,8 @@ export enum RouteNamesEnum {
     AddModel = '/models/add',
     EditModelById = '/models/edit/:id',
 
+    ModelsBrowser = '/models',
+
     Login = '/login',
     Registration = '/registration',
     StartPage = '/',

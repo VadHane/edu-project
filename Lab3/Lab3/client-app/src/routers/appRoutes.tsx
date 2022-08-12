@@ -4,6 +4,7 @@ import UserPage from '../pages/UsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import { Navigate, RouteObject } from 'react-router-dom';
 import ModelsPage from '../pages/ModelsPage';
+import ModelsBrowserPage from '../pages/ModelsBrowserPage';
 
 export const defaultRouter: RouteObject = {
     path: '*',
@@ -19,6 +20,11 @@ export const userRouter: RouteObject = {
 export const modelRouter: RouteObject = {
     path: RouteNamesEnum.Models,
     element: <ModelsPage />,
+};
+
+export const modelsBrowser: RouteObject = {
+    path: RouteNamesEnum.ModelsBrowser,
+    element: <ModelsBrowserPage />,
 };
 
 export const authRoutesRedirect: Array<RouteObject> = [
