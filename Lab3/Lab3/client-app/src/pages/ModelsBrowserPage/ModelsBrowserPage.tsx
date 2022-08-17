@@ -62,8 +62,6 @@ const ModelsBrowserPage: FunctionComponent = () => {
                 setError(error || UNKNOWN_EXCEPTION);
                 return;
             }
-
-            setSelectedModels(models);
         });
     }, []);
 
@@ -85,7 +83,7 @@ const ModelsBrowserPage: FunctionComponent = () => {
 
     useEffect(() => {
         filterModels();
-    }, [selectedTags]);
+    }, [selectedTags, models]);
 
     const onCloseSnackbarHandler = () => {
         setError(undefined);
@@ -142,7 +140,7 @@ const ModelsBrowserPage: FunctionComponent = () => {
     const searchingBox: React.ReactNode = (
         <Grid container spacing={2} sx={{ margin: '30px 30px -20px 30px' }}>
             <Grid item xs={8}>
-                <Typography sx={{ padding: '15px', fontSize: '20px' }}>
+                <Typography sx={{ padding: '15px', fontSize: '20px' }} component={'div'}>
                     Selected tags:{' '}
                     {selectedTags.map((tagName) => (
                         <Chip
