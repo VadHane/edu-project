@@ -1,4 +1,4 @@
-import React, { FunctionComponent, useState } from 'react';
+import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Model } from '../../../models/Model';
 import {
     Box,
@@ -24,6 +24,7 @@ import {
     USER_LABEL,
 } from './BrowsersRow.constants';
 import { collapseTableRowStyles } from './BrowsersRow.styles';
+import { getUserByIdAsync } from '../../../services/userService';
 
 interface BrowsersRowProps {
     model: Model;
@@ -32,9 +33,22 @@ interface BrowsersRowProps {
 const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
     const [open, setOpen] = useState<boolean>(false);
 
+    const [ownerName, setOwnerName] = useState<string>('');
+
+    useEffect(() => {
+        if (!model.createdBy) {
+            return;
+        }
+
+        getUserByIdAsync(model.createdBy).then((user) =>
+            setOwnerName(`${user.firstName} ${user.lastName}`),
+        );
+    });
+
     const onClickPreviewHandler = (preview: string) => {
         return () => {
             console.log('Show pereview');
+            console.log(model.createdAt);
         };
     };
 
@@ -48,11 +62,11 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
         <TableBody>
             {model.modelHistory.map((historyRow) => (
                 <TableRow key={historyRow.id}>
-                    <TableCell component="th" scope="row">
-                        {historyRow.createdAt.toLocaleString()}
+                    <TableCell component="th" scope="row" align="center">
+                        {new Date(historyRow.createdAt).toLocaleString()}
                     </TableCell>
-                    <TableCell>{historyRow.createdBy}</TableCell>
-                    <TableCell align="right">
+                    <TableCell align="center">{ownerName}</TableCell>
+                    <TableCell align="center">
                         <Tooltip title={DOWNLOAD_TITLE} placement="left">
                             <Button onClick={onClickDownloadHandler(historyRow.fileKey)}>
                                 {ACTION_LABELES.DOWNLOAD}
@@ -67,7 +81,7 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
     const collapsibleTable: React.ReactNode = (
         <TableRow>
             <TableCell style={collapseTableRowStyles} colSpan={4}>
-                <Collapse in={open} timeout="auto" unmountOnExit>
+                <Collapse in={open} timeout="auto">
                     <Box sx={{ margin: 1 }}>
                         <Typography
                             variant="h6"
