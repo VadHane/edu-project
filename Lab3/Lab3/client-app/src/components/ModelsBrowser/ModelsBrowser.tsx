@@ -56,9 +56,15 @@ const ModelsBrowser: FunctionComponent<ModelsBrowserProps> = (
 
     const tablesBody: React.ReactNode = (
         <>
-            {models.map((model) => (
-                <BrowsersRow key={model.id} model={model} />
-            ))}
+            {models.length > 0 ? (
+                models.map((model) => <BrowsersRow key={model.id} model={model} />)
+            ) : (
+                <TableRow>
+                    <TableCell align="center" colSpan={4}>
+                        Not Found
+                    </TableCell>
+                </TableRow>
+            )}
         </>
     );
 
