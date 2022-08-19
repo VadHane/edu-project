@@ -22,11 +22,7 @@ import {
     tableHeadTextColor,
 } from './ModelsBrowser.constants';
 import { paperStyles, tableContainerStyles, tableStyles } from './ModelsBrowser.styles';
-
-interface ModelsBrowserProps {
-    models: Array<Model>;
-    isLoading: boolean;
-}
+import { ModelsBrowserProps } from './ModelsBrowser.types';
 
 const ModelsBrowser: FunctionComponent<ModelsBrowserProps> = (
     props: ModelsBrowserProps,

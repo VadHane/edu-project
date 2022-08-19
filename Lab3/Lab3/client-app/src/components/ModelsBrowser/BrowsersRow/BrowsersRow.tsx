@@ -1,5 +1,4 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { Model } from '../../../models/Model';
 import {
     Box,
     Button,
@@ -28,10 +27,7 @@ import { getUserByIdAsync } from '../../../services/userService';
 import { signUrl } from '../../../services/fileService';
 import ModalPhoto from '../../ModalPhoto';
 import { saveAs } from 'file-saver';
-
-interface BrowsersRowProps {
-    model: Model;
-}
+import { BrowsersRowProps } from './BrowsersRow.types';
 
 const fileStorageUrl = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
 

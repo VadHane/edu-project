@@ -1,27 +1,9 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { MODEL_DEFAULT_PICTURE } from './../../App.constants';
-import { Box, IconButton, Modal, SxProps } from '@mui/material';
+import { Box, IconButton, Modal } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-
-interface ModalPhotoProps {
-    open: boolean;
-    urlToPhoto: string;
-    onCloseModal?: () => void;
-}
-
-const modalWindowStyles: SxProps = {
-    display: 'flex',
-    //direction: 'row',
-    justifyContent: 'center',
-    marginTop: '1%',
-};
-
-const modalContentStyle: SxProps = {
-    display: 'flex',
-    justifyContent: 'center',
-    maxWidth: '60vw',
-    maxHeight: '60vh',
-};
+import { modalWindowStyles, modalContentStyle, imgStyles } from './ModalPhoto.styles';
+import { ModalPhotoProps } from './ModalPhoto.types';
 
 const ModalPhoto: FunctionComponent<ModalPhotoProps> = (props) => {
     const [open, setOpen] = useState<boolean>(false);
@@ -43,15 +25,7 @@ const ModalPhoto: FunctionComponent<ModalPhotoProps> = (props) => {
     return (
         <Modal open={open} onClose={onCloseModalHandler} sx={modalWindowStyles}>
             <Box sx={modalContentStyle}>
-                <img
-                    src={url}
-                    onError={onFailedLoadPhoto}
-                    style={{
-                        display: 'block',
-                        maxHeight: '100%',
-                        maxWidth: '100%',
-                    }}
-                />
+                <img src={url} onError={onFailedLoadPhoto} style={imgStyles} />
                 <IconButton onClick={props.onCloseModal}>
                     <CancelIcon />
                 </IconButton>
