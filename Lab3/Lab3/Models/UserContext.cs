@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using Lab3.Services;
 
 namespace Lab3.Models
 {
@@ -13,10 +15,7 @@ namespace Lab3.Models
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-            builder.Entity<Role>().HasData(
-                new Role() { Id = Guid.NewGuid(), Name = "Super Admin", IsAdmin = true },
-                new Role() { Id = Guid.NewGuid(), Name = "Admin", IsAdmin = true }
-            );
+
         }
 
         public object AddAndSave(object entity)
