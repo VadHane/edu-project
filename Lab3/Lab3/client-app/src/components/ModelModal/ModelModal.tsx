@@ -85,7 +85,7 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
             description: '',
             tags: [],
             id: '',
-            fileKey: '',
+            filekey: '',
             prevBlobKey: '',
             createdAt: new Date(),
             createdBy: '',

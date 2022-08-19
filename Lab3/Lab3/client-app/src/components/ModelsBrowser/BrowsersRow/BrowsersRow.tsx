@@ -25,15 +25,23 @@ import {
 } from './BrowsersRow.constants';
 import { collapseTableRowStyles } from './BrowsersRow.styles';
 import { getUserByIdAsync } from '../../../services/userService';
+import { signUrl } from '../../../services/fileService';
+import ModalPhoto from '../../ModalPhoto';
+import { saveAs } from 'file-saver';
 
 interface BrowsersRowProps {
     model: Model;
 }
 
+const fileStorageUrl = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
+
 const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
     const [open, setOpen] = useState<boolean>(false);
 
     const [ownerName, setOwnerName] = useState<string>('');
+
+    const [previewIsOpen, setPreviewIsOpen] = useState<boolean>(false);
+    const [previewUrl, setPreviewUrl] = useState<string>('');
 
     useEffect(() => {
         if (!model.createdBy) {
@@ -45,18 +53,32 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
         );
     });
 
-    const onClickPreviewHandler = (preview: string) => {
-        return () => {
-            console.log('Show pereview');
-            console.log(model.createdAt);
-        };
+    const onClickPreviewHandler = (previewUrl: string) => () => {
+        const photoUrl = `${fileStorageUrl}${previewUrl}`;
+
+        signUrl(photoUrl)
+            .then((signedUrl) => {
+                setPreviewUrl(signedUrl);
+            })
+            .then(() => {
+                setPreviewIsOpen(true);
+            });
     };
 
-    const onClickDownloadHandler = (file: string) => {
-        return () => {
-            console.log('Download model file');
-        };
+    const onClosePreviewModalHandler = () => {
+        setPreviewIsOpen(false);
     };
+
+    const onClickDownloadHandler =
+        (file: string, modelName: string, index: number) => () => {
+            const fileUrl = `${fileStorageUrl}${file}`;
+
+            signUrl(fileUrl).then((signedUrl) => {
+                const fileName = `${modelName}_v${index}.cad`; //! It is solution only for .cad files!
+
+                saveAs(signedUrl, fileName);
+            });
+        };
 
     const collapsibleTableBody: React.ReactNode = (
         <TableBody>
@@ -68,7 +90,13 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
                     <TableCell align="center">{ownerName}</TableCell>
                     <TableCell align="center">
                         <Tooltip title={DOWNLOAD_TITLE} placement="left">
-                            <Button onClick={onClickDownloadHandler(historyRow.fileKey)}>
+                            <Button
+                                onClick={onClickDownloadHandler(
+                                    historyRow.fileKey,
+                                    model.name,
+                                    new Date(historyRow.createdAt).getMilliseconds(),
+                                )}
+                            >
                                 {ACTION_LABELES.DOWNLOAD}
                             </Button>
                         </Tooltip>
@@ -108,6 +136,14 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
         </TableRow>
     );
 
+    const previewModal: React.ReactNode = (
+        <ModalPhoto
+            open={previewIsOpen}
+            urlToPhoto={previewUrl}
+            onCloseModal={onClosePreviewModalHandler}
+        />
+    );
+
     return (
         <React.Fragment>
             <TableRow>
@@ -132,7 +168,13 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
                     </Tooltip>
 
                     <Tooltip title={DOWNLOAD_TITLE} placement="right">
-                        <Button onClick={onClickDownloadHandler(model.fileKey)}>
+                        <Button
+                            onClick={onClickDownloadHandler(
+                                model.filekey,
+                                model.name,
+                                new Date(model.updatedAt).getMilliseconds(),
+                            )}
+                        >
                             {ACTION_LABELES.DOWNLOAD}
                         </Button>
                     </Tooltip>
@@ -140,6 +182,7 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
             </TableRow>
 
             {collapsibleTable}
+            {previewModal}
         </React.Fragment>
     );
 };
