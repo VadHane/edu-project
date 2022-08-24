@@ -11,7 +11,7 @@ jest.mock('./../../../hooks/useModelActions', () => ({
 const emptyModel: Model = {
     id: '',
     name: '',
-    fileKey: '',
+    filekey: '',
     prevBlobKey: '',
     description: '',
     createdAt: new Date('1995-12-17T03:24:00'),
