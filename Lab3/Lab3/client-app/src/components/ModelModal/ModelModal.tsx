@@ -287,7 +287,7 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
         <>
             <Stack sx={contentStyle} direction="column" alignItems="center" spacing={2}>
                 <TextField
-                    id="standard-basic"
+                    id="standard-basic-name"
                     className="text_field"
                     label="Model name"
                     variant="standard"
@@ -297,7 +297,7 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
                     margin="dense"
                 />
                 <TextField
-                    id="standard-basic"
+                    id="standard-basic-description"
                     className="text_field"
                     label="Model description"
                     variant="standard"

@@ -1,11 +1,11 @@
 import React, { FunctionComponent, useEffect, useState } from 'react';
-import { MODEL_DEFAULT_PICTURE } from './../../App.constants';
+import { MODEL_DEFAULT_PICTURE } from '../../App.constants';
 import { Box, IconButton, Modal } from '@mui/material';
 import CancelIcon from '@mui/icons-material/Cancel';
-import { modalWindowStyles, modalContentStyle, imgStyles } from './ModalPhoto.styles';
-import { ModalPhotoProps } from './ModalPhoto.types';
+import { modalWindowStyles, modalContentStyle, imgStyles } from './ModalImage.styles';
+import { ModalImageProps } from './ModalImage.types';
 
-const ModalPhoto: FunctionComponent<ModalPhotoProps> = (props) => {
+const ModalImage: FunctionComponent<ModalImageProps> = (props) => {
     const [open, setOpen] = useState<boolean>(false);
     const [url, setUrl] = useState<string>('');
 
@@ -34,4 +34,4 @@ const ModalPhoto: FunctionComponent<ModalPhotoProps> = (props) => {
     );
 };
 
-export default ModalPhoto;
+export default ModalImage;

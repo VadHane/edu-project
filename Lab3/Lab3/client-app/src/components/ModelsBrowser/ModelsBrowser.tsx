@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Model } from '../../models/Model';
-import BrowsersRow from './BrowsersRow/BrowsersRow';
+import BrowsersRow from './BrowsersRow';
 import {
     MODEL_NAME_LABEL,
     DESCRIPTION_LABEL,

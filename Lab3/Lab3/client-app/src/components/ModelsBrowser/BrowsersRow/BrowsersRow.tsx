@@ -25,7 +25,7 @@ import {
 import { collapseTableRowStyles } from './BrowsersRow.styles';
 import { getUserByIdAsync } from '../../../services/userService';
 import { signUrl } from '../../../services/fileService';
-import ModalPhoto from '../../ModalPhoto';
+import ModalPhoto from '../../ModalImage';
 import { saveAs } from 'file-saver';
 import { BrowsersRowProps } from './BrowsersRow.types';
 
