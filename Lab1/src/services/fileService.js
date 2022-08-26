@@ -104,7 +104,13 @@ export default class FileService {
     #generateFilePath(fileName) {
         const fileExtension = path.extname(fileName);
         const _fileName = Date.now() + fileExtension;
-        return path.resolve('src', 'static', _fileName);
+        const pathToStaticFolder = path.resolve('src', 'static');
+
+        if (!fs.existsSync(pathToStaticFolder)) {
+            fs.mkdirSync(pathToStaticFolder);
+        }
+
+        return path.resolve(pathToStaticFolder, _fileName);
     }
 
     /**

@@ -17,10 +17,5 @@
         "jsx": "react-jsx",
         "types": ["node", "jest"]
     },
-    "include": [
-        "build.js",
-        "**/*.ts",
-        "src/components/PageNotFound/PageNotFound.tsx",
-        "webpack.config.js"
-    ]
+    "include": ["**/*.ts"]
 }

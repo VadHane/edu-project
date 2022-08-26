@@ -12,7 +12,7 @@ import {
 } from '@mui/material';
 import React, { FunctionComponent, useEffect, useState } from 'react';
 import { Model } from '../../models/Model';
-import BrowsersRow from './BrowsersRow/BrowsersRow';
+import BrowsersRow from './BrowsersRow';
 import {
     MODEL_NAME_LABEL,
     DESCRIPTION_LABEL,
@@ -22,11 +22,7 @@ import {
     tableHeadTextColor,
 } from './ModelsBrowser.constants';
 import { paperStyles, tableContainerStyles, tableStyles } from './ModelsBrowser.styles';
-
-interface ModelsBrowserProps {
-    models: Array<Model>;
-    isLoading: boolean;
-}
+import { ModelsBrowserProps } from './ModelsBrowser.types';
 
 const ModelsBrowser: FunctionComponent<ModelsBrowserProps> = (
     props: ModelsBrowserProps,

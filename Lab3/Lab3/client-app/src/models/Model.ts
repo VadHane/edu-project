@@ -4,7 +4,7 @@ import { Tag } from './Tag';
 export interface Model {
     id: string;
     name: string;
-    fileKey: string;
+    filekey: string;
     prevBlobKey: string;
     description: string;
     createdAt: Date;
