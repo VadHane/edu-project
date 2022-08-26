@@ -35,8 +35,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-aqpgxn-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="standard-basic"
-              id="standard-basic-label"
+              for="standard-basic-name"
+              id="standard-basic-name-label"
             >
               Model name
             </label>
@@ -46,7 +46,7 @@ Object {
               <input
                 aria-invalid="false"
                 class="MuiInput-input MuiInputBase-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                id="standard-basic"
+                id="standard-basic-name"
                 type="text"
                 value=""
               />
@@ -58,8 +58,8 @@ Object {
             <label
               class="MuiInputLabel-root MuiInputLabel-formControl MuiInputLabel-animated MuiInputLabel-standard MuiFormLabel-root MuiFormLabel-colorPrimary css-aqpgxn-MuiFormLabel-root-MuiInputLabel-root"
               data-shrink="false"
-              for="standard-basic"
-              id="standard-basic-label"
+              for="standard-basic-description"
+              id="standard-basic-description-label"
             >
               Model description
             </label>
@@ -69,7 +69,7 @@ Object {
               <input
                 aria-invalid="false"
                 class="MuiInput-input MuiInputBase-input css-1x51dt5-MuiInputBase-input-MuiInput-input"
-                id="standard-basic"
+                id="standard-basic-description"
                 type="text"
                 value=""
               />
