@@ -310,13 +310,13 @@ const ModelModal: FunctionComponent<ModelModalProps> = (props: ModelModalProps) 
                 {tagsIsLoading ? preloaderNode : tagsList}
 
                 <Button variant="contained" component="label" size="small">
-                    Upload your photo
+                    Upload image of model
                     <input hidden accept="image/*" type="file" ref={preview} />
                 </Button>
 
                 <Button variant="contained" component="label" size="small">
-                    Upload your CAD file
-                    <input hidden accept=".cad" type="file" ref={file} />
+                    Upload .obj file
+                    <input hidden accept=".obj" type="file" ref={file} />
                 </Button>
             </Stack>
             <Stack

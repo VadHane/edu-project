@@ -3,6 +3,11 @@ import React from 'react';
 import { Model } from '../../../models/Model';
 import TableContentRow from './TableContentRow';
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: jest.fn(),
+}));
+
 jest.mock('./../../../hooks/useModelActions', () => ({
     ...jest.requireActual('./../../../hooks/useModelActions'),
     useModelActions: () => ({ deleteModel: jest.fn() }),

@@ -12,4 +12,4 @@ export enum LocalStorageFields {
     REFRESH_TOKEN = 'REFRESH_TOKEN',
 }
 
-export const ModelsFileExtensions = ['cad'];
+export const ModelsFileExtensions = ['obj'];

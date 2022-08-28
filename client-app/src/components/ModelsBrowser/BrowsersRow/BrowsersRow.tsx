@@ -70,7 +70,7 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
             const fileUrl = `${fileStorageUrl}${file}`;
 
             signUrl(fileUrl).then((signedUrl) => {
-                const fileName = `${modelName}_v${index}.cad`; //! It is solution only for .cad files!
+                const fileName = `${modelName}_v${index}.obj`; //! It is solution only for .obj files!
 
                 saveAs(signedUrl, fileName);
             });

@@ -8,11 +8,17 @@ import { User } from '../../../models/User';
 import { DEFAULT_OWNER_NAME } from './TableContentRow.constants';
 import { Tag } from '../../../models/Tag';
 import { signUrl } from './../../../services/fileService';
+import RemoveRedEyeIcon from '@mui/icons-material/RemoveRedEye';
 import './TableContentRow.css';
+import { IconButton } from '@mui/material';
+import { useNavigate } from 'react-router-dom';
+import { RouteNamesEnum } from '../../../types/Route.types';
 
 const TableContentRow: FunctionComponent<TableContentRowProps> = (
     props: TableContentRowProps,
 ) => {
+    const navigate = useNavigate();
+
     const [model, setModel] = useState<Model>(props.model);
     const [previewUrl, setPreviewUrl] = useState<string>('');
     const [updaterName, setUpdaterName] = useState<string>('');
@@ -86,6 +92,13 @@ const TableContentRow: FunctionComponent<TableContentRowProps> = (
                     alt={REMOVE_IMAGE.ALT}
                     onClick={onDeleteHandler}
                 />
+                <IconButton
+                    onClick={() =>
+                        navigate(`${RouteNamesEnum.ModelViewerForNavigate}${model.id}`)
+                    }
+                >
+                    <RemoveRedEyeIcon />
+                </IconButton>
             </th>
         </tr>
     );

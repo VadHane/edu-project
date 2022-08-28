@@ -5,10 +5,17 @@ import NotFoundPage from '../pages/NotFoundPage';
 import { Navigate, RouteObject } from 'react-router-dom';
 import ModelsPage from '../pages/ModelsPage';
 import ModelsBrowserPage from '../pages/ModelsBrowserPage';
+import ModelsViewerPage from '../pages/ModelsViewerPage';
 
 export const defaultRouter: RouteObject = {
     path: '*',
     index: false,
+    element: <NotFoundPage />,
+};
+
+export const pageNotFound: RouteObject = {
+    path: RouteNamesEnum.PageNotFound,
+    index: true,
     element: <NotFoundPage />,
 };
 
@@ -25,6 +32,11 @@ export const modelRouter: RouteObject = {
 export const modelsBrowser: RouteObject = {
     path: RouteNamesEnum.ModelsBrowser,
     element: <ModelsBrowserPage />,
+};
+
+export const modelViewer: RouteObject = {
+    path: RouteNamesEnum.ModelViewer,
+    element: <ModelsViewerPage />,
 };
 
 export const authRoutesRedirect: Array<RouteObject> = [

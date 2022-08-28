@@ -17,6 +17,13 @@ export const signUrl = async (url: string): Promise<string> => {
     return signedUrl;
 };
 
+export const getFile = async (fileKey: string) => {
+    const fileUrl = `${url}${fileKey}`;
+    const signedUrl = await signUrl(fileUrl);
+
+    return fetch(signedUrl).then((res) => res.body);
+};
+
 export const uploadFile = async (file: File): Promise<string> => {
     const signedUrl = await signUrl(url);
     const formData = new FormData();

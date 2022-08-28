@@ -18,4 +18,4 @@ export const ALLOWED_IMAGE_EXTENSIONS = ['.png', '.jpeg', '.jpg'];
 /**
  * Array of allowed ***CAD File*** extensions.
  */
-export const ALLOWED_FILE_EXTENSIONS = ['.cad'];
+export const ALLOWED_FILE_EXTENSIONS = ['.obj'];
