@@ -1,5 +1,5 @@
 export const viewerContainerStyles: React.CSSProperties = {
-    height: '80vh',
+    height: '90vh',
     width: '100vw',
     position: 'absolute',
     display: 'flex',
