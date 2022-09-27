@@ -21,6 +21,7 @@ import {
     COLLAPSE_ROW_HEADER_LABEL,
     DATE_LABEL,
     USER_LABEL,
+    PREVIEW3D_TITLE,
 } from './BrowsersRow.constants';
 import { collapseTableRowStyles } from './BrowsersRow.styles';
 import { getUserByIdAsync } from '../../../services/userService';
@@ -28,6 +29,8 @@ import { signUrl } from '../../../services/fileService';
 import ModalPhoto from '../../ModalImage';
 import { saveAs } from 'file-saver';
 import { BrowsersRowProps } from './BrowsersRow.types';
+import { RouteNamesEnum } from '../../../types/Route.types';
+import { useNavigate } from 'react-router-dom';
 
 const fileStorageUrl = `${process.env.REACT_APP_FILE_STORAGE_URL}/api/file/`;
 
@@ -38,6 +41,8 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
 
     const [previewIsOpen, setPreviewIsOpen] = useState<boolean>(false);
     const [previewUrl, setPreviewUrl] = useState<string>('');
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         if (!model.createdBy) {
@@ -172,6 +177,18 @@ const BrowsersRow: FunctionComponent<BrowsersRowProps> = ({ model }) => {
                             )}
                         >
                             {ACTION_LABELES.DOWNLOAD}
+                        </Button>
+                    </Tooltip>
+
+                    <Tooltip title={PREVIEW3D_TITLE} placement="right-end">
+                        <Button
+                            onClick={() =>
+                                navigate(
+                                    `${RouteNamesEnum.ModelViewerForNavigate}${model.id}`,
+                                )
+                            }
+                        >
+                            {ACTION_LABELES.PREVIEW_3D}
                         </Button>
                     </Tooltip>
                 </TableCell>

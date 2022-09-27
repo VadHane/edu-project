@@ -6,16 +6,7 @@ import { viewerContainerStyles, progressStyles } from './ModelsViewer.styles';
 import { ModelsViewerProps } from './ModelsViewer.types';
 import { Button, ButtonGroup } from '@mui/material';
 import { loadOBJModel } from '../../utils/OBJLoader';
-import {
-    BACK_POSITION,
-    BOTTOM_POSITION,
-    DEFAULT_POSITION,
-    FRONT_POSITION,
-    LEFT_POSITION,
-    RIGHT_POSITION,
-    TOP_POSITION,
-} from './ModelsViewer.constants';
-import { Mesh } from 'three';
+import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
 
 const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
     const refContainer = useRef<HTMLDivElement>(null);
@@ -23,6 +14,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
     const [renderer, setRenderer] = useState<THREE.WebGLRenderer>();
     const [scene, setScene] = useState<THREE.Scene>();
     const [showTriad, setShowTriad] = useState<boolean>(false);
+    const [isSliced, setIsSliced] = useState<boolean>(false);
 
     const [controls, setControls] = useState<OrbitControls>();
 
@@ -49,8 +41,12 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
             const scene = new THREE.Scene();
             setScene(scene);
 
-            const camera = new THREE.PerspectiveCamera(75, scW / scH, 0.1, 1000);
-            const target = new THREE.Vector3(0, 0, 0);
+            const camera = new THREE.PerspectiveCamera(
+                75,
+                window.innerWidth / window.innerHeight,
+                0.1,
+                1000,
+            );
             const ambientLight = new THREE.AmbientLight(0xcccccc, 1);
             scene.add(ambientLight);
 
@@ -75,7 +71,6 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                 );
                 setControls(controls);
 
-                controls.setCameraPosition();
                 animate();
                 setLoading(false);
             });
@@ -83,8 +78,6 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
             let req = 0;
             const animate = () => {
                 req = requestAnimationFrame(animate);
-
-                camera.lookAt(target);
 
                 renderer.render(scene, camera);
             };
@@ -114,43 +107,306 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
             return;
         }
 
-        const localPlane = new THREE.Plane(new THREE.Vector3(1, 1, 0), 0);
-        const planeNormalX = localPlane.normal.x;
-        const planeNormalY = localPlane.normal.y;
-        const planeNormalZ = localPlane.normal.z;
-        const constant = localPlane.constant;
+        if (isSliced) {
+            const localPlane = new THREE.Plane(new THREE.Vector3(1, 1, 0), 0.5);
+            const copyModel = model.clone(true);
+            scene.remove(model);
 
-        console.log(model);
-        console.log(model?.children[0].type);
-        console.log(model?.children[0].geometry);
-    });
+            const group = new THREE.Group();
+
+            copyModel?.children.forEach((child) => {
+                if ((child as THREE.Mesh).isMesh) {
+                    const geometry = mergeVertices((child as THREE.Mesh).geometry);
+
+                    const vertices = geometry.getAttribute('position').array;
+
+                    const needToUpdate = () => {
+                        for (let i = 0; i < vertices.length; i += 3) {
+                            if (
+                                localPlane.distanceToPoint(
+                                    new THREE.Vector3(
+                                        vertices[i],
+                                        vertices[i + 1],
+                                        vertices[i + 2],
+                                    ),
+                                ) < 0
+                            ) {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    };
+
+                    if (needToUpdate()) {
+                        const normals = geometry.getAttribute('normal').array;
+                        const indices = geometry.getIndex()?.array || [];
+
+                        const updVertices: number[] = [];
+                        const updNormals: number[] = [];
+                        const updIndices: number[] = [];
+
+                        const addVertices = (
+                            v: THREE.Vector3,
+                            normals: THREE.Vector3,
+                        ) => {
+                            updVertices.push(v.x, v.y, v.z);
+                            updNormals.push(normals.x, normals.y, normals.z);
+
+                            return (updVertices.length - 3) / 3;
+                        };
+
+                        for (let i = 0; i < indices.length; i += 3) {
+                            const points = [
+                                new THREE.Vector3(
+                                    vertices[indices[i] * 3],
+                                    vertices[indices[i] * 3 + 1],
+                                    vertices[indices[i] * 3 + 2],
+                                ),
+                                new THREE.Vector3(
+                                    vertices[indices[i + 1] * 3],
+                                    vertices[indices[i + 1] * 3 + 1],
+                                    vertices[indices[i + 1] * 3 + 2],
+                                ),
+                                new THREE.Vector3(
+                                    vertices[indices[i + 2] * 3],
+                                    vertices[indices[i + 2] * 3 + 1],
+                                    vertices[indices[i + 2] * 3 + 2],
+                                ),
+                            ];
+
+                            const distances = points
+                                .map((point) => {
+                                    return localPlane.distanceToPoint(point);
+                                })
+                                .filter((n) => n > 0);
+
+                            const way = distances.filter((n) => n >= 0).length;
+
+                            if (way === 3) {
+                                updIndices.push(
+                                    addVertices(
+                                        points[0],
+                                        new THREE.Vector3(
+                                            normals[indices[i] * 3],
+                                            normals[indices[i] * 3 + 1],
+                                            normals[indices[i] * 3 + 2],
+                                        ),
+                                    ),
+                                    addVertices(
+                                        points[1],
+                                        new THREE.Vector3(
+                                            normals[indices[i + 1] * 3],
+                                            normals[indices[i + 1] * 3 + 1],
+                                            normals[indices[i + 1] * 3 + 2],
+                                        ),
+                                    ),
+                                    addVertices(
+                                        points[2],
+                                        new THREE.Vector3(
+                                            normals[indices[i + 2] * 3],
+                                            normals[indices[i + 2] * 3 + 1],
+                                            normals[indices[i + 2] * 3 + 2],
+                                        ),
+                                    ),
+                                );
+                            } else if (way === 2) {
+                                const deleteElem = points.filter(
+                                    (p) => localPlane.distanceToPoint(p) < 0,
+                                )[0];
+                                const [first, second] = points.filter(
+                                    (p) => !p.equals(deleteElem),
+                                );
+                                const firstPoint = new THREE.Vector3();
+                                const secondPoint = new THREE.Vector3();
+                                localPlane.intersectLine(
+                                    new THREE.Line3(first, deleteElem),
+                                    firstPoint,
+                                );
+                                localPlane.intersectLine(
+                                    new THREE.Line3(second, deleteElem),
+                                    secondPoint,
+                                );
+
+                                const v1 = new THREE.Vector3(
+                                    second.x - secondPoint.x,
+                                    second.y - secondPoint.y,
+                                    second.z - secondPoint.z,
+                                ).normalize();
+                                const v2 = new THREE.Vector3(
+                                    second.x - first.x,
+                                    second.y - first.y,
+                                    second.z - first.z,
+                                ).normalize();
+                                const _normal = v1.cross(v2);
+
+                                const indexOfFirstOld = addVertices(first, _normal);
+                                const indexOfSecondOld = addVertices(second, _normal);
+                                const indexOfFirstNew = addVertices(firstPoint, _normal);
+                                const indexOfSecondNew = addVertices(
+                                    secondPoint,
+                                    _normal,
+                                );
+
+                                const dotProduct = _normal.dot(
+                                    new THREE.Vector3(0, 0, -1).sub(first),
+                                );
+
+                                if (dotProduct >= 0) {
+                                    updIndices.push(
+                                        indexOfFirstOld,
+                                        indexOfFirstNew,
+                                        indexOfSecondOld,
+                                    );
+                                    updIndices.push(
+                                        indexOfFirstNew,
+                                        indexOfSecondNew,
+                                        indexOfSecondOld,
+                                    );
+                                } else {
+                                    updIndices.push(
+                                        indexOfFirstOld,
+                                        indexOfSecondOld,
+                                        indexOfFirstNew,
+                                    );
+                                    updIndices.push(
+                                        indexOfFirstNew,
+                                        indexOfSecondOld,
+                                        indexOfSecondNew,
+                                    );
+                                }
+                            } else if (way === 1) {
+                                const first = points.filter(
+                                    (p) => localPlane.distanceToPoint(p) >= 0,
+                                )[0];
+                                const [firstDel, secondDel] = points.filter(
+                                    (p) => !p.equals(first),
+                                );
+                                const firstPoint = new THREE.Vector3();
+                                const secondPoint = new THREE.Vector3();
+                                localPlane.intersectLine(
+                                    new THREE.Line3(firstDel, first),
+                                    firstPoint,
+                                );
+                                localPlane.intersectLine(
+                                    new THREE.Line3(secondDel, first),
+                                    secondPoint,
+                                );
+
+                                const v1 = new THREE.Vector3(
+                                    first.x - secondPoint.x,
+                                    first.y - secondPoint.y,
+                                    first.z - secondPoint.z,
+                                ).normalize();
+                                const v2 = new THREE.Vector3(
+                                    first.x - firstPoint.x,
+                                    first.y - firstPoint.y,
+                                    first.z - firstPoint.z,
+                                ).normalize();
+                                const _normal = v1.cross(v2);
+
+                                const indexOfFirstOld = addVertices(first, _normal);
+                                const indexOfFirstNew = addVertices(firstPoint, _normal);
+                                const indexOfSecondNew = addVertices(
+                                    secondPoint,
+                                    _normal,
+                                );
+
+                                const dotProduct = _normal.dot(
+                                    new THREE.Vector3(0, 0, -1).sub(first),
+                                );
+                                if (dotProduct >= 0) {
+                                    updIndices.push(
+                                        indexOfFirstNew,
+                                        indexOfSecondNew,
+                                        indexOfFirstOld,
+                                    );
+                                } else {
+                                    updIndices.push(
+                                        indexOfFirstNew,
+                                        indexOfFirstOld,
+                                        indexOfSecondNew,
+                                    );
+                                }
+                            }
+                        }
+
+                        geometry.setAttribute(
+                            'position',
+                            new THREE.BufferAttribute(new Float32Array(updVertices), 3),
+                        );
+                        geometry.setAttribute(
+                            'normal',
+                            new THREE.Float32BufferAttribute(normals, 3),
+                        );
+                        geometry.setAttribute(
+                            'uv',
+                            new THREE.Float32BufferAttribute([], 2),
+                        );
+                        geometry.setIndex(updIndices);
+                    }
+
+                    group.add(
+                        new THREE.Mesh(
+                            geometry,
+                            new THREE.MeshBasicMaterial({ color: 'black' }),
+                        ),
+                    );
+                }
+            });
+
+            scene.add(group);
+        } else {
+            scene.children.forEach((child) => {
+                if ((child as THREE.Group).isGroup) {
+                    scene.remove(child);
+                }
+            });
+
+            scene.add(model);
+        }
+    }, [isSliced]);
 
     const onClickFrontHandler = () => {
-        controls?.setCustomAngles(FRONT_POSITION.x, FRONT_POSITION.y);
+        const axis = new THREE.Vector3(0, 0, 0);
+        const angle = 0;
+
+        controls?.setCameraPosition(axis, angle);
     };
 
     const onClickBackHandler = () => {
-        controls?.setCustomAngles(BACK_POSITION.x, BACK_POSITION.y);
+        const axis = new THREE.Vector3(0, 1, 0);
+        const angle = Math.PI;
+
+        controls?.setCameraPosition(axis, angle);
     };
 
     const onClickLeftHandler = () => {
-        controls?.setCustomAngles(LEFT_POSITION.x, LEFT_POSITION.y);
+        const axis = new THREE.Vector3(0, 1, 0);
+        const angle = -Math.PI / 2;
+
+        controls?.setCameraPosition(axis, angle);
     };
 
     const onClickRightHandler = () => {
-        controls?.setCustomAngles(RIGHT_POSITION.x, RIGHT_POSITION.y);
+        const axis = new THREE.Vector3(0, 1, 0);
+        const angle = Math.PI / 2;
+
+        controls?.setCameraPosition(axis, angle);
     };
 
     const onClickTopHandler = () => {
-        controls?.setCustomAngles(TOP_POSITION.x, TOP_POSITION.y);
+        const axis = new THREE.Vector3(1, 0, 0);
+        const angle = -Math.PI / 2;
+
+        controls?.setCameraPosition(axis, angle);
     };
 
     const onClickBottomHandler = () => {
-        controls?.setCustomAngles(BOTTOM_POSITION.x, BOTTOM_POSITION.y);
-    };
+        const axis = new THREE.Vector3(1, 0, 0);
+        const angle = Math.PI / 2;
 
-    const onClickDefaultHandler = () => {
-        controls?.setCustomAngles(DEFAULT_POSITION.x, DEFAULT_POSITION.y);
+        controls?.setCameraPosition(axis, angle);
     };
 
     return (
@@ -177,11 +433,15 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                 <Button onClick={onClickRightHandler}>Right</Button>
                 <Button onClick={onClickTopHandler}>Top</Button>
                 <Button onClick={onClickBottomHandler}>Bottom</Button>
-                <Button onClick={onClickDefaultHandler}>Default</Button>
             </ButtonGroup>
             <ButtonGroup variant="outlined" aria-label="outlined button group">
-                <Button onClick={() => setShowTriad((c) => !c)}>
+                <Button onClick={() => setShowTriad((c) => !c)} disabled={isSliced}>
                     Edit mode: {showTriad ? 'On' : 'Off'}
+                </Button>
+            </ButtonGroup>
+            <ButtonGroup variant="outlined" aria-label="outlined button group">
+                <Button onClick={() => setIsSliced((c) => !c)} disabled={showTriad}>
+                    Slice model: {isSliced ? 'On' : 'Off'}
                 </Button>
             </ButtonGroup>
         </>

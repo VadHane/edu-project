@@ -45,6 +45,11 @@ jest.mock('../../ModalImage', () => ({
     default: () => <></>,
 }));
 
+jest.mock('react-router-dom', () => ({
+    ...jest.requireActual('react-router-dom'),
+    useNavigate: jest.fn(),
+}));
+
 describe('Test row of models browser.', () => {
     test('Snapshot', () => {
         const utils = render(

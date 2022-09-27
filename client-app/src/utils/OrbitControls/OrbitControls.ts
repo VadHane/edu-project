@@ -1,5 +1,13 @@
 import * as THREE from 'three';
 import {
+    ArrowHelper,
+    Vector3,
+    BufferGeometry,
+    EllipseCurve,
+    Line,
+    LineBasicMaterial,
+} from 'three';
+import {
     DEFAULT_ANGLE_X,
     DEFAULT_ANGLE_Y,
     INITIAL_CAMERA_POSITION,
@@ -7,41 +15,42 @@ import {
     ZOOM_STEP_DECREMENT,
     ZOOM_STEP_INCREMENT,
 } from './OrbitControls.constants';
-import {
-    arrowX,
-    arrowY,
-    arrowZ,
-    ellipseX,
-    ellipseY,
-    ellipseZ,
-} from './OrbitControls.units';
 
-const rotate = (angleX: number, angleY: number) => {
-    const matrix = [
-        [Math.cos(angleX), 0, Math.sin(angleX)],
-        [
-            -Math.sin(angleX) * -Math.sin(angleY),
-            Math.cos(angleY),
-            -Math.sin(angleY) * Math.cos(angleX),
-        ],
-        [
-            Math.cos(angleY) * -Math.sin(angleX),
-            Math.sin(angleY),
-            Math.cos(angleX) * Math.cos(angleY),
-        ],
-    ];
+const getDefaultCameraDistance = (model: THREE.Group) => {
+    const maxX = new THREE.Vector3();
+    const maxY = new THREE.Vector3();
+    const maxZ = new THREE.Vector3();
 
-    return new THREE.Vector3(
-        INITIAL_CAMERA_POSITION.x * matrix[0][0] +
-            INITIAL_CAMERA_POSITION.y * matrix[1][0] +
-            INITIAL_CAMERA_POSITION.z * matrix[2][0],
-        INITIAL_CAMERA_POSITION.x * matrix[0][1] +
-            INITIAL_CAMERA_POSITION.y * matrix[1][1] +
-            INITIAL_CAMERA_POSITION.z * matrix[2][1],
-        INITIAL_CAMERA_POSITION.x * matrix[0][2] +
-            INITIAL_CAMERA_POSITION.y * matrix[1][2] +
-            INITIAL_CAMERA_POSITION.z * matrix[2][2],
-    );
+    model.children.forEach((child) => {
+        const points = (child as THREE.Mesh).geometry.getAttribute('position').array;
+        const len = points.length;
+
+        for (let index = 0; index < len; index += 3) {
+            if (points[index] > maxX.x) {
+                maxX.x = points[index];
+                maxX.y = points[index + 1];
+                maxX.z = points[index + 2];
+            }
+
+            if (points[index + 1] > maxY.y) {
+                maxY.x = points[index];
+                maxY.y = points[index + 1];
+                maxY.z = points[index + 2];
+            }
+
+            if (points[index + 2] > maxZ.z) {
+                maxZ.x = points[index];
+                maxZ.y = points[index + 1];
+                maxZ.z = points[index + 2];
+            }
+        }
+    });
+
+    const distanceX = maxX.distanceTo(new THREE.Vector3());
+    const distanceY = maxY.distanceTo(new THREE.Vector3());
+    const distanceZ = maxZ.distanceTo(new THREE.Vector3());
+
+    return Math.max(distanceX, distanceY, distanceZ);
 };
 
 export class OrbitControls extends THREE.EventDispatcher {
@@ -50,9 +59,20 @@ export class OrbitControls extends THREE.EventDispatcher {
     scene: THREE.Scene;
     model: THREE.Group;
 
+    target: THREE.Vector3;
+    up: THREE.Vector3;
+    right: THREE.Vector3;
+
     angleX: number;
     angleY: number;
     rotationAngle: number;
+
+    arrowX: THREE.ArrowHelper;
+    arrowY: THREE.ArrowHelper;
+    arrowZ: THREE.ArrowHelper;
+    ellipseX: THREE.Line;
+    ellipseY: THREE.Line;
+    ellipseZ: THREE.Line;
 
     modelMoveStep: number;
     modelRotateStep: number;
@@ -78,6 +98,96 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.scene = scene;
         this.model = model;
 
+        this.target = new THREE.Vector3(0, 0, 0);
+        this.up = new THREE.Vector3(0, 1, 0);
+        this.right = new THREE.Vector3(1, 0, 0);
+
+        const distance = getDefaultCameraDistance(this.model) * 1.2;
+
+        this.arrowX = new ArrowHelper(
+            new Vector3(1, 0, 0).normalize(),
+            new Vector3(0, 0, 0),
+            distance,
+            0x00ff00,
+            undefined,
+            2,
+        );
+
+        this.arrowY = new ArrowHelper(
+            new Vector3(0, 1, 0).normalize(),
+            new Vector3(0, 0, 0),
+            distance,
+            0xff0000,
+            undefined,
+            2,
+        );
+
+        this.arrowZ = new ArrowHelper(
+            new Vector3(0, 0, 1).normalize(),
+            new Vector3(0, 0, 0),
+            distance,
+            0x0000ff,
+            undefined,
+            2,
+        );
+
+        const geometryEllipseX = new BufferGeometry().setFromPoints(
+            new EllipseCurve(
+                0,
+                0,
+                distance,
+                distance,
+                0,
+                2 * Math.PI,
+                false,
+                0,
+            ).getPoints(150),
+        );
+
+        const geometryEllipseZ = new BufferGeometry().setFromPoints(
+            new EllipseCurve(
+                0,
+                0,
+                distance,
+                distance,
+                0,
+                2 * Math.PI,
+                false,
+                0,
+            ).getPoints(150),
+        );
+
+        const geometryEllipseY = new BufferGeometry().setFromPoints(
+            new EllipseCurve(
+                0,
+                0,
+                distance,
+                distance,
+                0,
+                2 * Math.PI,
+                false,
+                0,
+            ).getPoints(150),
+        );
+
+        this.ellipseX = new Line(
+            geometryEllipseX,
+            new LineBasicMaterial({ color: 0x00ff00 }),
+        );
+
+        this.ellipseY = new Line(
+            geometryEllipseY,
+            new LineBasicMaterial({ color: 0xff0000 }),
+        );
+
+        this.ellipseZ = new Line(
+            geometryEllipseZ,
+            new LineBasicMaterial({ color: 0x0000ff }),
+        );
+
+        this.ellipseX.rotateY(Math.PI / 2);
+        this.ellipseY.rotateX(Math.PI / 2);
+
         this.angleX = DEFAULT_ANGLE_X;
         this.angleY = DEFAULT_ANGLE_Y;
         this.rotationAngle = ROTATION_ANGLE;
@@ -95,24 +205,71 @@ export class OrbitControls extends THREE.EventDispatcher {
 
         this.domElement.style.setProperty('touchAction', 'none');
 
+        INITIAL_CAMERA_POSITION.z = distance * 2;
+        camera.position.copy(INITIAL_CAMERA_POSITION);
+
+        const penTransform = (mouse: THREE.Vector2) => {
+            const mousePos = targetPlaneToSphere(
+                new THREE.Vector2(
+                    (mouse.x / window.innerWidth) * 2 - 1,
+                    -(mouse.y / window.innerHeight) * 2 + 1,
+                ),
+            );
+            const lastPos = targetPlaneToSphere(
+                new THREE.Vector2(
+                    (this.lastMousePosition.x / window.innerWidth) * 2 - 1,
+                    -(this.lastMousePosition.y / window.innerHeight) * 2 + 1,
+                ),
+            );
+
+            const deltaX = (lastPos.x - mousePos.x) * 5;
+            const deltaY = (lastPos.y - mousePos.y) * 5;
+
+            const updRight = this.right.clone().multiplyScalar(deltaX);
+            const updUp = this.up.clone().multiplyScalar(deltaY);
+            const deltaTranslate = updRight.add(updUp);
+            const updCameraPosition = camera.position.clone().add(deltaTranslate);
+
+            this.target = this.target.add(deltaTranslate);
+
+            camera.position.copy(updCameraPosition);
+            camera.lookAt(this.target.clone());
+            console.log(camera.position, this.target);
+
+            this.lastMousePosition.copy(mouse);
+        };
+
+        const targetPlaneToSphere = (point: THREE.Vector2) => {
+            const vec = new THREE.Vector3();
+
+            if (point.length() >= 1.0) {
+                point.normalize();
+
+                vec.set(point.x, point.y, 0.0);
+            } else {
+                const z = Math.sqrt(1.0 - Math.pow(point.x, 2) - Math.pow(point.y, 2));
+
+                vec.set(point.x, point.y, z * -1);
+            }
+
+            return vec;
+        };
+
         const rotateModel = (mousePosition: THREE.Vector2) => {
             const startAngle = new THREE.Vector2(
                 (this.lastMousePosition.x / window.innerWidth) * 2 - 1,
                 -(this.lastMousePosition.y / window.innerHeight) * 2 + 1,
             ).angle();
-
             const endAngle = new THREE.Vector2(
                 (mousePosition.x / window.innerWidth) * 2 - 1,
                 -(mousePosition.y / window.innerHeight) * 2 + 1,
             ).angle();
-
             const direction = startAngle >= endAngle ? -1 : 1;
-
-            if (this.selectedObject == ellipseX) {
+            if (this.selectedObject == this.ellipseX) {
                 model.rotateX(this.modelRotateStep * direction);
-            } else if (this.selectedObject == ellipseY) {
+            } else if (this.selectedObject == this.ellipseY) {
                 model.rotateY(this.modelRotateStep * direction);
-            } else if (this.selectedObject == ellipseZ) {
+            } else if (this.selectedObject == this.ellipseZ) {
                 model.rotateZ(this.modelRotateStep * direction);
             }
         };
@@ -128,84 +285,117 @@ export class OrbitControls extends THREE.EventDispatcher {
                 -(mousePosition.y / (domElement.height + 400)) * 2 + 1,
             );
 
-            const startVectorLenght =
-                this.lastMousePosition.x * this.lastMousePosition.x +
-                this.lastMousePosition.y * this.lastMousePosition.y;
+            const center = model.position.clone().project(camera);
 
-            const endVectorLenght = mouse.x * mouse.x + mouse.y * mouse.y;
+            const startDistance = this.lastMousePosition.distanceTo(
+                new THREE.Vector2(center.x, center.y),
+            );
+            const endDistance = mouse.distanceTo(new THREE.Vector2(center.x, center.y));
 
-            if (endVectorLenght < 0.005) {
+            if (startDistance < this.lastMousePosition.distanceTo(mouse)) {
                 this.domElement.removeEventListener('pointermove', onPointerMove);
             }
 
-            const direction = startVectorLenght >= endVectorLenght ? -1 : 1;
+            const direction = startDistance >= endDistance ? -1 : 1;
 
             if (
-                this.selectedObject == arrowX.line ||
-                this.selectedObject == arrowX.cone
+                this.selectedObject == this.arrowX.line ||
+                this.selectedObject == this.arrowX.cone
             ) {
-                model.position.set(
-                    model.position.x + this.modelMoveStep * direction,
-                    model.position.y,
-                    model.position.z,
-                );
+                model.translateX(this.modelMoveStep * direction);
             } else if (
-                this.selectedObject == arrowY.line ||
-                this.selectedObject == arrowY.cone
+                this.selectedObject == this.arrowY.line ||
+                this.selectedObject == this.arrowY.cone
             ) {
-                model.position.set(
-                    model.position.x,
-                    model.position.y + this.modelMoveStep * direction,
-                    model.position.z,
-                );
+                model.translateY(this.modelMoveStep * direction);
             } else if (
-                this.selectedObject == arrowZ.line ||
-                this.selectedObject == arrowZ.cone
+                this.selectedObject == this.arrowZ.line ||
+                this.selectedObject == this.arrowZ.cone
             ) {
-                model.position.set(
-                    model.position.x,
-                    model.position.y,
-                    model.position.z + this.modelMoveStep * direction,
-                );
+                model.translateZ(this.modelMoveStep * direction);
             }
         };
 
-        const onMouseMove = (event: PointerEvent) => {
-            const mousePosition = new THREE.Vector2(event.screenX, event.screenY);
+        const rotateCamera = (mousePosition: THREE.Vector2) => {
+            const ar = window.innerWidth / window.innerHeight;
 
-            if (!this.selectedObject || model.children.includes(this.selectedObject)) {
-                if (this.lastMousePosition.x - mousePosition.x > 0) {
-                    this.angleX -= this.rotationAngle;
-                } else if (this.lastMousePosition.x - mousePosition.x < 0) {
-                    this.angleX += this.rotationAngle;
-                }
+            const mouse = targetPlaneToSphere(
+                new THREE.Vector2(
+                    ((ar * mousePosition.x) / window.innerWidth) * 2 - ar,
+                    -(mousePosition.y / window.innerHeight) * 2 + 1,
+                ),
+            );
+            const lastPos = targetPlaneToSphere(
+                new THREE.Vector2(
+                    ((ar * this.lastMousePosition.x) / window.innerWidth) * 2 - ar,
+                    -(this.lastMousePosition.y / window.innerHeight) * 2 + 1,
+                ),
+            );
 
-                if (this.lastMousePosition.y - mousePosition.y > 0) {
-                    this.angleY =
-                        this.angleY > -Math.PI / 2 + 0.1
-                            ? this.angleY - this.rotationAngle
-                            : this.angleY;
-                } else if (this.lastMousePosition.y - mousePosition.y < 0) {
-                    this.angleY =
-                        this.angleY < Math.PI / 2 - 0.1
-                            ? this.angleY + this.rotationAngle
-                            : this.angleY;
-                }
+            const angle = -lastPos.angleTo(mouse);
+            const axis = mouse.cross(lastPos);
 
-                this.setCameraPosition();
-            } else {
-                if (this.selectedObject.type === 'Mesh') {
-                    transformModel(mousePosition);
-                } else if (this.selectedObject.type === 'Line') {
-                    rotateModel(mousePosition);
-                }
+            if (camera.position.z < 0) {
+                axis.x = -axis.x;
             }
 
-            this.lastMousePosition = mousePosition;
+            const toWordlCameraSpace = camera.modelViewMatrix.transpose();
+            const updAxis = axis.applyMatrix4(toWordlCameraSpace).normalize();
+
+            // const t = 1 - Math.cos(angle);
+            // const c = Math.cos(angle);
+            // const s = Math.sin(angle);
+            // const x = updAxis.x;
+            // const y = updAxis.y;
+            // const z = updAxis.z;
+
+            // const o = new THREE.Matrix3();
+            // o.set(
+            //     t * x * x + c,
+            //     t * x * y - z * s,
+            //     t * x * z + y * s,
+            //     t * x * y + z * s,
+            //     t * y * y + c,
+            //     t * y * z - x * s,
+            //     t * x * z - y * s,
+            //     t * y * z + x * s,
+            //     t * z * z + c,
+            // );
+
+            const revPosCamera = camera.position.clone().sub(this.target);
+            const updCamera = revPosCamera
+                .applyAxisAngle(updAxis, angle)
+                .add(this.target);
+
+            this.up = this.up.applyAxisAngle(axis, angle);
+            this.right = this.right.applyAxisAngle(axis, angle);
+
+            camera.position.copy(updCamera);
+            camera.lookAt(this.target);
+        };
+
+        const onMouseMove = (mousePosition: THREE.Vector2) => {
+            if (this.selectedObject?.type === 'Mesh') {
+                if (model.children.includes(this.selectedObject)) {
+                    rotateCamera(mousePosition);
+                } else {
+                    transformModel(mousePosition);
+                }
+            } else if (this.selectedObject?.type === 'Line') {
+                rotateModel(mousePosition);
+            } else {
+                rotateCamera(mousePosition);
+            }
+
+            this.lastMousePosition.copy(mousePosition);
         };
 
         const onMouseDown = (event: PointerEvent) => {
             this.lastMousePosition = new THREE.Vector2(event.screenX, event.screenY);
+
+            if (event.button !== 0) {
+                return;
+            }
 
             const mouse = new THREE.Vector2();
             mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
@@ -217,6 +407,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 
             if (intersects.length > 0) {
                 this.selectedObject = intersects[0].object;
+                console.log(this.selectedObject);
             } else {
                 this.selectedObject = undefined;
             }
@@ -239,7 +430,13 @@ export class OrbitControls extends THREE.EventDispatcher {
         };
 
         const onPointerMove = (event: PointerEvent) => {
-            onMouseMove(event);
+            const mousePosition = new THREE.Vector2(event.screenX, event.screenY);
+
+            if (event.buttons === 1) {
+                onMouseMove(mousePosition);
+            } else if (event.buttons === 4) {
+                penTransform(mousePosition);
+            }
         };
 
         const onPointerUp = (event: PointerEvent) => {
@@ -265,37 +462,35 @@ export class OrbitControls extends THREE.EventDispatcher {
         this.domElement.addEventListener('wheel', this.onMouseWheel);
     }
 
-    setCameraPosition = () => {
-        const afterRotateCameraPosistion = rotate(this.angleX, this.angleY);
+    setCameraPosition = (axis: THREE.Vector3, angle: number) => {
+        this.camera.position.copy(INITIAL_CAMERA_POSITION);
+        this.target = new THREE.Vector3(0, 0, 0);
+        this.up = new THREE.Vector3(0, 1, 0);
+        this.right = new THREE.Vector3(1, 0, 0);
 
-        this.camera.position.x = afterRotateCameraPosistion.x;
-        this.camera.position.y = afterRotateCameraPosistion.y;
-        this.camera.position.z = afterRotateCameraPosistion.z;
-    };
+        this.camera.position.applyAxisAngle(axis, angle);
+        this.up.applyAxisAngle(axis, angle);
+        this.right.applyAxisAngle(axis, angle);
 
-    setCustomAngles = (angleX: number, angleY: number) => {
-        this.angleX = angleX;
-        this.angleY = angleY;
-
-        this.setCameraPosition();
+        this.camera.lookAt(this.target);
     };
 
     drowTriad() {
-        this.scene.add(ellipseX);
-        this.scene.add(arrowY);
-        this.scene.add(arrowX);
-        this.scene.add(ellipseY);
-        this.scene.add(arrowZ);
-        this.scene.add(ellipseZ);
+        this.model.add(this.ellipseX);
+        this.model.add(this.arrowY);
+        this.model.add(this.arrowX);
+        this.model.add(this.ellipseY);
+        this.model.add(this.arrowZ);
+        this.model.add(this.ellipseZ);
     }
 
     clearTriad() {
-        this.scene.remove(ellipseX);
-        this.scene.remove(arrowY);
-        this.scene.remove(arrowX);
-        this.scene.remove(ellipseY);
-        this.scene.remove(arrowZ);
-        this.scene.remove(ellipseZ);
+        this.model.remove(this.ellipseX);
+        this.model.remove(this.arrowY);
+        this.model.remove(this.arrowX);
+        this.model.remove(this.ellipseY);
+        this.model.remove(this.arrowZ);
+        this.model.remove(this.ellipseZ);
     }
 
     dispose = () => {
