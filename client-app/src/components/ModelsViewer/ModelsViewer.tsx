@@ -2,11 +2,28 @@ import React, { FunctionComponent, useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 import { OrbitControls } from '../../utils/OrbitControls/OrbitControls';
 import CircularProgress from '@mui/material/CircularProgress';
-import { viewerContainerStyles, progressStyles } from './ModelsViewer.styles';
+import { viewerContainerStyles, progressStyles, modalStyle } from './ModelsViewer.styles';
 import { ModelsViewerProps } from './ModelsViewer.types';
-import { Button, ButtonGroup } from '@mui/material';
-import { loadOBJModel } from '../../utils/OBJLoader';
+import {
+    Box,
+    Button,
+    ButtonGroup,
+    Modal,
+    Stack,
+    TextField,
+    Typography,
+} from '@mui/material';
 import { mergeVertices } from 'three/examples/jsm/utils/BufferGeometryUtils.js';
+import { loadOBJModel } from '../../utils/OBJLoader';
+import {
+    CAMERA_BUTTON_CAPTION,
+    CANCEL,
+    COEFS_ARE_ZERO_ERROR,
+    COEF_NOT_NUMBER_ERROR,
+    EDIT_MODE_BUTTON_CAPTION,
+    OK,
+    SLICE_BUTTON_CAPTION,
+} from './ModelsViewer.constants';
 
 const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
     const refContainer = useRef<HTMLDivElement>(null);
@@ -15,6 +32,13 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
     const [scene, setScene] = useState<THREE.Scene>();
     const [showTriad, setShowTriad] = useState<boolean>(false);
     const [isSliced, setIsSliced] = useState<boolean>(false);
+
+    const [plane, setPlane] = useState<THREE.Plane>();
+    const [planeModalIsOpen, setPlaneModelIsOpen] = useState<boolean>(false);
+    const [coefA, setCoefA] = useState<string>('1');
+    const [coefB, setCoefB] = useState<string>('0');
+    const [coefC, setCoefC] = useState<string>('0');
+    const [coefD, setCoefD] = useState<string>('0');
 
     const [controls, setControls] = useState<OrbitControls>();
 
@@ -107,8 +131,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
             return;
         }
 
-        if (isSliced) {
-            const localPlane = new THREE.Plane(new THREE.Vector3(1, 1, 0), 0.5);
+        if (plane) {
             const copyModel = model.clone(true);
             scene.remove(model);
 
@@ -123,7 +146,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                     const needToUpdate = () => {
                         for (let i = 0; i < vertices.length; i += 3) {
                             if (
-                                localPlane.distanceToPoint(
+                                plane.distanceToPoint(
                                     new THREE.Vector3(
                                         vertices[i],
                                         vertices[i + 1],
@@ -177,7 +200,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
 
                             const distances = points
                                 .map((point) => {
-                                    return localPlane.distanceToPoint(point);
+                                    return plane.distanceToPoint(point);
                                 })
                                 .filter((n) => n > 0);
 
@@ -212,18 +235,18 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                                 );
                             } else if (way === 2) {
                                 const deleteElem = points.filter(
-                                    (p) => localPlane.distanceToPoint(p) < 0,
+                                    (p) => plane.distanceToPoint(p) < 0,
                                 )[0];
                                 const [first, second] = points.filter(
                                     (p) => !p.equals(deleteElem),
                                 );
                                 const firstPoint = new THREE.Vector3();
                                 const secondPoint = new THREE.Vector3();
-                                localPlane.intersectLine(
+                                plane.intersectLine(
                                     new THREE.Line3(first, deleteElem),
                                     firstPoint,
                                 );
-                                localPlane.intersectLine(
+                                plane.intersectLine(
                                     new THREE.Line3(second, deleteElem),
                                     secondPoint,
                                 );
@@ -277,18 +300,18 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                                 }
                             } else if (way === 1) {
                                 const first = points.filter(
-                                    (p) => localPlane.distanceToPoint(p) >= 0,
+                                    (p) => plane.distanceToPoint(p) >= 0,
                                 )[0];
                                 const [firstDel, secondDel] = points.filter(
                                     (p) => !p.equals(first),
                                 );
                                 const firstPoint = new THREE.Vector3();
                                 const secondPoint = new THREE.Vector3();
-                                localPlane.intersectLine(
+                                plane.intersectLine(
                                     new THREE.Line3(firstDel, first),
                                     firstPoint,
                                 );
-                                localPlane.intersectLine(
+                                plane.intersectLine(
                                     new THREE.Line3(secondDel, first),
                                     secondPoint,
                                 );
@@ -365,7 +388,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
 
             scene.add(model);
         }
-    }, [isSliced]);
+    }, [plane]);
 
     const onClickFrontHandler = () => {
         const axis = new THREE.Vector3(0, 0, 0);
@@ -409,6 +432,60 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
         controls?.setCameraPosition(axis, angle);
     };
 
+    const onClickSliceButtomHandler = () => {
+        if (isSliced) {
+            setIsSliced(false);
+            setPlane(undefined);
+        } else {
+            setPlaneModelIsOpen(true);
+        }
+    };
+
+    const onCloseModal = () => {
+        setPlaneModelIsOpen(false);
+        setPlane(undefined);
+    };
+
+    const onSendModal = () => {
+        const A = +coefA;
+        const B = +coefB;
+        const C = +coefC;
+        const D = +coefD;
+
+        if (isNaN(A) || isNaN(B) || isNaN(C) || isNaN(D)) {
+            return;
+        }
+
+        if (A !== 0 || B !== 0 || C !== 0) {
+            const localPlane = new THREE.Plane(new THREE.Vector3(A, B, C), D);
+            setPlane(localPlane);
+            setPlaneModelIsOpen(false);
+            setIsSliced(true);
+        }
+    };
+
+    const getHelperTextForTextField = (coef: string) => {
+        if (+coefA === 0 && +coefB === 0 && +coefC === 0) {
+            return COEFS_ARE_ZERO_ERROR;
+        }
+
+        if (isNaN(+coef)) {
+            return COEF_NOT_NUMBER_ERROR;
+        }
+    };
+
+    const isTextFieldError = (coef: string) => {
+        if (+coefA === 0 && +coefB === 0 && +coefC === 0) {
+            return true;
+        }
+
+        if (isNaN(+coef)) {
+            return true;
+        }
+
+        return false;
+    };
+
     return (
         <>
             <div style={viewerContainerStyles} ref={refContainer}>
@@ -425,7 +502,7 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
                 sx={{ margin: '5px' }}
             >
                 <Button disabled color="error">
-                    Camera:{' '}
+                    {CAMERA_BUTTON_CAPTION}
                 </Button>
                 <Button onClick={onClickFrontHandler}>Front</Button>
                 <Button onClick={onClickBackHandler}>Back</Button>
@@ -436,14 +513,87 @@ const ModelsViewer: FunctionComponent<ModelsViewerProps> = ({ fileUrl }) => {
             </ButtonGroup>
             <ButtonGroup variant="outlined" aria-label="outlined button group">
                 <Button onClick={() => setShowTriad((c) => !c)} disabled={isSliced}>
-                    Edit mode: {showTriad ? 'On' : 'Off'}
+                    {EDIT_MODE_BUTTON_CAPTION} {showTriad ? 'On' : 'Off'}
                 </Button>
             </ButtonGroup>
             <ButtonGroup variant="outlined" aria-label="outlined button group">
-                <Button onClick={() => setIsSliced((c) => !c)} disabled={showTriad}>
-                    Slice model: {isSliced ? 'On' : 'Off'}
+                <Button onClick={onClickSliceButtomHandler} disabled={showTriad}>
+                    {SLICE_BUTTON_CAPTION} {isSliced ? 'On' : 'Off'}
                 </Button>
             </ButtonGroup>
+
+            <Modal open={planeModalIsOpen} onClose={onCloseModal}>
+                <Box sx={modalStyle}>
+                    <Typography variant="h6" component="h2" align="center">
+                        Enter plane coefficients
+                    </Typography>
+
+                    <TextField
+                        id="filled-basic"
+                        label="A"
+                        variant="filled"
+                        margin="dense"
+                        size="small"
+                        value={coefA}
+                        onChange={(e) => setCoefA(e.currentTarget.value)}
+                        error={isTextFieldError(coefA)}
+                        helperText={getHelperTextForTextField(coefA)}
+                    />
+                    <TextField
+                        id="filled-basic"
+                        label="B"
+                        variant="filled"
+                        margin="dense"
+                        size="small"
+                        value={coefB}
+                        onChange={(e) => setCoefB(e.currentTarget.value)}
+                        error={isTextFieldError(coefB)}
+                        helperText={getHelperTextForTextField(coefB)}
+                    />
+                    <TextField
+                        id="filled-basic"
+                        label="C"
+                        variant="filled"
+                        margin="dense"
+                        size="small"
+                        value={coefC}
+                        onChange={(e) => setCoefC(e.currentTarget.value)}
+                        error={isTextFieldError(coefC)}
+                        helperText={getHelperTextForTextField(coefC)}
+                    />
+                    <TextField
+                        id="filled-basic"
+                        label="D"
+                        variant="filled"
+                        margin="dense"
+                        size="small"
+                        value={coefD}
+                        onChange={(e) => setCoefD(e.currentTarget.value)}
+                        error={isNaN(+coefD)}
+                        helperText={isNaN(+coefD) && COEF_NOT_NUMBER_ERROR}
+                    />
+
+                    <Stack
+                        display="flex"
+                        direction="row"
+                        justifyContent="flex-end"
+                        spacing={1}
+                        sx={{ width: '90%', m: 1, marginTop: '50px' }}
+                    >
+                        <Button variant="contained" size="small" onClick={onCloseModal}>
+                            {CANCEL}
+                        </Button>
+                        <Button
+                            variant="contained"
+                            size="small"
+                            color="success"
+                            onClick={onSendModal}
+                        >
+                            {OK}
+                        </Button>
+                    </Stack>
+                </Box>
+            </Modal>
         </>
     );
 };

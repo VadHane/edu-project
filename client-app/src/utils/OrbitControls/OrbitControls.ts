@@ -234,7 +234,6 @@ export class OrbitControls extends THREE.EventDispatcher {
 
             camera.position.copy(updCameraPosition);
             camera.lookAt(this.target.clone());
-            console.log(camera.position, this.target);
 
             this.lastMousePosition.copy(mouse);
         };
@@ -376,7 +375,7 @@ export class OrbitControls extends THREE.EventDispatcher {
 
         const onMouseMove = (mousePosition: THREE.Vector2) => {
             if (this.selectedObject?.type === 'Mesh') {
-                if (model.children.includes(this.selectedObject)) {
+                if (this.selectedObject.parent?.type !== 'ArrowHelper') {
                     rotateCamera(mousePosition);
                 } else {
                     transformModel(mousePosition);
@@ -407,7 +406,6 @@ export class OrbitControls extends THREE.EventDispatcher {
 
             if (intersects.length > 0) {
                 this.selectedObject = intersects[0].object;
-                console.log(this.selectedObject);
             } else {
                 this.selectedObject = undefined;
             }
