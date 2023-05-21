@@ -7,8 +7,8 @@ const user = {
 };
 
 const admin = {
-    email: 'root@root.ua',
-    password: 'root',
+    email: 'admin@admin.ua',
+    password: 'admin',
 };
 
 describe('Tests', () => {
@@ -26,23 +26,6 @@ describe('Tests', () => {
         cy.get('.user-name');
         cy.get('.MuiButton-textError');
         cy.get('.MuiButton-textInherit').click();
-
-        cy.contains('Add new model').click();
-
-        cy.get(':nth-child(1) > .MuiInput-root > #standard-basic').type('test');
-        cy.get('#tags-filled').type('test');
-        cy.get(':nth-child(2) > .MuiInput-root > #standard-basic').type('test');
-
-        cy.get('.css-1cp3q7g-MuiStack-root > .MuiButton-containedPrimary').click();
-
-        cy.get(
-            ':nth-child(1) > .actions > [src="https://cdn-icons-png.flaticon.com/512/61/61456.png"]',
-        ).click();
-
-        cy.get('.css-1cp3q7g-MuiStack-root > .MuiButton-containedPrimary').click();
-
-        cy.get('.MuiButton-textError').click();
-        cy.get('h1');
     });
 
     it('Try login as admin', () => {
@@ -76,6 +59,16 @@ describe('Tests', () => {
         cy.get(
             ':nth-child(1) > .actions > [src="https://cdn-icons-png.flaticon.com/512/61/61456.png"]',
         ).click();
+        cy.get('.css-1cp3q7g-MuiStack-root > .MuiButton-containedPrimary').click();
+
+        cy.get('.MuiToolbar-root > :nth-child(3)').click();
+
+        cy.contains('Add new model').click();
+
+        cy.get('#standard-basic-name').type('test');
+        cy.get('#tags-filled').type('test');
+        cy.get('#standard-basic-description').type('test');
+
         cy.get('.css-1cp3q7g-MuiStack-root > .MuiButton-containedPrimary').click();
 
         cy.get('.MuiButton-textError').click();
